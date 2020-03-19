@@ -11,9 +11,11 @@ const Spreadsheet = props => {
    */
   function* letterLabelGenerator() {
     yield "";
+
     function nextChar(c) {
       return String.fromCharCode(c.charCodeAt(0) + 1);
     }
+
     const label = ['A'];
     while (true) {
       yield label.slice().reverse().join("");
@@ -47,7 +49,7 @@ const Spreadsheet = props => {
       <tbody>
       {props.cells.map((row, i) =>
         <tr key={i}>
-          <td key={-1}>{i+1}</td>
+          <td key={-1}>{i + 1}</td>
           {row.map((cell, j) =>
             <td key={j}>
               {cell.value}
