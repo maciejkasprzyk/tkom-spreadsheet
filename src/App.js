@@ -8,7 +8,7 @@ const store = new SpreadsheetStore(10, 10);
 function App() {
   return (
     <div className="App">
-      <Spreadsheet cells={store.cells}/>
+      <Spreadsheet sheet={store}/>
     </div>
   );
 }
