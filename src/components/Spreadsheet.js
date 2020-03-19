@@ -2,7 +2,6 @@ import React from 'react';
 import {observer, PropTypes as ObservablePropTypes} from "mobx-react";
 import style from './Spreadsheet.module.scss'
 
-
 /**
  * It returns strings like this: "A", "B", ... , "Z", "AA", "AB", ...
  */
@@ -48,7 +47,6 @@ const Spreadsheet = props => {
     if (cell.formula) {
       e.target.value = cell.formula;
     }
-    console.log(e.target.parentNode);
     e.target.parentNode.classList.add(style.focus)
   };
 
@@ -60,8 +58,8 @@ const Spreadsheet = props => {
         <thead>
         <tr>
           <th/>
-          {props.sheet.cells.map((_, i) =>
-            <th>
+          {Array(props.sheet.x).fill(0).map((_, i) =>
+            <th key={i}>
               {rowLabelsGen.next().value}
             </th>
           )}

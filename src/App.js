@@ -3,7 +3,7 @@ import './App.css';
 import Spreadsheet from "./components/Spreadsheet";
 import {SpreadsheetStore} from "./mobx/SpreadsheetStore";
 
-const store = new SpreadsheetStore(10, 10);
+const store = new SpreadsheetStore(5, 10);
 
 function App() {
   return (
