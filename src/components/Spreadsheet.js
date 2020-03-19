@@ -6,11 +6,9 @@ import style from './Spreadsheet.module.scss'
 const Spreadsheet = props => {
 
   /**
-   * It returns strings like this: "", "A", "B", ... , "Z", "AA", ...
-   * Notice the empty string at the beginning.
+   * It returns strings like this: "A", "B", ... , "Z", "AA", "AB", ...
    */
   function* letterLabelGenerator() {
-    yield "";
 
     function nextChar(c) {
       return String.fromCharCode(c.charCodeAt(0) + 1);
@@ -36,30 +34,32 @@ const Spreadsheet = props => {
   const rowLabelsGen = letterLabelGenerator();
 
   return (
-    <table className={style.test}>
-      <thead>
-      <tr>
-        {props.cells.map((_, i) =>
-          <td key={i}>
-            {rowLabelsGen.next().value}
-          </td>
-        )}
-      </tr>
-      </thead>
-      <tbody>
-      {props.cells.map((row, i) =>
-        <tr key={i}>
-          <td key={-1}>{i + 1}</td>
-          {row.map((cell, j) =>
-            <td key={j}>
-              {cell.value}
-            </td>
+    <div className={style.Spreadsheet}>
+      <table className={style.SpreadsheetTable}>
+        <thead>
+        <tr>
+          <th/>
+          {props.cells.map((_, i) =>
+            <th key={i}>
+              {rowLabelsGen.next().value}
+            </th>
           )}
         </tr>
-      )}
-      </tbody>
-    </table>
-
+        </thead>
+        <tbody>
+        {props.cells.map((row, i) =>
+          <tr key={i}>
+            <th key={-1}>{i + 1}</th>
+            {row.map((cell, j) =>
+              <td key={j}>
+                {cell.value}
+              </td>
+            )}
+          </tr>
+        )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
