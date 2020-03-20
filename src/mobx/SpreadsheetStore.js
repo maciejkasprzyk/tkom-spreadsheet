@@ -1,6 +1,4 @@
 import {observable} from "mobx";
-import * as mathjs from 'mathjs';
-
 
 function isFormula(x) {
   return x.charAt(0) === '=';
@@ -11,7 +9,7 @@ export class Cell {
   @observable value = null;
   @observable formula = null;
 
-  constructor(sheet, x ,y) {
+  constructor(sheet, x, y) {
     this.sheet = sheet;
     this.i = x;
     this.j = y;
@@ -21,12 +19,9 @@ export class Cell {
     if (isFormula(string)) {
       this.formula = string;
       try {
-        // this.value = mathjs.evaluate(string.substring(1), {'A':5});
+
         this.value = this.sheet.getCellByLabel(string.substring(1)).value;
-        console.log(this.value)
-      }
-      catch (e) {
-        console.log(e);
+      } catch (e) {
         this.value = "error";
       }
     } else {
@@ -52,7 +47,7 @@ export class SpreadsheetStore {
     for (let i = 0; i < y; i++) {
       this.cells[i] = Array(x);
       for (let j = 0; j < x; j++) {
-        this.cells[i][j] = new Cell(this,i,j);
+        this.cells[i][j] = new Cell(this, i, j);
       }
     }
   }
@@ -80,4 +75,6 @@ export class SpreadsheetStore {
 
     return this.cells[x_index][y_index];
   }
+
+
 }
