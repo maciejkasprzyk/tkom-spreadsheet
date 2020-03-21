@@ -1,48 +1,11 @@
 import {observable} from "mobx";
 
-function isFormula(x) {
-  return x.charAt(0) === '=';
-}
-
-export class Cell {
-
-  @observable value = null;
-  @observable formula = null;
-
-  constructor(sheet, x, y) {
-    this.sheet = sheet;
-    this.i = x;
-    this.j = y;
-  }
-
-  set(string) {
-    if (isFormula(string)) {
-      this.formula = string;
-      try {
-
-        this.value = this.sheet.getCellByLabel(string.substring(1)).value;
-      } catch (e) {
-        this.value = "error";
-      }
-    } else {
-      this.value = string;
-    }
-  }
-}
-
-
-function isUpperLetter(x) {
-  return 'A'.charCodeAt(0) <= x.charCodeAt(0) && x.charCodeAt(0) <= 'Z'.charCodeAt(0);
-}
-
 export class SpreadsheetStore {
-
-  @observable cells = [];
+  cells = [];
 
   constructor(x, y) {
     this.x = x;
     this.y = y;
-
     this.cells = Array(y);
     for (let i = 0; i < y; i++) {
       this.cells[i] = Array(x);
@@ -67,7 +30,6 @@ export class SpreadsheetStore {
     const x_index = parseInt(digits) - 1;
 
     let y_index = 0;
-
     for (let i = 0; i < letters.length; i++) {
       y_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
       y_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
@@ -75,6 +37,90 @@ export class SpreadsheetStore {
 
     return this.cells[x_index][y_index];
   }
+}
 
 
+export class Cell {
+
+  @observable formula = null;
+  @observable value = 0;
+
+  constructor(sheet, x, y) {
+    this.sheet = sheet;
+    this.x = x;
+    this.y = y;
+  }
+
+  // cells that observe ass -> we are used in their formula
+  observers = new Set();
+  // cells that we observe for changes -> we use them in our formula
+  // this is needed to remove us from their observer list when we change formula
+  // could avoid this list by parsing old formula for cell one more time
+  // dunno what is a better way
+  subjects = [];
+
+  set(string) {
+    // remove us from observers list from cells we used in old formula
+    for (const cell of this.subjects) {
+      cell.removeObserver(this);
+    }
+    // and clear subject table
+    this.subjects = [];
+
+    if (isFormula(string)) {
+
+      this.formula = string;
+      try {
+        this.calculateValue();
+        // todo this code is temporary (testing only), will change when I finish parser
+        let cellReferenced = this.sheet.getCellByLabel(this.formula.substring(1));
+
+        const cellsReferenced = [];
+        cellsReferenced.push(cellReferenced);
+        // todo check for cycle
+
+        // todo this code will stay the same after writing parser
+        for (const cell of cellsReferenced) {
+          cell.addObserver(this);
+          this.subjects.push(cell);
+        }
+
+      } catch (e) {
+        // todo more meaningful error messages
+        this.value = "error";
+      }
+    } else {
+      this.value = string;
+      this.formula = null;
+    }
+    // todo run topological sorting algorithm
+    for (let cell of this.observers) {
+      cell.calculateValue();
+    }
+  }
+
+  addObserver(cell) {
+    this.observers.add(cell);
+  }
+
+  removeObserver(cell) {
+    this.observers.delete(cell);
+  }
+
+  calculateValue() {
+    // todo add parser here
+    let cellReferenced = this.sheet.getCellByLabel(this.formula.substring(1));
+    this.value = cellReferenced.value;
+  }
+
+}
+
+// helper functions
+
+function isFormula(x) {
+  return x.charAt(0) === '=';
+}
+
+function isUpperLetter(x) {
+  return 'A'.charCodeAt(0) <= x.charCodeAt(0) && x.charCodeAt(0) <= 'Z'.charCodeAt(0);
 }

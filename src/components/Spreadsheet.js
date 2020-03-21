@@ -1,6 +1,7 @@
-import React from 'react';
-import {observer, PropTypes as ObservablePropTypes} from "mobx-react";
+import React, {useState} from 'react';
+import {observer} from "mobx-react";
 import style from './Spreadsheet.module.scss'
+import PropTypes from 'prop-types'
 
 /**
  * It returns strings like this: "A", "B", ... , "Z", "AA", "AB", ...
@@ -30,6 +31,9 @@ function* letterLabelGenerator() {
 
 const Spreadsheet = props => {
 
+  let [isEditing, setEditing] = useEditing();
+
+
   const onInputKeyDown = (e) => {
     if (e.keyCode === 13) {
       e.target.blur();
@@ -38,19 +42,21 @@ const Spreadsheet = props => {
 
   const onBlur = (e, cell) => {
     cell.set(e.target.value);
-    e.target.value = cell.value;
     e.target.parentNode.classList.remove(style.focus)
 
   };
 
   const onFocus = (e, cell) => {
-    if (cell.formula) {
-      e.target.value = cell.formula;
-    }
+    e.target.value = cell.formula ? cell.formula : cell.value;
     e.target.parentNode.classList.add(style.focus)
   };
 
+  const onClick = (e, cell) => {
+    setEditing(cell.x, cell.y);
+  };
+
   const rowLabelsGen = letterLabelGenerator();
+
 
   return (
     <div className={style.Spreadsheet}>
@@ -70,13 +76,20 @@ const Spreadsheet = props => {
           <tr key={i}>
             <th>{i + 1}</th>
             {row.map((cell, j) =>
-              <td key={j}>
-                <input
-                  onKeyDown={onInputKeyDown}
-                  onFocus={e => onFocus(e, cell)}
-                  onBlur={e => onBlur(e, cell)}
-                  defaultValue={cell.value}
-                />
+              <td
+                onClick={e => onClick(e, cell)}
+                key={j}>
+                {isEditing(cell.x, cell.y) ?
+                  <input
+                    onKeyDown={onInputKeyDown}
+                    onFocus={e => onFocus(e, cell)}
+                    onBlur={e => onBlur(e, cell)}
+                    autoFocus={true}
+                  /> :
+                  <div>
+                    {cell.value}
+                  </div>
+                }
               </td>
             )}
           </tr>
@@ -88,8 +101,24 @@ const Spreadsheet = props => {
 };
 
 
+function useEditing(initial) {
+
+  let [editing, _setEditing] = useState(initial);
+
+  const setEditing = (x, y) => {
+    _setEditing({x: x, y: y})
+  };
+
+  const isEditing = (x, y) => {
+    return editing && editing.x === x && editing.y === y;
+  };
+
+  return [isEditing, setEditing];
+}
+
+
 Spreadsheet.propTypes = {
-  sheet: ObservablePropTypes.observableObject.isRequired,
+  sheet: PropTypes.object.isRequired,
 };
 
 export default observer(Spreadsheet);
