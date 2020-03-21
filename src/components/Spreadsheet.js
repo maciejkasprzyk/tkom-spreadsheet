@@ -41,9 +41,11 @@ const Spreadsheet = props => {
   };
 
   const onBlur = (e, cell) => {
-    cell.set(e.target.value);
-    e.target.parentNode.classList.remove(style.focus)
-
+    props.onCellSet(cell, e.target.value);
+    e.target.parentNode.classList.remove(style.focus);
+    if (isEditing(cell)){
+      setEditing(null);
+    }
   };
 
   const onFocus = (e, cell) => {
@@ -52,7 +54,7 @@ const Spreadsheet = props => {
   };
 
   const onClick = (e, cell) => {
-    setEditing(cell.x, cell.y);
+    setEditing(cell);
   };
 
   const rowLabelsGen = letterLabelGenerator();
@@ -64,7 +66,7 @@ const Spreadsheet = props => {
         <thead>
         <tr>
           <th/>
-          {Array(props.sheet.x).fill(0).map((_, i) =>
+          {Array(props.x).fill(0).map((_, i) =>
             <th key={i}>
               {rowLabelsGen.next().value}
             </th>
@@ -72,14 +74,14 @@ const Spreadsheet = props => {
         </tr>
         </thead>
         <tbody>
-        {props.sheet.cells.map((row, i) =>
+        {props.cells.map((row, i) =>
           <tr key={i}>
             <th>{i + 1}</th>
             {row.map((cell, j) =>
               <td
                 onClick={e => onClick(e, cell)}
                 key={j}>
-                {isEditing(cell.x, cell.y) ?
+                {isEditing(cell) ?
                   <input
                     onKeyDown={onInputKeyDown}
                     onFocus={e => onFocus(e, cell)}
@@ -105,12 +107,17 @@ function useEditing(initial) {
 
   let [editing, _setEditing] = useState(initial);
 
-  const setEditing = (x, y) => {
-    _setEditing({x: x, y: y})
+  const setEditing = (cell) => {
+    if (cell == null) {
+      _setEditing(null)
+    }
+    else {
+      _setEditing({x: cell.x, y: cell.y})
+    }
   };
 
-  const isEditing = (x, y) => {
-    return editing && editing.x === x && editing.y === y;
+  const isEditing = (cell) => {
+    return editing && editing.x === cell.x && editing.y === cell.y;
   };
 
   return [isEditing, setEditing];
