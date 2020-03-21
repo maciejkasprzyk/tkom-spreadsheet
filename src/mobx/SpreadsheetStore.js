@@ -56,7 +56,7 @@ export class Cell {
   // cells that we observe for changes -> we use them in our formula
   // this is needed to remove us from their observer list when we change formula
   // could avoid this list by parsing old formula for cell one more time
-  // dunno what is a better way
+  // dunno which is better
   subjects = [];
 
   set(string) {
@@ -64,7 +64,7 @@ export class Cell {
     for (const cell of this.subjects) {
       cell.removeObserver(this);
     }
-    // and clear subject table
+    // and clear our subject table
     this.subjects = [];
 
     if (isFormula(string)) {
@@ -77,7 +77,28 @@ export class Cell {
 
         const cellsReferenced = [];
         cellsReferenced.push(cellReferenced);
-        // todo check for cycle
+
+        if (cellsReferenced.includes(this)) {
+          throw Error("cycle");
+        }
+        let visited = new Set(cellsReferenced);
+        let stack = Array.from(cellsReferenced);
+
+        while (stack.length !== 0) {
+          const cell = stack.pop();
+
+          for (let i = 0; i < cell.subjects.length; i++) {
+            const neighbour = cell.subjects[i];
+            if (neighbour === this) {
+              throw Error("cycle");
+            }
+            if (!visited.has(neighbour)) {
+              visited.add(neighbour);
+              stack.push(neighbour);
+            }
+          }
+
+        }
 
         // todo this code will stay the same after writing parser
         for (const cell of cellsReferenced) {
@@ -86,8 +107,8 @@ export class Cell {
         }
 
       } catch (e) {
-        // todo more meaningful error messages
-        this.value = "error";
+        this.value = e.message;
+        this.formula = null;
       }
     } else {
       this.value = string;
