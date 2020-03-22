@@ -52,7 +52,8 @@ export class SpreadsheetStore {
 export class Cell {
 
   @observable formula = null;
-  @observable value = 0;
+  @observable value = null;
+  @observable error = null;
 
   constructor(sheet, x, y) {
     this.sheet = sheet;
@@ -89,9 +90,11 @@ export class Cell {
       for (const cell of x) {
         cell.calculateValue();
       }
+      this.error = null;
     } catch (e) {
-      this.value = e.message;
+      this.error = e.message;
     }
+
 
   }
 

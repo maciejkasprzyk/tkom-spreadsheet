@@ -59,7 +59,6 @@ const Spreadsheet = props => {
 
   const rowLabelsGen = letterLabelGenerator();
 
-
   return (
     <div className={style.Spreadsheet}>
       <table>
@@ -88,8 +87,10 @@ const Spreadsheet = props => {
                     onBlur={e => onBlur(e, cell)}
                     autoFocus={true}
                   /> :
-                  <div>
-                    {cell.value}
+                  <div
+                    className={cell.error? style.error : ""}
+                  >
+                    {cell.error? cell.error : cell.value}
                   </div>
                 }
               </td>
