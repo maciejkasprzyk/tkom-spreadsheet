@@ -19,23 +19,32 @@ export class SpreadsheetStore {
    * @param cellLabel For example: A2, AB13, C13 etc as string
    */
   getCellByLabel(cellLabel) {
-    cellLabel.toUpperCase();
+    cellLabel = cellLabel.toUpperCase();
     let index = 0;
-    while (index < cellLabel.length - 1 && isUpperLetter(cellLabel[index])) {
+    while (index < cellLabel.length && isUpperLetter(cellLabel[index])) {
       index++;
     }
     const letters = cellLabel.substring(0, index);
     const digits = cellLabel.substring(index);
 
-    const x_index = parseInt(digits) - 1;
+    if (letters.length === 0 || digits.length === 0) {
+      throw Error(`Incorrect label: ${cellLabel}`)
 
-    let y_index = 0;
-    for (let i = 0; i < letters.length; i++) {
-      y_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
-      y_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
     }
 
-    return this.cells[x_index][y_index];
+    const y_index = parseInt(digits) - 1;
+
+    let x_index = 0;
+    for (let i = 0; i < letters.length; i++) {
+      x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
+      x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
+    }
+
+    if (this.x <= x_index || this.y <= y_index) {
+      throw Error(`No cell: ${cellLabel}`)
+    }
+
+    return this.cells[y_index][x_index];
   }
 }
 
@@ -52,7 +61,7 @@ export class Cell {
   }
 
   // cells that observe ass -> we are used in their formula
-  observers = new Set();
+  observers = [];
   // cells that we observe for changes -> we use them in our formula
   // this is needed to remove us from their observer list when we change formula
   // could avoid this list by parsing old formula for cell one more time
@@ -60,76 +69,82 @@ export class Cell {
   subjects = [];
 
   set(string) {
-    // remove us from observers list from cells we used in old formula
-    for (const cell of this.subjects) {
-      cell.removeObserver(this);
-    }
-    // and clear our subject table
-    this.subjects = [];
-
-    if (isFormula(string)) {
-
-      this.formula = string;
-      try {
+    this.unregisterFromAllSubjects();
+    try {
+      if (isFormula(string)) {
+        // todo parse for every reference here
+        this.formula = string;
+        // noinspection JSUnresolvedFunction
+        const cellsReferenced = [this.sheet.getCellByLabel(this.formula.substring(1))];
         this.calculateValue();
-        // todo this code is temporary (testing only), will change when I finish parser
-        let cellReferenced = this.sheet.getCellByLabel(this.formula.substring(1));
-
-        const cellsReferenced = [];
-        cellsReferenced.push(cellReferenced);
-
-        if (cellsReferenced.includes(this)) {
-          throw Error("cycle");
-        }
-        let visited = new Set(cellsReferenced);
-        let stack = Array.from(cellsReferenced);
-
-        while (stack.length !== 0) {
-          const cell = stack.pop();
-
-          for (let i = 0; i < cell.subjects.length; i++) {
-            const neighbour = cell.subjects[i];
-            if (neighbour === this) {
-              throw Error("cycle");
-            }
-            if (!visited.has(neighbour)) {
-              visited.add(neighbour);
-              stack.push(neighbour);
-            }
-          }
-
-        }
-
-        // todo this code will stay the same after writing parser
         for (const cell of cellsReferenced) {
-          cell.addObserver(this);
-          this.subjects.push(cell);
+          this.observe(cell);
         }
-
-      } catch (e) {
-        this.value = e.message;
+      } else {
+        this.value = string;
         this.formula = null;
       }
+
+      const x = this.topologicalSort();
+      for (const cell of x) {
+        cell.calculateValue();
+      }
+    } catch (e) {
+      this.value = e.message;
+    }
+
+  }
+
+  unregisterFromAllSubjects() {
+    for (const cell of this.subjects) {
+      cell.unregisterObserver(this);
+    }
+    this.subjects = [];
+  }
+
+  observe(cell) {
+    cell.registerObserver(this);
+    this.subjects.push(cell);
+  }
+
+  topologicalSort() {
+    let visited = [];
+    let sorted = [];
+    dfs(this);
+
+    function dfs(cell) {
+      if (sorted.includes(cell)) {
+        return;
+      }
+      if (visited.includes(cell)) {
+        throw Error("cycle");
+      }
+      visited.push(cell);
+      for (const neighbour of cell.observers) {
+        dfs(neighbour)
+      }
+      sorted.push(cell);
+    }
+
+    return sorted.reverse().slice(1);
+  }
+
+  registerObserver(cell) {
+    this.observers.push(cell);
+  }
+
+  unregisterObserver(cell) {
+    const index = this.observers.indexOf(cell);
+    if (index === this.observers.length - 1) {
+      this.observers.pop();
     } else {
-      this.value = string;
-      this.formula = null;
+      this.observers[index] = this.observers.pop();
     }
-    // todo run topological sorting algorithm
-    for (let cell of this.observers) {
-      cell.calculateValue();
-    }
-  }
-
-  addObserver(cell) {
-    this.observers.add(cell);
-  }
-
-  removeObserver(cell) {
-    this.observers.delete(cell);
   }
 
   calculateValue() {
     // todo add parser here
+    // noinspection JSUnresolvedFunction
     let cellReferenced = this.sheet.getCellByLabel(this.formula.substring(1));
     this.value = cellReferenced.value;
   }
