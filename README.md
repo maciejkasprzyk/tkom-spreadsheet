@@ -23,8 +23,8 @@ This project uses [moo](https://github.com/no-context/moo) as tokenize and [near
 
 Source code lives in `/src`:
 
-Spreadsheet view: `components/Spreadsheet.js`
-Spreadsheet model/logic: `mobx/SpreadsheetStore.js`
+Spreadsheet view: `components/Spreadsheet.js`  
+Spreadsheet model/logic: `mobx/SpreadsheetStore.js`  
 Formula lexer: `tokens.js`  
 Formula parser: `grammar.ne`  
 
@@ -45,7 +45,7 @@ Click to edit cell, if you want to put in formula start with `=`. Press enter to
 Auto refresh of formulas is implemented with a variation of [observer patter](https://en.wikipedia.org/wiki/Observer_pattern). Each cell stores collections of observers (cells that observe this) and subjects (cells that this observe). When cell value changes all observers (and observers of observers) are recalculated. The order in which cells refresh is determined by [topological sorting algorithm with cycle detection](https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search).
 
 #### Formula lexer
-Let the source code speak for itself. Notice that lexer has two states. When we encounter function call we change state to `func_args`. That is not necessary for lexer to work, but it allows to detect more errors during lexing. For example `sum(A1*B1)` will result in syntex error as `*` is not allowed as function argument.
+Lexer has two states. When we encounter function call we change state to `func_args`. That is not necessary for lexer to work, but it allows to detect more errors during lexing. For example `sum(A1*B1)` will result in syntex error as `*` is not allowed as function argument. Source code:
 ```js
 // tokenizer has two states: main and func_args
 module.exports = {
