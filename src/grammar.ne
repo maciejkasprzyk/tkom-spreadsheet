@@ -4,7 +4,7 @@
 
   const lexer = moo.states(tokens);
 
-  const debug = false;
+  const debug = true;
   function log() {
     if (debug) {
       console.log(...arguments);
@@ -81,18 +81,22 @@ primary ->
     %}
   |number
   {%
-      (data) => {
-        log("number:", data[0]);
-        return data[0];
-      }
+    (data) => {
+      log("number:", data[0]);
+      return data[0];
+    }
   %}
   |cell_ref {% id %}
 
 cell_ref ->
   %label
-    {% (data) => {
-      return 0;
-    } %}
+  {%
+    ([label]) => {
+      // todo get value for label
+      log("label:", label.value)
+      return 1;
+    }
+  %}
 
 number ->
   %float {% id %}
@@ -103,3 +107,72 @@ number ->
         return data[0].value;
       }
     %}
+  |func
+    {%
+      ([func]) => {
+        log("func:", func)
+        return func;
+      }
+    %}
+
+func ->
+  %func_call args %func_call_end
+    {%
+      ([func_name, args]) => {
+        // todo call function smth like: global[func_name.value](...args)
+        log("func_name:", func_name.value)
+        log("args:", args)
+        let sum = 0;
+        for (const x of args){
+          sum += x;
+        }
+        return sum;
+      }
+    %}
+
+args ->
+  range
+    {%
+      ([range]) => {
+        log("range:", range)
+        return range;
+      }
+    %}
+  |list
+    {%
+      ([list]) => {
+        log("list(args):", list)
+        return list;
+      }
+    %}
+
+range -> %label %colon %label
+    {%
+      ([label1, _, label2]) => {
+        // todo get values for range label1:label2
+        log("label1:", label1.value)
+        log("label2:", label2.value)
+        return [label1.value,":",label2.value];
+      }
+    %}
+
+list ->
+    %label
+    {%
+      ([label]) => {
+        // todo get value for label
+        log("label(list):", label.value)
+        return [label.value];
+      }
+    %}
+    |%label %semicolon list
+    {%
+      ([label, _, list]) => {
+        // todo get values for label
+        log("label(label ; list):", label.value)
+        log("list(label ; list):", list)
+        list.push(label.value);
+        return list;
+      }
+    %}
+

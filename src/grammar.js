@@ -8,7 +8,7 @@ function id(x) { return x[0]; }
 
   const lexer = moo.states(tokens);
 
-  const debug = false;
+  const debug = true;
   function log() {
     if (debug) {
       console.log(...arguments);
@@ -74,14 +74,72 @@ var grammar = {
         }
           },
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
-    {"name": "cell_ref", "symbols": [(lexer.has("label") ? {type: "label"} : label)], "postprocess":  (data) => {
-          return 0;
-        } },
+    {"name": "cell_ref", "symbols": [(lexer.has("label") ? {type: "label"} : label)], "postprocess": 
+        ([label]) => {
+          // todo get value for label
+          log("label:", label.value)
+          return 1;
+        }
+          },
     {"name": "number", "symbols": [(lexer.has("float") ? {type: "float"} : float)], "postprocess": id},
     {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": 
         (data) => {
           log("int:",data[0].value);
           return data[0].value;
+        }
+            },
+    {"name": "number", "symbols": ["func"], "postprocess": 
+        ([func]) => {
+          log("func:", func)
+          return func;
+        }
+            },
+    {"name": "func", "symbols": [(lexer.has("func_call") ? {type: "func_call"} : func_call), "args", (lexer.has("func_call_end") ? {type: "func_call_end"} : func_call_end)], "postprocess": 
+        ([func_name, args]) => {
+          // todo call function smth like: global[func_name.value](...args)
+          log("func_name:", func_name.value)
+          log("args:", args)
+          let sum = 0;
+          for (const x of args){
+            sum += x;
+          }
+          return sum;
+        }
+            },
+    {"name": "args", "symbols": ["range"], "postprocess": 
+        ([range]) => {
+          log("range:", range)
+          return range;
+        }
+            },
+    {"name": "args", "symbols": ["list"], "postprocess": 
+        ([list]) => {
+          log("list(args):", list)
+          return list;
+        }
+            },
+    {"name": "range", "symbols": [(lexer.has("label") ? {type: "label"} : label), (lexer.has("colon") ? {type: "colon"} : colon), (lexer.has("label") ? {type: "label"} : label)], "postprocess": 
+        ([label1, _, label2]) => {
+          // todo get values for range label1:label2
+          log("label1:", label1.value)
+          log("label2:", label2.value)
+          return [label1.value,":",label2.value];
+        }
+            },
+    {"name": "list", "symbols": [(lexer.has("label") ? {type: "label"} : label)], "postprocess": 
+        ([label]) => {
+          // todo get value for label
+          log("label(list):", label.value)
+          return [label.value];
+        }
+            },
+    {"name": "list", "symbols": [(lexer.has("label") ? {type: "label"} : label), (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "list"], "postprocess": 
+        ([label, _, list]) => {
+          // todo get values for label
+          log("label(label ; list):", label.value)
+          log("list(label ; list):", list)
+          list.push(label.value);
+          return list;
         }
             }
 ]
