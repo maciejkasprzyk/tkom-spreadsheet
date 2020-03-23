@@ -7,7 +7,7 @@
 
 @lexer lexer
 
-# note: :+ is like + in ebnf
+# note:  is like + in ebnf
 # note: % references a token
 # note: moo returns tokens as objects, .value to get to value
 
@@ -20,29 +20,23 @@ expression ->
       return a;
      }
   %}
-  |multi_expr (%plus multi_expr {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
+  |expression %plus multi_expr
     {%
-      ([a,rest]) => {
+      ([a,_,b]) => {
         console.log("expression")
         console.log("a:", a)
-        console.log("rest:", rest)
-        for(const x of rest){
-          a+=x;
-        }
-        return a;
+        console.log("b:", b)
+        return a+b;
        }
     %}
 
-  |multi_expr (%minus multi_expr {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
+  |expression %minus multi_expr
     {%
-      ([a,rest]) => {
+      ([a,_,b]) => {
         console.log("expression")
         console.log("a:", a)
-        console.log("rest:", rest)
-        for(const x of rest){
-          a-=x;
-        }
-        return a;
+        console.log("b:", b)
+        return a-b;
        }
     %}
 
@@ -55,28 +49,22 @@ multi_expr ->
         return a;
        }
     %}
-  |primary (%asterisk primary {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
+  |multi_expr %asterisk primary
     {%
-      ([a,rest]) => {
+      ([a,_,b]) => {
         console.log("multi_expr")
         console.log("a:", a)
-        console.log("rest:", rest)
-        for(const x of rest){
-          a*=x;
-        }
-        return a;
+        console.log("b:", b)
+        return a*b;
        }
     %}
-  |primary (%slash primary {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
+  |multi_expr %slash primary
     {%
-      ([a,rest]) => {
+      ([a,_,b]) => {
         console.log("multi_expr")
         console.log("a:", a)
-        console.log("rest:", rest)
-        for(const x of rest){
-          a/=x;
-        }
-        return a;
+        console.log("b:", b)
+        return a/b;
        }
     %}
 

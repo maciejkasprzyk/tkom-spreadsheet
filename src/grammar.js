@@ -17,34 +17,20 @@ var grammar = {
           return a;
          }
           },
-    {"name": "expression$ebnf$1$subexpression$1", "symbols": [(lexer.has("plus") ? {type: "plus"} : plus), "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "expression$ebnf$1", "symbols": ["expression$ebnf$1$subexpression$1"]},
-    {"name": "expression$ebnf$1$subexpression$2", "symbols": [(lexer.has("plus") ? {type: "plus"} : plus), "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "expression$ebnf$1", "symbols": ["expression$ebnf$1", "expression$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "expression", "symbols": ["multi_expr", "expression$ebnf$1"], "postprocess": 
-        ([a,rest]) => {
+    {"name": "expression", "symbols": ["expression", (lexer.has("plus") ? {type: "plus"} : plus), "multi_expr"], "postprocess": 
+        ([a,_,b]) => {
           console.log("expression")
           console.log("a:", a)
-          console.log("rest:", rest)
-          for(const x of rest){
-            a+=x;
-          }
-          return a;
+          console.log("b:", b)
+          return a+b;
          }
             },
-    {"name": "expression$ebnf$2$subexpression$1", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "expression$ebnf$2", "symbols": ["expression$ebnf$2$subexpression$1"]},
-    {"name": "expression$ebnf$2$subexpression$2", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "expression$ebnf$2", "symbols": ["expression$ebnf$2", "expression$ebnf$2$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "expression", "symbols": ["multi_expr", "expression$ebnf$2"], "postprocess": 
-        ([a,rest]) => {
+    {"name": "expression", "symbols": ["expression", (lexer.has("minus") ? {type: "minus"} : minus), "multi_expr"], "postprocess": 
+        ([a,_,b]) => {
           console.log("expression")
           console.log("a:", a)
-          console.log("rest:", rest)
-          for(const x of rest){
-            a-=x;
-          }
-          return a;
+          console.log("b:", b)
+          return a-b;
          }
             },
     {"name": "multi_expr", "symbols": ["primary"], "postprocess": 
@@ -54,34 +40,20 @@ var grammar = {
           return a;
          }
             },
-    {"name": "multi_expr$ebnf$1$subexpression$1", "symbols": [(lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "multi_expr$ebnf$1", "symbols": ["multi_expr$ebnf$1$subexpression$1"]},
-    {"name": "multi_expr$ebnf$1$subexpression$2", "symbols": [(lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "multi_expr$ebnf$1", "symbols": ["multi_expr$ebnf$1", "multi_expr$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "multi_expr", "symbols": ["primary", "multi_expr$ebnf$1"], "postprocess": 
-        ([a,rest]) => {
+    {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": 
+        ([a,_,b]) => {
           console.log("multi_expr")
           console.log("a:", a)
-          console.log("rest:", rest)
-          for(const x of rest){
-            a*=x;
-          }
-          return a;
+          console.log("b:", b)
+          return a*b;
          }
             },
-    {"name": "multi_expr$ebnf$2$subexpression$1", "symbols": [(lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "multi_expr$ebnf$2", "symbols": ["multi_expr$ebnf$2$subexpression$1"]},
-    {"name": "multi_expr$ebnf$2$subexpression$2", "symbols": [(lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
-    {"name": "multi_expr$ebnf$2", "symbols": ["multi_expr$ebnf$2", "multi_expr$ebnf$2$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "multi_expr", "symbols": ["primary", "multi_expr$ebnf$2"], "postprocess": 
-        ([a,rest]) => {
+    {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": 
+        ([a,_,b]) => {
           console.log("multi_expr")
           console.log("a:", a)
-          console.log("rest:", rest)
-          for(const x of rest){
-            a/=x;
-          }
-          return a;
+          console.log("b:", b)
+          return a/b;
          }
             },
     {"name": "primary", "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expression", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": 
