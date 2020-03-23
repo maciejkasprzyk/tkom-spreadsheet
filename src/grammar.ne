@@ -87,6 +87,13 @@ primary ->
     }
   %}
   |cell_ref {% id %}
+  |func
+    {%
+      ([func]) => {
+        log("func:", func)
+        return func;
+      }
+    %}
 
 cell_ref ->
   %label
@@ -105,13 +112,6 @@ number ->
       (data) => {
         log("int:",data[0].value);
         return data[0].value;
-      }
-    %}
-  |func
-    {%
-      ([func]) => {
-        log("func:", func)
-        return func;
       }
     %}
 
