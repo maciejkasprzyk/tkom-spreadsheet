@@ -3,6 +3,14 @@
   const tokens = require('./tokens.js')
 
   const lexer = moo.compile(tokens);
+
+  const debug = false;
+  function log() {
+    if (debug) {
+      console.log(...arguments);
+    }
+  }
+
 %}
 
 @lexer lexer
@@ -14,26 +22,26 @@ expression ->
   multi_expr
   {%
     ([a]) => {
-      console.log("expression")
-      console.log("a:", a);
+      log("expression")
+      log("a:", a);
       return a;
      }
   %}
   |expression %plus multi_expr
     {%
       ([a,_,b]) => {
-        console.log("expression")
-        console.log("a:", a)
-        console.log("b:", b)
+        log("expression")
+        log("a:", a)
+        log("b:", b)
         return a+b;
        }
     %}
   |expression %minus multi_expr
     {%
       ([a,_,b]) => {
-        console.log("expression")
-        console.log("a:", a)
-        console.log("b:", b)
+        log("expression")
+        log("a:", a)
+        log("b:", b)
         return a-b;
        }
     %}
@@ -42,26 +50,26 @@ multi_expr ->
   primary
     {%
       ([a]) => {
-        console.log("multi_expr")
-        console.log("a:", a);
+        log("multi_expr")
+        log("a:", a);
         return a;
        }
     %}
   |multi_expr %asterisk primary
     {%
       ([a,_,b]) => {
-        console.log("multi_expr")
-        console.log("a:", a)
-        console.log("b:", b)
+        log("multi_expr")
+        log("a:", a)
+        log("b:", b)
         return a*b;
        }
     %}
   |multi_expr %slash primary
     {%
       ([a,_,b]) => {
-        console.log("multi_expr")
-        console.log("a:", a)
-        console.log("b:", b)
+        log("multi_expr")
+        log("a:", a)
+        log("b:", b)
         return a/b;
        }
     %}
@@ -74,7 +82,7 @@ primary ->
   |number
   {%
       (data) => {
-        console.log("number:", data[0]);
+        log("number:", data[0]);
         return data[0];
       }
   %}
@@ -88,4 +96,4 @@ cell_ref ->
 
 number ->
   %float {% id %}
-  |%int {% (data) => {console.log("int:",data[0].value); return data[0].value; } %}
+  |%int {% (data) => {log("int:",data[0].value); return data[0].value; } %}

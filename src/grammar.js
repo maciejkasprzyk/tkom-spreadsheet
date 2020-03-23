@@ -7,52 +7,60 @@ function id(x) { return x[0]; }
   const tokens = require('./tokens.js')
 
   const lexer = moo.compile(tokens);
+
+  const debug = false;
+  function log() {
+    if (debug) {
+      console.log(...arguments);
+    }
+  }
+
 var grammar = {
     Lexer: lexer,
     ParserRules: [
     {"name": "expression", "symbols": ["multi_expr"], "postprocess": 
         ([a]) => {
-          console.log("expression")
-          console.log("a:", a);
+          log("expression")
+          log("a:", a);
           return a;
          }
           },
     {"name": "expression", "symbols": ["expression", (lexer.has("plus") ? {type: "plus"} : plus), "multi_expr"], "postprocess": 
         ([a,_,b]) => {
-          console.log("expression")
-          console.log("a:", a)
-          console.log("b:", b)
+          log("expression")
+          log("a:", a)
+          log("b:", b)
           return a+b;
          }
             },
     {"name": "expression", "symbols": ["expression", (lexer.has("minus") ? {type: "minus"} : minus), "multi_expr"], "postprocess": 
         ([a,_,b]) => {
-          console.log("expression")
-          console.log("a:", a)
-          console.log("b:", b)
+          log("expression")
+          log("a:", a)
+          log("b:", b)
           return a-b;
          }
             },
     {"name": "multi_expr", "symbols": ["primary"], "postprocess": 
         ([a]) => {
-          console.log("multi_expr")
-          console.log("a:", a);
+          log("multi_expr")
+          log("a:", a);
           return a;
          }
             },
     {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": 
         ([a,_,b]) => {
-          console.log("multi_expr")
-          console.log("a:", a)
-          console.log("b:", b)
+          log("multi_expr")
+          log("a:", a)
+          log("b:", b)
           return a*b;
          }
             },
     {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": 
         ([a,_,b]) => {
-          console.log("multi_expr")
-          console.log("a:", a)
-          console.log("b:", b)
+          log("multi_expr")
+          log("a:", a)
+          log("b:", b)
           return a/b;
          }
             },
@@ -61,7 +69,7 @@ var grammar = {
             },
     {"name": "primary", "symbols": ["number"], "postprocess": 
         (data) => {
-          console.log("number:", data[0]);
+          log("number:", data[0]);
           return data[0];
         }
           },
@@ -70,7 +78,7 @@ var grammar = {
           return 0;
         } },
     {"name": "number", "symbols": [(lexer.has("float") ? {type: "float"} : float)], "postprocess": id},
-    {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": (data) => {console.log("int:",data[0].value); return data[0].value; }}
+    {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": (data) => {log("int:",data[0].value); return data[0].value; }}
 ]
   , ParserStart: "expression"
 }
