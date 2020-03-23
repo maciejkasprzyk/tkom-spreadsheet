@@ -2,7 +2,7 @@
   const moo = require("moo");
   const tokens = require('./tokens.js')
 
-  const lexer = moo.compile(tokens);
+  const lexer = moo.states(tokens);
 
   const debug = false;
   function log() {
@@ -96,4 +96,10 @@ cell_ref ->
 
 number ->
   %float {% id %}
-  |%int {% (data) => {log("int:",data[0].value); return data[0].value; } %}
+  |%int
+    {%
+      (data) => {
+        log("int:",data[0].value);
+        return data[0].value;
+      }
+    %}

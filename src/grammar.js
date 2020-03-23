@@ -6,7 +6,7 @@ function id(x) { return x[0]; }
   const moo = require("moo");
   const tokens = require('./tokens.js')
 
-  const lexer = moo.compile(tokens);
+  const lexer = moo.states(tokens);
 
   const debug = false;
   function log() {
@@ -78,7 +78,12 @@ var grammar = {
           return 0;
         } },
     {"name": "number", "symbols": [(lexer.has("float") ? {type: "float"} : float)], "postprocess": id},
-    {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": (data) => {log("int:",data[0].value); return data[0].value; }}
+    {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": 
+        (data) => {
+          log("int:",data[0].value);
+          return data[0].value;
+        }
+            }
 ]
   , ParserStart: "expression"
 }

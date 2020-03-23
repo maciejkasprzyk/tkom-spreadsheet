@@ -1,6 +1,6 @@
 // tokenizer has two states: main and func_args
 module.exports = {
-  // main:{
+  main:{
     func_call:  {
       match: /[a-zA-Z_$][0-9a-zA-Z_$]*\(/,
       // push: 'func_args', // change to func_args state
@@ -22,13 +22,13 @@ module.exports = {
     },
     lparen: '(',
     rparen: ')',
-  // },
-  // func_args:{
-  //   args_end:  {match: ')', pop: 1}, // come back to main state
-  //   label: /[a-zA-Z]+[1-9]+[0-9]*/,
-  //   semicolon: ';',
-  //   comma: ',',
-  //   whitespace: /[ ]*/, // whitespaces are later ignored and not passed to parser
-  //
-  // }
+  },
+  func_args:{
+    args_end:  {match: ')', pop: 1}, // come back to main state
+    label: /[a-zA-Z]+[1-9]+[0-9]*/,
+    semicolon: ';',
+    comma: ',',
+    whitespace: /[ ]+/, // whitespaces are later ignored and not passed to parser
+
+  }
 };
