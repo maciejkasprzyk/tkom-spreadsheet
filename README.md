@@ -84,7 +84,8 @@ module.exports = {
 
 #### Formula parser
 Parser uses [precedence climbing method](https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method) to execute parenthesis and operators in adequate order.  
-That is parser code from `grammar.ne` with blocks of javascript code removed:
+[Diagram](https://maciejkasprzyk.github.io/tkom-spreadsheet/grammar) of parser structure.  
+The same thing as code with blocks of javascript code removed (from `grammar.ne`):
 ```
 # note: % references a token
 expression ->
