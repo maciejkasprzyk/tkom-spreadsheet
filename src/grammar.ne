@@ -1,10 +1,11 @@
 @{%
-
-  const nm = require('nearley-moo')
+  const moo = require("moo");
   const tokens = require('./tokens.js')
-  console.log(tokens);
-  nm(tokens)
+
+  const lexer = moo.compile(tokens);
 %}
+
+@lexer lexer
 
 # note: :+ is like + in ebnf
 # note: % references a token
