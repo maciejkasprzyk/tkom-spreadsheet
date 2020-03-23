@@ -7,7 +7,6 @@
 
 @lexer lexer
 
-# note:  is like + in ebnf
 # note: % references a token
 # note: moo returns tokens as objects, .value to get to value
 
@@ -29,7 +28,6 @@ expression ->
         return a+b;
        }
     %}
-
   |expression %minus multi_expr
     {%
       ([a,_,b]) => {
@@ -81,7 +79,6 @@ primary ->
       }
   %}
   |cell_ref {% id %}
-
 
 cell_ref ->
   %label
