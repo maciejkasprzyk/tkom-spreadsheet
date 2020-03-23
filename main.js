@@ -9,7 +9,13 @@ let parser = nm(moo.compile(tokens));
 
 // ignored tokens will not be passed to nearley
 parser.ignore('whitespace');
+try {
+  parser.feed("1+2+3+4+5");
 
-parser.feed("2*3");
+} catch (e) {
+  console.log(e.message);
+  throw e;
+}
+
 
 console.log(parser.results);

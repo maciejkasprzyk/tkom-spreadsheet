@@ -1,11 +1,6 @@
 // tokenizer has two states: main and func_args
 module.exports = {
   // main:{
-
-    int: {
-      match: /[+-]?[1-9]+[0-9]*/, // examples : 0 | 0,123 | -14 | +0,23
-      value: x=> parseInt(x),
-    },
     func_call:  {
       match: /[a-zA-Z_$][0-9a-zA-Z_$]*\(/,
       // push: 'func_args', // change to func_args state
@@ -17,6 +12,10 @@ module.exports = {
     asterisk: '*',
     slash: '/',
     label: /[a-zA-Z]+[1-9]+[0-9]*/,
+    int: {
+      match: /[+-]?[1-9]+[0-9]*/, // examples : 0 | 0,123 | -14 | +0,23
+      value: x=> parseInt(x),
+    },
     float: {
       match: /[-+]?[1-9][0-9]*(?:,[0-9]*)|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
       value: x=> parseFloat(x),

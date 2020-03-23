@@ -1,44 +1,81 @@
 @{%
+
   const nm = require('nearley-moo')
   const tokens = require('./tokens.js')
-
+  console.log(tokens);
   nm(tokens)
 %}
 
-# note: :* is like * in ebnf
+# note: :+ is like + in ebnf
 # note: % references a token
 # note: moo returns tokens as objects, .value to get to value
 
 expression ->
-  multi_expr (%plus multi_expr {% data=>data[1] %}):*
+  multi_expr
+  {%
+    ([a]) => {
+      console.log("expression")
+      console.log("a:", a);
+      return a;
+     }
+  %}
+  |multi_expr (%plus multi_expr {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
     {%
-      ([a,b]) => {
-        if (b.length === 0) { return a; }
-        return a+b;
+      ([a,rest]) => {
+        console.log("expression")
+        console.log("a:", a)
+        console.log("rest:", rest)
+        for(const x of rest){
+          a+=x;
+        }
+        return a;
        }
     %}
 
-  |multi_expr (%minus multi_expr {% data=>data[1] %}):*
+  |multi_expr (%minus multi_expr {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
     {%
-      ([a,b]) => {
-        if (b.length === 0) { return a; }
-        return a-b;
+      ([a,rest]) => {
+        console.log("expression")
+        console.log("a:", a)
+        console.log("rest:", rest)
+        for(const x of rest){
+          a-=x;
+        }
+        return a;
        }
     %}
 
 multi_expr ->
-  primary (%asterisk primary {% data=>data[1] %}):*
+  primary
     {%
-      ([a,b]) => {
-        if (b.length === 0) { return a; }
-        return a*b;
+      ([a]) => {
+        console.log("multi_expr")
+        console.log("a:", a);
+        return a;
        }
     %}
-  |primary (%slash primary {% data=>data[1] %}):*
+  |primary (%asterisk primary {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
     {%
-      ([a,b]) => {
-        if (b.length === 0) { return a; }
-        return a/b;
+      ([a,rest]) => {
+        console.log("multi_expr")
+        console.log("a:", a)
+        console.log("rest:", rest)
+        for(const x of rest){
+          a*=x;
+        }
+        return a;
+       }
+    %}
+  |primary (%slash primary {% (data)=>{console.log("data:",data[1]) ;return data[1];} %}):+
+    {%
+      ([a,rest]) => {
+        console.log("multi_expr")
+        console.log("a:", a)
+        console.log("rest:", rest)
+        for(const x of rest){
+          a/=x;
+        }
+        return a;
        }
     %}
 
@@ -47,7 +84,13 @@ primary ->
     {%
       (data) => { return data[1]; }
     %}
-  |number {% id %}
+  |number
+  {%
+      (data) => {
+        console.log("number:", data[0]);
+        return data[0];
+      }
+  %}
   |cell_ref {% id %}
 
 
@@ -59,4 +102,4 @@ cell_ref ->
 
 number ->
   %float {% id %}
-  |%int {% (data) => {console.log(data[0]); return data[0].value; } %}
+  |%int {% (data) => {console.log("int:",data[0].value); return data[0].value; } %}

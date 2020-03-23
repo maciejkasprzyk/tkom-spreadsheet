@@ -3,50 +3,103 @@
 (function () {
 function id(x) { return x[0]; }
 
+
   const nm = require('nearley-moo')
   const tokens = require('./tokens.js')
-
+  console.log(tokens);
   nm(tokens)
 var grammar = {
     Lexer: undefined,
     ParserRules: [
-    {"name": "expression$ebnf$1", "symbols": []},
-    {"name": "expression$ebnf$1$subexpression$1", "symbols": [minus, "multi_expr"], "postprocess": data=>data[1]},
-    {"name": "expression$ebnf$1", "symbols": ["expression$ebnf$1", "expression$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "expression", "symbols": ["multi_expr"], "postprocess": 
+        ([a]) => {
+          console.log("expression")
+          console.log("a:", a);
+          return a;
+         }
+          },
+    {"name": "expression$ebnf$1$subexpression$1", "symbols": [plus, "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "expression$ebnf$1", "symbols": ["expression$ebnf$1$subexpression$1"]},
+    {"name": "expression$ebnf$1$subexpression$2", "symbols": [plus, "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "expression$ebnf$1", "symbols": ["expression$ebnf$1", "expression$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "expression", "symbols": ["multi_expr", "expression$ebnf$1"], "postprocess": 
-        ([a,b]) => {
-          if (b.length === 0) { return a; }
-          return a-b;
+        ([a,rest]) => {
+          console.log("expression")
+          console.log("a:", a)
+          console.log("rest:", rest)
+          for(const x of rest){
+            a+=x;
+          }
+          return a;
          }
             },
-    {"name": "multi_expr$ebnf$1", "symbols": []},
-    {"name": "multi_expr$ebnf$1$subexpression$1", "symbols": [asterisk, "primary"], "postprocess": data=>data[1]},
-    {"name": "multi_expr$ebnf$1", "symbols": ["multi_expr$ebnf$1", "multi_expr$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "expression$ebnf$2$subexpression$1", "symbols": [minus, "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "expression$ebnf$2", "symbols": ["expression$ebnf$2$subexpression$1"]},
+    {"name": "expression$ebnf$2$subexpression$2", "symbols": [minus, "multi_expr"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "expression$ebnf$2", "symbols": ["expression$ebnf$2", "expression$ebnf$2$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "expression", "symbols": ["multi_expr", "expression$ebnf$2"], "postprocess": 
+        ([a,rest]) => {
+          console.log("expression")
+          console.log("a:", a)
+          console.log("rest:", rest)
+          for(const x of rest){
+            a-=x;
+          }
+          return a;
+         }
+            },
+    {"name": "multi_expr", "symbols": ["primary"], "postprocess": 
+        ([a]) => {
+          console.log("multi_expr")
+          console.log("a:", a);
+          return a;
+         }
+            },
+    {"name": "multi_expr$ebnf$1$subexpression$1", "symbols": [asterisk, "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "multi_expr$ebnf$1", "symbols": ["multi_expr$ebnf$1$subexpression$1"]},
+    {"name": "multi_expr$ebnf$1$subexpression$2", "symbols": [asterisk, "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "multi_expr$ebnf$1", "symbols": ["multi_expr$ebnf$1", "multi_expr$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "multi_expr", "symbols": ["primary", "multi_expr$ebnf$1"], "postprocess": 
-        ([a,b]) => {
-          if (b.length === 0) { return a; }
-          return a*b;
+        ([a,rest]) => {
+          console.log("multi_expr")
+          console.log("a:", a)
+          console.log("rest:", rest)
+          for(const x of rest){
+            a*=x;
+          }
+          return a;
          }
             },
-    {"name": "multi_expr$ebnf$2", "symbols": []},
-    {"name": "multi_expr$ebnf$2$subexpression$1", "symbols": [slash, "primary"], "postprocess": data=>data[1]},
-    {"name": "multi_expr$ebnf$2", "symbols": ["multi_expr$ebnf$2", "multi_expr$ebnf$2$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "multi_expr$ebnf$2$subexpression$1", "symbols": [slash, "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "multi_expr$ebnf$2", "symbols": ["multi_expr$ebnf$2$subexpression$1"]},
+    {"name": "multi_expr$ebnf$2$subexpression$2", "symbols": [slash, "primary"], "postprocess": (data)=>{console.log("data:",data[1]) ;return data[1];}},
+    {"name": "multi_expr$ebnf$2", "symbols": ["multi_expr$ebnf$2", "multi_expr$ebnf$2$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "multi_expr", "symbols": ["primary", "multi_expr$ebnf$2"], "postprocess": 
-        ([a,b]) => {
-          if (b.length === 0) { return a; }
-          return a/b;
+        ([a,rest]) => {
+          console.log("multi_expr")
+          console.log("a:", a)
+          console.log("rest:", rest)
+          for(const x of rest){
+            a/=x;
+          }
+          return a;
          }
             },
     {"name": "primary", "symbols": [lparen, "expression", rparen], "postprocess": 
         (data) => { return data[1]; }
             },
-    {"name": "primary", "symbols": ["number"], "postprocess": id},
+    {"name": "primary", "symbols": ["number"], "postprocess": 
+        (data) => {
+          console.log("number:", data[0]);
+          return data[0];
+        }
+          },
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
     {"name": "cell_ref", "symbols": [label], "postprocess":  (data) => {
           return 0;
         } },
     {"name": "number", "symbols": [float], "postprocess": id},
-    {"name": "number", "symbols": [int], "postprocess": (data) => {console.log(data[0]); return data[0].value; }}
+    {"name": "number", "symbols": [int], "postprocess": (data) => {console.log("int:",data[0].value); return data[0].value; }}
 ]
   , ParserStart: "expression"
 }
