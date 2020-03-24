@@ -126,7 +126,10 @@ function useEditing(initial) {
 
 
 Spreadsheet.propTypes = {
-  sheet: PropTypes.object.isRequired,
+  cells: PropTypes.arrayOf(PropTypes.array).isRequired,
+  onCellSet: PropTypes.func.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
 };
 
 export default observer(Spreadsheet);

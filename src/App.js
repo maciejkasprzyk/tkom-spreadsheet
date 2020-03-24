@@ -19,7 +19,7 @@ function App() {
 
     store.cells[2][0].set("Auto update working");
     store.cells[2][2].set("=B3");
-    store.cells[2][3].set("=C3");
+    store.cells[2][3].set("=B3+C3");
     store.cells[2][1].set("coś");
 
     store.cells[3][0].set("Simple math");

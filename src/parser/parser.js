@@ -5,7 +5,7 @@ const post = require('./parserPostProcessors');
 
 export class Parser {
   cellsReferenced = [];
-  constructor(getByLabel, debug = false) {
+  constructor(getByLabel) {
     this.parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
     // to understand it read comment in parserPostProcessors.js
@@ -15,6 +15,7 @@ export class Parser {
       return cell.value;
     };
 
+    const debug = true;
     post.log = debug ? (function () {
       console.log(...arguments)
     }) : () => {};

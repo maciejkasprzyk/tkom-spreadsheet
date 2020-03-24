@@ -105,7 +105,7 @@ export class Cell {
   }
 
   calculateValue() {
-    const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet),true);
+    const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet));
     parser.feed(this.formula.substring(1));
     this.value = parser.results;
   }
