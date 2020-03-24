@@ -30,7 +30,7 @@ expression ->
       return a;
      }
   %}
-  |multi_expr %plus expression
+  |expression %plus multi_expr
     {%
       ([a,_,b]) => {
         post.log("expression")
@@ -39,7 +39,7 @@ expression ->
         return a+b;
        }
     %}
-  |multi_expr %minus expression
+  |expression %minus multi_expr
     {%
       ([a,_,b]) => {
         post.log("expression")
@@ -58,7 +58,7 @@ multi_expr ->
         return a;
        }
     %}
-  |primary %asterisk multi_expr
+  |multi_expr %asterisk primary
     {%
       ([a,_,b]) => {
         post.log("multi_expr")
@@ -67,7 +67,7 @@ multi_expr ->
         return a*b;
        }
     %}
-  |primary %slash multi_expr
+  |multi_expr %slash primary
     {%
       ([a,_,b]) => {
         post.log("multi_expr")

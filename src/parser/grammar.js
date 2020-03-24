@@ -28,7 +28,7 @@ var grammar = {
           return a;
          }
           },
-    {"name": "expression", "symbols": ["multi_expr", (lexer.has("plus") ? {type: "plus"} : plus), "expression"], "postprocess": 
+    {"name": "expression", "symbols": ["expression", (lexer.has("plus") ? {type: "plus"} : plus), "multi_expr"], "postprocess": 
         ([a,_,b]) => {
           post.log("expression")
           post.log("a:", a)
@@ -36,7 +36,7 @@ var grammar = {
           return a+b;
          }
             },
-    {"name": "expression", "symbols": ["multi_expr", (lexer.has("minus") ? {type: "minus"} : minus), "expression"], "postprocess": 
+    {"name": "expression", "symbols": ["expression", (lexer.has("minus") ? {type: "minus"} : minus), "multi_expr"], "postprocess": 
         ([a,_,b]) => {
           post.log("expression")
           post.log("a:", a)
@@ -51,7 +51,7 @@ var grammar = {
           return a;
          }
             },
-    {"name": "multi_expr", "symbols": ["primary", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "multi_expr"], "postprocess": 
+    {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": 
         ([a,_,b]) => {
           post.log("multi_expr")
           post.log("a:", a)
@@ -59,7 +59,7 @@ var grammar = {
           return a*b;
          }
             },
-    {"name": "multi_expr", "symbols": ["primary", (lexer.has("slash") ? {type: "slash"} : slash), "multi_expr"], "postprocess": 
+    {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": 
         ([a,_,b]) => {
           post.log("multi_expr")
           post.log("a:", a)
