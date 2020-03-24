@@ -48,6 +48,11 @@ function App() {
     store.cells[7][2].set('=as325');
     store.cells[7][3].set('=1**2');
 
+    store.cells[8][0].set("* and / order");
+    x = "3/3*3";
+    store.cells[8][1].set("=" + x);
+    store.cells[8][2].set(`is ${eval(x)}`);
+
   }, []);
 
   return (

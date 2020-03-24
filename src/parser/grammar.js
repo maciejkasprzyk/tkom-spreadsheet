@@ -70,10 +70,10 @@ var grammar = {
     {"name": "primary", "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expression", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": 
         (data) => { return data[1]; }
             },
-    {"name": "primary", "symbols": ["number"], "postprocess": 
-        (data) => {
-          post.log("number:", data[0]);
-          return data[0];
+    {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": 
+        ([number]) => {
+          post.log("number:", number.value);
+          return number.value;
         }
           },
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
@@ -89,13 +89,6 @@ var grammar = {
           return  post.getByLabel(label.value);
         }
           },
-    {"name": "number", "symbols": [(lexer.has("float") ? {type: "float"} : float)], "postprocess": id},
-    {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": 
-        (data) => {
-          post.log("int:",data[0].value);
-          return data[0].value;
-        }
-            },
     {"name": "func", "symbols": [(lexer.has("func_call") ? {type: "func_call"} : func_call), "args", (lexer.has("func_call_end") ? {type: "func_call_end"} : func_call_end)], "postprocess": 
         ([func_name, args]) => {
           // todo call function smth like: global[func_name.value](...args)

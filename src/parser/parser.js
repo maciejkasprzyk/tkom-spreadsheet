@@ -3,7 +3,7 @@ const grammar = require("./grammar.js");
 const post = require('./parserPostProcessors');
 
 
-export class Parser {
+class Parser {
   cellsReferenced = [];
   constructor(getByLabel) {
     this.parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
@@ -29,3 +29,5 @@ export class Parser {
     return this.parser.results;
   }
 }
+
+module.exports.Parser = Parser;

@@ -8,16 +8,12 @@ module.exports = {
     },
     whitespace: { match: /[\s]+/, lineBreaks: true },
     plus: '+',
-    minus: '-',
     asterisk: '*',
     slash: '/',
     label: /[a-zA-Z]+[1-9]+[0-9]*/,
-    int: {
-      match: /[+-]?[1-9]+[0-9]*/, // examples : 0 | 0,123 | -14 | +0,23
-      value: x=> parseInt(x),
-    },
-    float: {
-      match: /[-+]?[1-9][0-9]*(?:,[0-9]*)|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
+    minus: '-',
+    number: {
+      match: /[-+]?[1-9][0-9]*(?:,[0-9]*)?|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
       value: x=> parseFloat(x),
     },
     lparen: '(',

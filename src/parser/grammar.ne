@@ -82,11 +82,11 @@ primary ->
     {%
       (data) => { return data[1]; }
     %}
-  |number
+  |%number
   {%
-    (data) => {
-      post.log("number:", data[0]);
-      return data[0];
+    ([number]) => {
+      post.log("number:", number.value);
+      return number.value;
     }
   %}
   |cell_ref {% id %}
@@ -106,16 +106,6 @@ cell_ref ->
       return  post.getByLabel(label.value);
     }
   %}
-
-number ->
-  %float {% id %}
-  |%int
-    {%
-      (data) => {
-        post.log("int:",data[0].value);
-        return data[0].value;
-      }
-    %}
 
 func ->
   %func_call args %func_call_end
