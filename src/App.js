@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 import React, {useEffect} from 'react';
 import './App.css';
 import Spreadsheet from "./components/Spreadsheet";
@@ -20,6 +21,28 @@ function App() {
     store.cells[2][2].set("=B3");
     store.cells[2][3].set("=C3");
     store.cells[2][1].set("coś");
+
+    store.cells[3][0].set("Simple math");
+    let x = "1+2*(5+5)+2/3+((1*3))/2";
+    store.cells[3][1].set("=" + x);
+    store.cells[3][2].set(`is ${eval(x)}`);
+
+    store.cells[4][0].set("Complex math");
+    x = "1-1+2*(5+5)+2/3+((1*3))/2";
+    store.cells[4][1].set("=" + x);
+    store.cells[4][2].set(`is ${eval(x)}`);
+
+    store.cells[5][0].set("Negative numbers");
+    x = "1-1+1";
+    store.cells[5][1].set("=" + x);
+    store.cells[5][2].set(`is ${eval(x)}`);
+
+    store.cells[6][0].set("Math with labels");
+    store.cells[6][1].set('=C7+D7*E7');
+    store.cells[6][2].set('2');
+    store.cells[6][3].set('2');
+    store.cells[6][4].set('2');
+
   }, []);
 
   return (
