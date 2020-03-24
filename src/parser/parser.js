@@ -1,19 +1,29 @@
 const nearley = require("nearley");
 const grammar = require("./grammar.js");
+const post = require('./parserPostProcessors');
 
-const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
+export class Parser {
+  cellsReferenced = [];
+  constructor(getByLabel, debug = false) {
+    this.parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
-try {
-  // parser.feed("(1+2+3+4+5)/3");
-  parser.feed("suma(A1 :B1)");
+    post.getByLabel = (label) => {
+      const cell = getByLabel(label);
+      this.cellsReferenced.push(cell);
+      return cell.value;
+    };
 
-} catch (e) {
-  console.log(e.message);
-  throw(e);
+    post.log = debug ? (function () {
+      console.log(...arguments)
+    }) : () => {};
+  }
+
+  feed(s) {
+    return this.parser.feed(s);
+  }
+
+  get results() {
+    return this.parser.results;
+  }
 }
-
-
-
-
-console.log(parser.results);

@@ -1,4 +1,5 @@
 import {observable} from "mobx";
+import {Parser} from '../parser/parser';
 
 export class SpreadsheetStore {
   cells = [];
@@ -43,7 +44,6 @@ export class SpreadsheetStore {
     if (this.x <= x_index || this.y <= y_index) {
       throw Error(`No cell: ${cellLabel}`)
     }
-
     return this.cells[y_index][x_index];
   }
 }
@@ -73,16 +73,23 @@ export class Cell {
     this.unregisterFromAllSubjects();
     try {
       if (isFormula(string)) {
-        // todo parse for every reference here
         this.formula = string;
-        // noinspection JSUnresolvedFunction
-        const cellsReferenced = [this.sheet.getCellByLabel(this.formula.substring(1))];
-        this.calculateValue();
+
+        const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet));
+        parser.feed(this.formula.substring(1));
+        this.value = parser.results;
+        const cellsReferenced = parser.cellsReferenced;
         for (const cell of cellsReferenced) {
           this.observe(cell);
         }
       } else {
-        this.value = string;
+        const x = parseFloat(string);
+        if (!isNaN(x)) {
+          this.value = x;
+        }
+        else {
+          this.value = string;
+        }
         this.formula = null;
       }
 
@@ -146,10 +153,9 @@ export class Cell {
   }
 
   calculateValue() {
-    // todo add parser here
-    // noinspection JSUnresolvedFunction
-    let cellReferenced = this.sheet.getCellByLabel(this.formula.substring(1));
-    this.value = cellReferenced.value;
+    const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet),true);
+    parser.feed(this.formula.substring(1));
+    this.value = parser.results;
   }
 
 }

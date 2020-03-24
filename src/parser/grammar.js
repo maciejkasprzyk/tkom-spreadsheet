@@ -3,11 +3,14 @@
 (function () {
 function id(x) { return x[0]; }
 
+  /* eslint-disable */
+
   const moo = require("moo");
   const tokens = require('./tokens.js')
 
-  const lexer = moo.states(tokens);
+  const post = require("./parserPostProcessors.js")
 
+  const lexer = moo.states(tokens);
   // ignore whitespaces tokens
   lexer.next = (next => () => {
       let tok;
@@ -15,60 +18,52 @@ function id(x) { return x[0]; }
       return tok;
   })(lexer.next);
 
-
-  const debug = true;
-  function log() {
-    if (debug) {
-      console.log(...arguments);
-    }
-  }
-
 var grammar = {
     Lexer: lexer,
     ParserRules: [
     {"name": "expression", "symbols": ["multi_expr"], "postprocess": 
         ([a]) => {
-          log("expression")
-          log("a:", a);
+          post.log("expression")
+          post.log("a:", a);
           return a;
          }
           },
-    {"name": "expression", "symbols": ["expression", (lexer.has("plus") ? {type: "plus"} : plus), "multi_expr"], "postprocess": 
+    {"name": "expression", "symbols": ["multi_expr", (lexer.has("plus") ? {type: "plus"} : plus), "expression"], "postprocess": 
         ([a,_,b]) => {
-          log("expression")
-          log("a:", a)
-          log("b:", b)
+          post.log("expression")
+          post.log("a:", a)
+          post.log("b:", b)
           return a+b;
          }
             },
-    {"name": "expression", "symbols": ["expression", (lexer.has("minus") ? {type: "minus"} : minus), "multi_expr"], "postprocess": 
+    {"name": "expression", "symbols": ["multi_expr", (lexer.has("minus") ? {type: "minus"} : minus), "expression"], "postprocess": 
         ([a,_,b]) => {
-          log("expression")
-          log("a:", a)
-          log("b:", b)
+          post.log("expression")
+          post.log("a:", a)
+          post.log("b:", b)
           return a-b;
          }
             },
     {"name": "multi_expr", "symbols": ["primary"], "postprocess": 
         ([a]) => {
-          log("multi_expr")
-          log("a:", a);
+          post.log("multi_expr")
+          post.log("a:", a);
           return a;
          }
             },
-    {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": 
+    {"name": "multi_expr", "symbols": ["primary", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "multi_expr"], "postprocess": 
         ([a,_,b]) => {
-          log("multi_expr")
-          log("a:", a)
-          log("b:", b)
+          post.log("multi_expr")
+          post.log("a:", a)
+          post.log("b:", b)
           return a*b;
          }
             },
-    {"name": "multi_expr", "symbols": ["multi_expr", (lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": 
+    {"name": "multi_expr", "symbols": ["primary", (lexer.has("slash") ? {type: "slash"} : slash), "multi_expr"], "postprocess": 
         ([a,_,b]) => {
-          log("multi_expr")
-          log("a:", a)
-          log("b:", b)
+          post.log("multi_expr")
+          post.log("a:", a)
+          post.log("b:", b)
           return a/b;
          }
             },
@@ -77,36 +72,35 @@ var grammar = {
             },
     {"name": "primary", "symbols": ["number"], "postprocess": 
         (data) => {
-          log("number:", data[0]);
+          post.log("number:", data[0]);
           return data[0];
         }
           },
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
     {"name": "primary", "symbols": ["func"], "postprocess": 
         ([func]) => {
-          log("func:", func)
+          post.log("func:", func)
           return func;
         }
             },
     {"name": "cell_ref", "symbols": [(lexer.has("label") ? {type: "label"} : label)], "postprocess": 
         ([label]) => {
-          // todo get value for label
-          log("label:", label.value)
-          return 1;
+          post.log("label:", label.value)
+          return  post.getByLabel(label.value);
         }
           },
     {"name": "number", "symbols": [(lexer.has("float") ? {type: "float"} : float)], "postprocess": id},
     {"name": "number", "symbols": [(lexer.has("int") ? {type: "int"} : int)], "postprocess": 
         (data) => {
-          log("int:",data[0].value);
+          post.log("int:",data[0].value);
           return data[0].value;
         }
             },
     {"name": "func", "symbols": [(lexer.has("func_call") ? {type: "func_call"} : func_call), "args", (lexer.has("func_call_end") ? {type: "func_call_end"} : func_call_end)], "postprocess": 
         ([func_name, args]) => {
           // todo call function smth like: global[func_name.value](...args)
-          log("func_name:", func_name.value)
-          log("args:", args)
+          post.log("func_name:", func_name.value)
+          post.log("args:", args)
           let sum = 0;
           for (const x of args){
             sum += x;
@@ -116,37 +110,37 @@ var grammar = {
             },
     {"name": "args", "symbols": ["range"], "postprocess": 
         ([range]) => {
-          log("range:", range)
+          post.log("range:", range)
           return range;
         }
             },
     {"name": "args", "symbols": ["list"], "postprocess": 
         ([list]) => {
-          log("list(args):", list)
+          post.log("list(args):", list)
           return list;
         }
             },
     {"name": "range", "symbols": [(lexer.has("label") ? {type: "label"} : label), (lexer.has("colon") ? {type: "colon"} : colon), (lexer.has("label") ? {type: "label"} : label)], "postprocess": 
         ([label1, _, label2]) => {
           // todo get values for range label1:label2
-          log("label1:", label1.value)
-          log("label2:", label2.value)
+          post.log("label1:", label1.value)
+          post.log("label2:", label2.value)
           return [label1.value,":",label2.value];
         }
             },
     {"name": "list", "symbols": [(lexer.has("label") ? {type: "label"} : label)], "postprocess": 
         ([label]) => {
-          // todo get value for label
-          log("label(list):", label.value)
-          return [label.value];
+          post.getByLabel(label.value)
+          post.log("label(list):", label.value)
+          return  [post.getByLabel(label.value)];
         }
             },
     {"name": "list", "symbols": [(lexer.has("label") ? {type: "label"} : label), (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "list"], "postprocess": 
         ([label, _, list]) => {
-          // todo get values for label
-          log("label(label ; list):", label.value)
-          log("list(label ; list):", list)
-          list.push(label.value);
+          post.getByLabel(label.value)
+          post.log("label(label ; list):", label.value)
+          post.log("list(label ; list):", list)
+          list.push(post.getByLabel(label.value));
           return list;
         }
             }

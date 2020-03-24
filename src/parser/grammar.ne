@@ -1,23 +1,18 @@
 @{%
+  /* eslint-disable */
+
   const moo = require("moo");
   const tokens = require('./tokens.js')
 
-  const lexer = moo.states(tokens);
+  const post = require("./parserPostProcessors.js")
 
+  const lexer = moo.states(tokens);
   // ignore whitespaces tokens
   lexer.next = (next => () => {
       let tok;
       while ((tok = next.call(lexer)) && tok.type === "whitespace") {}
       return tok;
   })(lexer.next);
-
-
-  const debug = true;
-  function log() {
-    if (debug) {
-      console.log(...arguments);
-    }
-  }
 
 %}
 
@@ -30,26 +25,26 @@ expression ->
   multi_expr
   {%
     ([a]) => {
-      log("expression")
-      log("a:", a);
+      post.log("expression")
+      post.log("a:", a);
       return a;
      }
   %}
-  |expression %plus multi_expr
+  |multi_expr %plus expression
     {%
       ([a,_,b]) => {
-        log("expression")
-        log("a:", a)
-        log("b:", b)
+        post.log("expression")
+        post.log("a:", a)
+        post.log("b:", b)
         return a+b;
        }
     %}
-  |expression %minus multi_expr
+  |multi_expr %minus expression
     {%
       ([a,_,b]) => {
-        log("expression")
-        log("a:", a)
-        log("b:", b)
+        post.log("expression")
+        post.log("a:", a)
+        post.log("b:", b)
         return a-b;
        }
     %}
@@ -58,26 +53,26 @@ multi_expr ->
   primary
     {%
       ([a]) => {
-        log("multi_expr")
-        log("a:", a);
+        post.log("multi_expr")
+        post.log("a:", a);
         return a;
        }
     %}
-  |multi_expr %asterisk primary
+  |primary %asterisk multi_expr
     {%
       ([a,_,b]) => {
-        log("multi_expr")
-        log("a:", a)
-        log("b:", b)
+        post.log("multi_expr")
+        post.log("a:", a)
+        post.log("b:", b)
         return a*b;
        }
     %}
-  |multi_expr %slash primary
+  |primary %slash multi_expr
     {%
       ([a,_,b]) => {
-        log("multi_expr")
-        log("a:", a)
-        log("b:", b)
+        post.log("multi_expr")
+        post.log("a:", a)
+        post.log("b:", b)
         return a/b;
        }
     %}
@@ -90,7 +85,7 @@ primary ->
   |number
   {%
     (data) => {
-      log("number:", data[0]);
+      post.log("number:", data[0]);
       return data[0];
     }
   %}
@@ -98,7 +93,7 @@ primary ->
   |func
     {%
       ([func]) => {
-        log("func:", func)
+        post.log("func:", func)
         return func;
       }
     %}
@@ -107,9 +102,8 @@ cell_ref ->
   %label
   {%
     ([label]) => {
-      // todo get value for label
-      log("label:", label.value)
-      return 1;
+      post.log("label:", label.value)
+      return  post.getByLabel(label.value);
     }
   %}
 
@@ -118,7 +112,7 @@ number ->
   |%int
     {%
       (data) => {
-        log("int:",data[0].value);
+        post.log("int:",data[0].value);
         return data[0].value;
       }
     %}
@@ -128,8 +122,8 @@ func ->
     {%
       ([func_name, args]) => {
         // todo call function smth like: global[func_name.value](...args)
-        log("func_name:", func_name.value)
-        log("args:", args)
+        post.log("func_name:", func_name.value)
+        post.log("args:", args)
         let sum = 0;
         for (const x of args){
           sum += x;
@@ -142,14 +136,14 @@ args ->
   range
     {%
       ([range]) => {
-        log("range:", range)
+        post.log("range:", range)
         return range;
       }
     %}
   |list
     {%
       ([list]) => {
-        log("list(args):", list)
+        post.log("list(args):", list)
         return list;
       }
     %}
@@ -158,8 +152,8 @@ range -> %label %colon %label
     {%
       ([label1, _, label2]) => {
         // todo get values for range label1:label2
-        log("label1:", label1.value)
-        log("label2:", label2.value)
+        post.log("label1:", label1.value)
+        post.log("label2:", label2.value)
         return [label1.value,":",label2.value];
       }
     %}
@@ -168,18 +162,18 @@ list ->
     %label
     {%
       ([label]) => {
-        // todo get value for label
-        log("label(list):", label.value)
-        return [label.value];
+        post.getByLabel(label.value)
+        post.log("label(list):", label.value)
+        return  [post.getByLabel(label.value)];
       }
     %}
     |%label %semicolon list
     {%
       ([label, _, list]) => {
-        // todo get values for label
-        log("label(label ; list):", label.value)
-        log("list(label ; list):", list)
-        list.push(label.value);
+        post.getByLabel(label.value)
+        post.log("label(label ; list):", label.value)
+        post.log("list(label ; list):", list)
+        list.push(post.getByLabel(label.value));
         return list;
       }
     %}

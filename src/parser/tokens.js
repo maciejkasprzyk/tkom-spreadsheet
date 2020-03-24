@@ -6,7 +6,7 @@ module.exports = {
       push: 'func_args', // change to func_args state
       value: x => x.slice(0, -1), // remove last character
     },
-    whitespace: /[ ]+/,
+    whitespace: { match: /[\s]+/, lineBreaks: true },
     plus: '+',
     minus: '-',
     asterisk: '*',
