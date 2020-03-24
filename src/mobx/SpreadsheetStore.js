@@ -1,54 +1,6 @@
 import {observable} from "mobx";
 import {Parser} from '../parser/parser';
 
-export class SpreadsheetStore {
-  cells = [];
-
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.cells = Array(y);
-    for (let i = 0; i < y; i++) {
-      this.cells[i] = Array(x);
-      for (let j = 0; j < x; j++) {
-        this.cells[i][j] = new Cell(this, i, j);
-      }
-    }
-  }
-
-  /**
-   * @param cellLabel For example: A2, AB13, C13 etc as string
-   */
-  getCellByLabel(cellLabel) {
-    cellLabel = cellLabel.toUpperCase();
-    let index = 0;
-    while (index < cellLabel.length && isUpperLetter(cellLabel[index])) {
-      index++;
-    }
-    const letters = cellLabel.substring(0, index);
-    const digits = cellLabel.substring(index);
-
-    if (letters.length === 0 || digits.length === 0) {
-      throw Error(`Incorrect label: ${cellLabel}`)
-
-    }
-
-    const y_index = parseInt(digits) - 1;
-
-    let x_index = 0;
-    for (let i = 0; i < letters.length; i++) {
-      x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
-      x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
-    }
-
-    if (this.x <= x_index || this.y <= y_index) {
-      throw Error(`No cell: ${cellLabel}`)
-    }
-    return this.cells[y_index][x_index];
-  }
-}
-
-
 export class Cell {
 
   @observable formula = null;
@@ -159,6 +111,55 @@ export class Cell {
   }
 
 }
+
+
+export class SpreadsheetStore {
+  cells = [];
+
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.cells = Array(y);
+    for (let i = 0; i < y; i++) {
+      this.cells[i] = Array(x);
+      for (let j = 0; j < x; j++) {
+        this.cells[i][j] = new Cell(this, i, j);
+      }
+    }
+  }
+
+  /**
+   * @param cellLabel For example: A2, AB13, C13 etc as string
+   */
+  getCellByLabel(cellLabel) {
+    cellLabel = cellLabel.toUpperCase();
+    let index = 0;
+    while (index < cellLabel.length && isUpperLetter(cellLabel[index])) {
+      index++;
+    }
+    const letters = cellLabel.substring(0, index);
+    const digits = cellLabel.substring(index);
+
+    if (letters.length === 0 || digits.length === 0) {
+      throw Error(`Incorrect label: ${cellLabel}`)
+
+    }
+
+    const y_index = parseInt(digits) - 1;
+
+    let x_index = 0;
+    for (let i = 0; i < letters.length; i++) {
+      x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
+      x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
+    }
+
+    if (this.x <= x_index || this.y <= y_index) {
+      throw Error(`No cell: ${cellLabel}`)
+    }
+    return this.cells[y_index][x_index];
+  }
+}
+
 
 // helper functions
 

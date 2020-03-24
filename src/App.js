@@ -43,6 +43,11 @@ function App() {
     store.cells[6][3].set('2');
     store.cells[6][4].set('2');
 
+    store.cells[7][0].set("Invalid formulas");
+    store.cells[7][1].set('=C7D7*E7');
+    store.cells[7][2].set('=as325');
+    store.cells[7][3].set('=1**2');
+
   }, []);
 
   return (
