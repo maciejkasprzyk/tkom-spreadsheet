@@ -4,6 +4,14 @@
 
   const lexer = moo.states(tokens);
 
+  // ignore whitespaces tokens
+  lexer.next = (next => () => {
+      let tok;
+      while ((tok = next.call(lexer)) && tok.type === "whitespace") {}
+      return tok;
+  })(lexer.next);
+
+
   const debug = true;
   function log() {
     if (debug) {
