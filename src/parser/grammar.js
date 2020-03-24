@@ -4,7 +4,7 @@
 function id(x) { return x[0]; }
 
   const moo = require("moo");
-  const tokens = require('../tokens.js')
+  const tokens = require('./tokens.js')
 
   const lexer = moo.states(tokens);
 
