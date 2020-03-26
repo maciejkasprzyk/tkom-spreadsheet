@@ -21,6 +21,7 @@ function id(x) { return x[0]; }
 var grammar = {
     Lexer: lexer,
     ParserRules: [
+    {"name": "input", "symbols": ["expression"]},
     {"name": "expression", "symbols": ["multi_expr"], "postprocess": 
         ([a]) => {
           post.log("expression")
@@ -138,7 +139,7 @@ var grammar = {
         }
             }
 ]
-  , ParserStart: "expression"
+  , ParserStart: "input"
 }
 if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
    module.exports = grammar;

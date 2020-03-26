@@ -1,3 +1,5 @@
+// this file is for testing from nodejs only
+
 const Parser = require('./parser').Parser;
 const moo = require("moo");
 const tokens = require('./tokens.js');
@@ -14,3 +16,5 @@ for (let token of lexer) {
 const parser = new Parser();
 
 parser.feed(s);
+
+console.log(parser.results);

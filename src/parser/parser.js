@@ -15,7 +15,7 @@ class Parser {
       return cell.value;
     };
 
-    const debug = true;
+    const debug = false;
     post.log = debug ? (function () {
       console.log(...arguments)
     }) : () => {};
@@ -26,7 +26,7 @@ class Parser {
   }
 
   get results() {
-    return this.parser.results;
+    return this.parser.results[0][0];
   }
 }
 

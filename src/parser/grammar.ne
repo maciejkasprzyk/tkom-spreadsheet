@@ -21,6 +21,8 @@
 # note: % references a token
 # note: moo returns tokens as objects, .value to get to value
 
+input -> expression
+
 expression ->
   multi_expr
   {%
