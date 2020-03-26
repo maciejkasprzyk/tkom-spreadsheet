@@ -1,5 +1,5 @@
 import {observable} from "mobx";
-import {Parser} from '../parser/parser';
+const Parser = require("../parser/parser").Parser;
 
 export class Cell {
 
