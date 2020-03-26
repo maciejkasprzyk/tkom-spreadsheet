@@ -3,14 +3,14 @@
 Spreadsheet with macros.
 
 Live demo [here](https://maciejkasprzyk.github.io/tkom-spreadsheet/).  
-Keep in mind that the only formula working right now (for testing) is simple reference of another cell. For example '=A3'.
+
 
 #### This is still in progress
  * [x] Basic view
  * [x] Auto refresh formula logic
  * [x] Formula lexer
  * [x] Formula parser
- * [ ] Connecting formula parser to view  
+ * [x] Connecting formula parser to view  
  * [ ] Macro support  
 ... and more coming
 
@@ -25,8 +25,8 @@ Source code lives in `/src`:
 
 Spreadsheet view: `components/Spreadsheet.js`  
 Spreadsheet model/logic: `mobx/SpreadsheetStore.js`  
-Formula lexer: `tokens.js`  
-Formula parser: `grammar.ne`  
+Formula lexer: `parser/tokens.js`  
+Formula parser: `parser/grammar.ne`  
 
 #### Formula examples
  * `=2 * (2 + 2) / 5` and other math expressions
@@ -50,27 +50,23 @@ Lexer has two states. When we encounter function call we change state to `func_a
 // tokenizer has two states: main and func_args
 module.exports = {
   main:{
+    whitespace: { match: /[\s]+/, lineBreaks: true },
     func_call:  {
       match: /[a-zA-Z_$][0-9a-zA-Z_$]*\(/,
       push: 'func_args', // change to func_args state
       value: x => x.slice(0, -1), // remove last character
     },
-    whitespace: /[ ]+/,
+    label: /[a-zA-Z]+[1-9]+[0-9]*/,
     plus: '+',
-    minus: '-',
     asterisk: '*',
     slash: '/',
-    label: /[a-zA-Z]+[1-9]+[0-9]*/,
-    int: {
-      match: /[+-]?[1-9]+[0-9]*/, // examples : 0 | 0,123 | -14 | +0,23
-      value: x=> parseInt(x),
-    },
-    float: {
-      match: /[-+]?[1-9][0-9]*(?:,[0-9]*)|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
-      value: x=> parseFloat(x),
-    },
+    minus: '-',
     lparen: '(',
     rparen: ')',
+    number: {
+      match: /[1-9][0-9]*(?:,[0-9]*)?|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
+      value: x=> parseFloat(x),
+    },
   },
   func_args:{
     func_call_end:  {match: ')', pop: 1}, // come back to main state
@@ -85,48 +81,8 @@ module.exports = {
 #### Formula parser
 Parser uses [precedence climbing method](https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method) to execute parenthesis and operators in adequate order.  
 [Diagram](https://maciejkasprzyk.github.io/tkom-spreadsheet/grammar) of parser structure.  
-The same thing as code with blocks of javascript code removed (from `grammar.ne`):
-```
-# note: % references a token
-expression ->
-  multi_expr
-  |expression %plus multi_expr
-  |expression %minus multi_expr
 
-multi_expr ->
-  primary
-  |multi_expr %asterisk primary
-  |multi_expr %slash primary
-    
-primary ->
-  %lparen expression %rparen
-  |number
-  |cell_ref 
-  |func
-
-cell_ref ->
-  %label
-
-number ->
-  %float 
-  |%int
-
-func ->
-  %func_call args %func_call_end
-
-args ->
-  range
-  |list
-    
-range ->
-  %label %colon %label
-    
-list ->
-  %label
-  |%label %semicolon list
-```
-
-#### Macro (brief concept only)
+#### Macros (brief concept only)
 Macros will use Javascript (or its superset) in order to be super easy to pick up for someone who knows JS already. I'm not really sure about the functionality yet.  
 Things I am taking into consideration:
 * aliases for cells and ranges

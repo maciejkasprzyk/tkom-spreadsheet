@@ -25,6 +25,5 @@ module.exports = {
     semicolon: ';',
     colon: ':',
     whitespace: /[ ]+/,
-
   }
 };
