@@ -1,23 +1,23 @@
 // tokenizer has two states: main and func_args
 module.exports = {
   main:{
+    whitespace: { match: /[\s]+/, lineBreaks: true },
     func_call:  {
       match: /[a-zA-Z_$][0-9a-zA-Z_$]*\(/,
       push: 'func_args', // change to func_args state
       value: x => x.slice(0, -1), // remove last character
     },
-    whitespace: { match: /[\s]+/, lineBreaks: true },
+    label: /[a-zA-Z]+[1-9]+[0-9]*/,
     plus: '+',
     asterisk: '*',
     slash: '/',
-    label: /[a-zA-Z]+[1-9]+[0-9]*/,
     minus: '-',
-    number: {
-      match: /[-+]?[1-9][0-9]*(?:,[0-9]*)?|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
-      value: x=> parseFloat(x),
-    },
     lparen: '(',
     rparen: ')',
+    number: {
+      match: /[1-9][0-9]*(?:,[0-9]*)?|0\.[0-9]+/, // examples : 0 | 0,123 | -14 | +0,23
+      value: x=> parseFloat(x),
+    },
   },
   func_args:{
     func_call_end:  {match: ')', pop: 1}, // come back to main state

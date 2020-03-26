@@ -91,6 +91,13 @@ primary ->
       return number.value;
     }
   %}
+  | %minus %number
+  {%
+    ([_,number]) => {
+      post.log("number:", number.value);
+      return -number.value;
+    }
+  %}
   |cell_ref {% id %}
   |func
     {%

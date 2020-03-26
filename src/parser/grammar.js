@@ -77,6 +77,12 @@ var grammar = {
           return number.value;
         }
           },
+    {"name": "primary", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), (lexer.has("number") ? {type: "number"} : number)], "postprocess": 
+        ([_,number]) => {
+          post.log("number:", number.value);
+          return -number.value;
+        }
+          },
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
     {"name": "primary", "symbols": ["func"], "postprocess": 
         ([func]) => {
