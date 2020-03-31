@@ -1,1 +1,1 @@
-nearleyc src/parser/grammar.ne -o src/parser/grammar.js
+nearleyc src/interpreter/grammar.ne -o src/interpreter/grammar.js
