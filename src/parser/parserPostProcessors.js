@@ -8,3 +8,5 @@
 
 
 // Alternative solution would be to allow cyclic reference, but this way it seems more isolated.
+
+export const postProcessors = {};

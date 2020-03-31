@@ -1,5 +1,5 @@
 // tokenizer has two states: main and func_args
-module.exports = {
+export default {
   main:{
     whitespace: { match: /[\s]+/, lineBreaks: true },
     func_call:  {

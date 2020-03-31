@@ -1,10 +1,10 @@
+@preprocessor esmodule
 @{%
   /* eslint-disable */
 
-  const moo = require("moo");
-  const tokens = require('./tokens.js')
-
-  const post = require("./parserPostProcessors.js")
+  import * as moo from 'moo'
+  import tokens from './tokens.js'
+  import {postProcessors as post} from './parserPostProcessors.js'
 
   const lexer = moo.states(tokens);
   // ignore whitespaces tokens
@@ -13,8 +13,9 @@
       while ((tok = next.call(lexer)) && tok.type === "whitespace") {}
       return tok;
   })(lexer.next);
-
+git
 %}
+
 
 @lexer lexer
 

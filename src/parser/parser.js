@@ -1,9 +1,9 @@
-const nearley = require("nearley");
-const grammar = require("./grammar.js");
-const post = require('./parserPostProcessors');
+import * as nearley from 'nearley';
+import {postProcessors as post} from "./parserPostProcessors";
+import grammar from "./grammar.js";
 
 
-class Parser {
+export class Parser {
   cellsReferenced = [];
   constructor(getByLabel) {
     this.parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
@@ -29,5 +29,3 @@ class Parser {
     return this.parser.results[0][0];
   }
 }
-
-module.exports.Parser = Parser;

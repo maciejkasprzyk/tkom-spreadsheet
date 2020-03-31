@@ -1,14 +1,12 @@
 // Generated automatically by nearley, version 2.19.1
 // http://github.com/Hardmath123/nearley
-(function () {
 function id(x) { return x[0]; }
 
   /* eslint-disable */
 
-  const moo = require("moo");
-  const tokens = require('./tokens.js')
-
-  const post = require("./parserPostProcessors.js")
+  import * as moo from 'moo'
+  import tokens from './tokens.js'
+  import {postProcessors as post} from './parserPostProcessors.js'
 
   const lexer = moo.states(tokens);
   // ignore whitespaces tokens
@@ -18,9 +16,8 @@ function id(x) { return x[0]; }
       return tok;
   })(lexer.next);
 
-var grammar = {
-    Lexer: lexer,
-    ParserRules: [
+let Lexer = lexer;
+let ParserRules = [
     {"name": "input", "symbols": ["expression"]},
     {"name": "expression", "symbols": ["multi_expr"], "postprocess": 
         ([a]) => {
@@ -144,12 +141,6 @@ var grammar = {
           return list;
         }
             }
-]
-  , ParserStart: "input"
-}
-if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
-   module.exports = grammar;
-} else {
-   window.grammar = grammar;
-}
-})();
+];
+let ParserStart = "input";
+export default { Lexer, ParserRules, ParserStart };
