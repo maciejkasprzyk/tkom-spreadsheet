@@ -1,5 +1,5 @@
 import {observable} from "mobx";
-import {Parser} from "../parser/parser";
+import {Parser} from "../interpreter/parser";
 
 export class Cell {
 
