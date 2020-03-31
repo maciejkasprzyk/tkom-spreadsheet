@@ -1,5 +1,7 @@
-// tokenizer has two states: main and func_args
-export default {
+import * as moo from 'moo'
+
+// lexer has two states: main and func_args
+const tokens =  {
   main:{
     whitespace: { match: /[\s]+/, lineBreaks: true },
     func_call:  {
@@ -27,3 +29,13 @@ export default {
     whitespace: /[ ]+/,
   }
 };
+
+export const lexer = moo.states(tokens);
+
+// ignore whitespaces tokens
+lexer.next = (next => () => {
+  let tok;
+  while ((tok = next.call(lexer)) && tok.type === "whitespace") {}
+  return tok;
+})(lexer.next);
+
