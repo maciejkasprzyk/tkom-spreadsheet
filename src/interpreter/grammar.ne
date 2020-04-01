@@ -13,36 +13,36 @@ input ->
     sum
 
 sum ->
-    product                {% id %}
-  | sum %plus product      {% p.addition %}
-  | sum %minus product     {% p.subtraction %}
+    product                                  {% id %}
+  | sum %plus product                        {% p.addition %}
+  | sum %minus product                       {% p.subtraction %}
 
 product ->
-    primary                     {% id %}
-  | product %asterisk primary   {% p.multiplication %}
-  | product %slash primary      {% p.division %}
+    primary                                  {% id %}
+  | product %asterisk primary                {% p.multiplication %}
+  | product %slash primary                   {% p.division %}
 
 primary ->
-    %lparen sum %rparen          {% p.return1 %}
-  | %number                      {% p.token %}
-  | %minus %number               {% p.negative %}
-  | cell_ref                     {% id %}
-  | function_call                {% id %}
+    %lparen sum %rparen                      {% p.return1 %}
+  | %number                                  {% p.token %}
+  | %minus %number                           {% p.negative %}
+  | cell_ref                                 {% id %}
+  | function_call                            {% id %}
 
 cell_ref ->
-  %variable          {% p.variable %}
+  %variable                                  {% p.variable %}
 
 function_call ->
   %function_identifier args %func_call_end   {% p.functionCall %}
 
 args ->
-    range   {% id %}
-  | list   {% p.list %}
+    range                                    {% id %}
+  | list                                     {% p.list %}
 
 range ->
-  %variable %colon %variable   {% p.range %}
+  %variable %colon %variable                 {% p.range %}
 
 list ->
-    %variable                        {% id %}
-  | %list %semicolon variable        {% p.listAdd %}
+    %variable                                {% id %}
+  | %list %semicolon variable                {% p.listAdd %}
 
