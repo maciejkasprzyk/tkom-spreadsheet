@@ -43,6 +43,6 @@ range ->
   %variable %colon %variable                 {% p.range %}
 
 list ->
-    %variable                                {% id %}
-  | %list %semicolon variable                {% p.listAdd %}
+  %variable (%semicolon %variable):*         {% p.listAdd %}
+
 

@@ -98,9 +98,14 @@ export function list([list]) {
   };
 }
 
-export function listAdd([list, _, variable]) {
-  log("variable(variable ; list):", variable.value);
-  log("list(variable ; list):", list);
-  list.push(variable.value);
-  return list;
+
+export function listAdd([variable, list]) {
+  const result = [variable];
+
+  for (const el of list) {
+    result.push(el[1]);
+  }
+  console.log(result);
+  return result
 }
+

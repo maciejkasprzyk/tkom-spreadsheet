@@ -24,8 +24,10 @@ let ParserRules = [
     {"name": "args", "symbols": ["range"], "postprocess": id},
     {"name": "args", "symbols": ["list"], "postprocess": p.list},
     {"name": "range", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("colon") ? {type: "colon"} : colon), (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": p.range},
-    {"name": "list", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": id},
-    {"name": "list", "symbols": [(lexer.has("list") ? {type: "list"} : list), (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "variable"], "postprocess": p.listAdd}
+    {"name": "list$ebnf$1", "symbols": []},
+    {"name": "list$ebnf$1$subexpression$1", "symbols": [(lexer.has("semicolon") ? {type: "semicolon"} : semicolon), (lexer.has("variable") ? {type: "variable"} : variable)]},
+    {"name": "list$ebnf$1", "symbols": ["list$ebnf$1", "list$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "list", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), "list$ebnf$1"], "postprocess": p.listAdd}
 ];
 let ParserStart = "input";
 export default { Lexer, ParserRules, ParserStart };

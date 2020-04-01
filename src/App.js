@@ -60,6 +60,9 @@ function App() {
     store.cells[r][1].set("=" + x);
     store.cells[r][2].set(`is ${eval(x)}`);
 
+    store.cells[++r][0].set("function call");
+    store.cells[r][1].set("=suma(C11;D11;E11)");
+
 
   }, []);
 
