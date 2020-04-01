@@ -4,12 +4,12 @@ import * as moo from 'moo'
 const tokens =  {
   main:{
     whitespace: { match: /[\s]+/, lineBreaks: true },
-    func_call:  {
+    function_identifier:  {
       match: /[a-zA-Z_$][0-9a-zA-Z_$]*\(/,
       push: 'func_args', // change to func_args state
       value: x => x.slice(0, -1), // remove last character
     },
-    label: /[a-zA-Z]+[1-9]+[0-9]*/,
+    variable: /[a-zA-Z]+[1-9]+[0-9]*/,
     plus: '+',
     asterisk: '*',
     slash: '/',
@@ -23,7 +23,7 @@ const tokens =  {
   },
   func_args:{
     func_call_end:  {match: ')', pop: 1}, // come back to main state
-    label: /[a-zA-Z]+[1-9]+[0-9]*/,
+    variable: /[a-zA-Z]+[1-9]+[0-9]*/,
     semicolon: ';',
     colon: ':',
     whitespace: /[ ]+/,

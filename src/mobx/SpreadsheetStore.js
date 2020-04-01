@@ -29,7 +29,8 @@ export class Cell {
 
         const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet));
         parser.feed(this.formula.substring(1));
-        this.value = parser.results;
+        // this.value = parser.results;
+        console.log(parser.results);
         const cellsReferenced = parser.cellsReferenced;
         for (const cell of cellsReferenced) {
           this.observe(cell);
@@ -107,7 +108,7 @@ export class Cell {
   calculateValue() {
     const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet));
     parser.feed(this.formula.substring(1));
-    this.value = parser.results;
+    // this.value = parser.results;
   }
 
 }

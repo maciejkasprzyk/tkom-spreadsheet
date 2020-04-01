@@ -1,12 +1,106 @@
-// Parser postprocessor functions are dynamically added to this module before constructing the parser.
+import {nodeTypes} from './nodeTypes.js';
 
-// This module exists in order to avoid cyclic reference between modules
-// Nearley parser dont take any arguments, it can only call external functions from different modules.
-// I need parser to call external function to get value of call based on its label, that function exists in SpreadSheetStore module.
-// Its the same module that creates and uses parsers so it would be a cyclic reference.
-// To avoid that parser calls functions from this module, which are dynamically sets by parser wrapper.
+const debug = false;
+export const log = debug ? (function () {
+  console.log(...arguments)
+}) : () => {};
 
+export function addition([a,_,b]) {
+  log("sum");
+  log("a:", a);
+  log("b:", b);
+  return {
+    op1 : a,
+    op2 : b,
+    type: nodeTypes.addition
+  };
+}
 
-// Alternative solution would be to allow cyclic reference, but this way it seems more isolated.
+export function subtraction([a,_,b]) {
+  log("sum");
+  log("a:", a);
+  log("b:", b);
+  return {
+    op1 : a,
+    op2 : b,
+    type: nodeTypes.subtraction
+  };
+}
 
-export const postProcessors = {};
+export function multiplication([a,_,b]) {
+  log("product");
+  log("a:", a);
+  log("b:", b);
+  return {
+    op1 : a,
+    op2 : b,
+    type: nodeTypes.multiplication
+  };
+}
+
+export function division([a,_,b]) {
+  log("product");
+  log("a:", a);
+  log("b:", b);
+  return {
+    op1 : a,
+    op2 : b,
+    type: nodeTypes.division
+  };
+}
+
+export function return1(data) {
+  return data[1];
+}
+
+export function token([t]) {
+  log(t.type, ':', t.value);
+  return t.value;
+}
+
+export function negative([_,number]) {
+  log("number:", number.value);
+  return -number.value;
+}
+
+export function functionCall([identifier, args]) {
+  log("func_name:", identifier.value);
+  log("args:", args);
+  return {
+    identifier : identifier.value,
+    args : args,
+    type: nodeTypes.functionCall
+  };
+}
+
+export function variable([identifier]) {
+  log("variable:", identifier.value);
+  return {
+    type: nodeTypes.variable,
+    identifier: identifier.value,
+  };
+}
+
+export function range([identifier1, _, identifier2]) {
+  log("identifier1:", identifier1.value);
+  log("identifier2:", identifier2.value);
+  return {
+    identifier1: identifier1.value,
+    identifier2: identifier2.value,
+    type: nodeTypes.range,
+  };
+}
+
+export function list([list]) {
+  return {
+    list: list,
+    type: nodeTypes.list,
+  };
+}
+
+export function listAdd([list, _, variable]) {
+  log("variable(variable ; list):", variable.value);
+  log("list(variable ; list):", list);
+  list.push(variable.value);
+  return list;
+}
