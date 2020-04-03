@@ -1,7 +1,11 @@
 import {observable} from "mobx";
 import {Parser} from "../interpreter/parser";
 
-export class Cell {
+class Variable {
+
+}
+
+class Cell {
 
   @observable formula = null;
   @observable value = null;
@@ -13,7 +17,7 @@ export class Cell {
     this.y = y;
   }
 
-  // cells that observe ass -> we are used in their formula
+  // cells that observe us -> we are used in their formula
   observers = [];
   // cells that we observe for changes -> we use them in our formula
   // this is needed to remove us from their observer list when we change formula
