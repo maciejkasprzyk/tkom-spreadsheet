@@ -105,7 +105,6 @@ export function listAdd([variable, list]) {
   for (const el of list) {
     result.push(el[1]);
   }
-  console.log(result);
   return result
 }
 

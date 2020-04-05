@@ -1,136 +1,77 @@
 import {observable} from "mobx";
 import {Parser} from "../interpreter/parser";
+import {nodeTypes} from "../interpreter/nodeTypes";
+import {findLabelsReferenced} from "../interpreter/lexer";
 
 class Variable {
-
-}
-
-class Cell {
 
   @observable formula = null;
   @observable value = null;
   @observable error = null;
 
-  constructor(sheet, x, y) {
-    this.sheet = sheet;
-    this.x = x;
-    this.y = y;
-  }
+  ast = null;
 
   // cells that observe us -> we are used in their formula
   observers = [];
   // cells that we observe for changes -> we use them in our formula
-  // this is needed to remove us from their observer list when we change formula
-  // could avoid this list by parsing old formula for cell one more time
-  // dunno which is better
   subjects = [];
-
-  set(string) {
-    this.unregisterFromAllSubjects();
-    try {
-      if (isFormula(string)) {
-        this.formula = string;
-
-        const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet));
-        parser.feed(this.formula.substring(1));
-        // this.value = parser.results;
-        console.log(parser.results);
-        const cellsReferenced = parser.cellsReferenced;
-        for (const cell of cellsReferenced) {
-          this.observe(cell);
-        }
-      } else {
-        const x = parseFloat(string);
-        if (!isNaN(x)) {
-          this.value = x;
-        }
-        else {
-          this.value = string;
-        }
-        this.formula = null;
-      }
-
-      const x = this.topologicalSort();
-      for (const cell of x) {
-        cell.calculateValue();
-      }
-      this.error = null;
-    } catch (e) {
-      this.error = e.message;
-    }
-
-
-  }
 
   unregisterFromAllSubjects() {
     for (const cell of this.subjects) {
-      cell.unregisterObserver(this);
+      cell._unregisterObserver(this);
     }
     this.subjects = [];
   }
 
   observe(cell) {
-    cell.registerObserver(this);
+    cell.observers.push(this);
     this.subjects.push(cell);
   }
 
-  topologicalSort() {
-    let visited = [];
-    let sorted = [];
-    dfs(this);
-
-    function dfs(cell) {
-      if (sorted.includes(cell)) {
-        return;
-      }
-      if (visited.includes(cell)) {
-        throw Error("cycle");
-      }
-      visited.push(cell);
-      for (const neighbour of cell.observers) {
-        dfs(neighbour)
-      }
-      sorted.push(cell);
-    }
-
-    return sorted.reverse().slice(1);
-  }
-
-  registerObserver(cell) {
-    this.observers.push(cell);
-  }
-
-  unregisterObserver(cell) {
-    const index = this.observers.indexOf(cell);
+  _unregisterObserver(v) {
+    const index = this.observers.indexOf(v);
     if (index === this.observers.length - 1) {
       this.observers.pop();
     } else {
       this.observers[index] = this.observers.pop();
     }
   }
+}
 
-  calculateValue() {
-    const parser = new Parser(this.sheet.getCellByLabel.bind(this.sheet));
-    parser.feed(this.formula.substring(1));
-    // this.value = parser.results;
+class Cell extends Variable {
+
+  constructor(x, y, manager) {
+    super();
+    this.x = x;
+    this.y = y;
+    this.manager = manager;
   }
 
+  set(str) {
+    this.manager.set(this, str)
+  }
 }
 
 
 export class SpreadsheetStore {
   cells = [];
 
-  constructor(x, y) {
+  constructor(x, y, functions) {
     this.x = x;
     this.y = y;
+    this.functions = functions;
     this.cells = Array(y);
     for (let i = 0; i < y; i++) {
       this.cells[i] = Array(x);
       for (let j = 0; j < x; j++) {
-        this.cells[i][j] = new Cell(this, i, j);
+        this.cells[i][j] = new Cell(i, j, this);
       }
     }
+  }
+
+  getVarByName(name) {
+    // todo if not a cell look for variable
+    return this.getCellByLabel(name)
   }
 
   /**
@@ -163,10 +104,116 @@ export class SpreadsheetStore {
     }
     return this.cells[y_index][x_index];
   }
+
+  set(variable, string) {
+    variable.unregisterFromAllSubjects();
+    try {
+
+      if (isFormula(string)) {
+
+        variable.formula = string;
+        const parser = new Parser();
+        parser.feed(variable.formula.substring(1));
+        variable.ast = parser.results;
+        this.updateVariable(variable);
+
+        // todo manage ranges
+        for (const label of findLabelsReferenced(variable.formula.substring(1))) {
+          variable.observe(this.getVarByName(label));
+        }
+      } else {
+        const x = parseFloat(string);
+        if (!isNaN(x)) {
+          variable.value = x;
+        } else {
+          variable.value = string;
+        }
+        variable.formula = null;
+      }
+
+      for (const x of topologicalSort(variable)) {
+        this.updateVariable(x);
+      }
+      variable.error = null;
+    } catch (e) {
+      variable.error = e.message;
+    }
+  }
+
+
+  updateVariable(variable) {
+    // todo exec this.ast
+    variable.value = this.execute(variable.ast);
+  }
+
+
+  execute(x) {
+    // its a primitive
+    if (!x.type) {
+      return x;
+    }
+
+    switch (x.type) {
+      case nodeTypes.multiplication:
+        return this.execute(x.op1) * this.execute(x.op2);
+
+      case nodeTypes.division:
+        return this.execute(x.op1) / this.execute(x.op2);
+
+      case nodeTypes.addition:
+        return this.execute(x.op1) + this.execute(x.op2);
+
+      case nodeTypes.subtraction:
+        return this.execute(x.op1) - this.execute(x.op2);
+
+      case nodeTypes.functionCall:
+        if (!this.functions.hasOwnProperty(x.identifier)) {
+          throw Error(`No function ${x.identifier}`);
+        }
+        let argsList = [];
+        if (x.args.type === nodeTypes.list) {
+          for (const arg of x.args) {
+            argsList.push(this.getVarByName(arg).value)
+          }
+        } else if (x.args.type === nodeTypes.range) {
+          argsList = this.getValuesByRange(x.args.identifier1, x.args.identifier2);
+        }
+        return this.functions[x.identifier](argsList);
+
+      case nodeTypes.variable:
+        return this.getVarByName(x.identifier).value;
+
+
+      default:
+        throw Error("Not handled node type");
+
+    }
+  }
 }
 
 
 // helper functions
+
+function topologicalSort(startVariable) {
+  let visited = [];
+  let sorted = [];
+  dfs(startVariable);
+
+  function dfs(variable) {
+    if (sorted.includes(variable)) {
+      return;
+    }
+    if (visited.includes(variable)) {
+      throw Error("cycle");
+    }
+    visited.push(variable);
+    for (const neighbour of variable.observers) {
+      dfs(neighbour)
+    }
+    sorted.push(variable);
+  }
+  return sorted.reverse().slice(1);
+}
 
 function isFormula(x) {
   return x.charAt(0) === '=';

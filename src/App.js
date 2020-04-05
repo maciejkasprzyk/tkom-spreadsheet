@@ -4,64 +4,66 @@ import './App.css';
 import Spreadsheet from "./components/Spreadsheet";
 import {SpreadsheetStore} from "./mobx/SpreadsheetStore";
 
-const store = new SpreadsheetStore(5, 15);
+const store = new SpreadsheetStore(5, 15, {});
 
 function App() {
 
   useEffect(() => {
 
+    const cells = store.cells;
+
     let r = 0;
 
-    store.cells[r][0].set("Self reference");
-    store.cells[r][1].set("=B1");
+    cells[r][0].set("Self reference");
+    cells[r][1].set("=B1");
 
-    store.cells[++r][0].set("Cycle");
-    store.cells[r][1].set("=C2");
-    store.cells[r][2].set("=B2");
+    cells[++r][0].set("Cycle");
+    cells[r][1].set("=C2");
+    cells[r][2].set("=B2");
 
-    store.cells[++r][0].set("Auto update working");
-    store.cells[r][2].set("=B3");
-    store.cells[r][3].set("=B3+C3");
-    store.cells[r][1].set("coś");
+    cells[++r][0].set("Auto update working");
+    cells[r][2].set("=B3");
+    cells[r][3].set("=B3+C3");
+    cells[r][1].set("coś");
 
-    store.cells[++r][0].set("Simple math");
+    cells[++r][0].set("Simple math");
     let x = "1+2*(5+5)+2/3+((1*3))/2";
-    store.cells[r][1].set("=" + x);
-    store.cells[r][2].set(`is ${eval(x)}`);
+    cells[r][1].set("=" + x);
+    cells[r][2].set(`is ${eval(x)}`);
 
-    store.cells[++r][0].set("Complex math");
+    cells[++r][0].set("Complex math");
     x = "1-1+2*(5+5)+2/3+((1*3))/2";
-    store.cells[r][1].set("=" + x);
-    store.cells[r][2].set(`is ${eval(x)}`);
+    cells[r][1].set("=" + x);
+    cells[r][2].set(`is ${eval(x)}`);
 
-    store.cells[++r][0].set("Negative numbers");
+    cells[++r][0].set("Negative numbers");
     x = "1-1+1";
-    store.cells[r][1].set("=" + x);
-    store.cells[r][2].set(`is ${eval(x)}`);
+    cells[r][1].set("=" + x);
+    cells[r][2].set(`is ${eval(x)}`);
 
-    store.cells[++r][0].set("Math with labels");
-    store.cells[r][1].set('=C7+D7*E7');
-    store.cells[r][2].set('2');
-    store.cells[r][3].set('2');
-    store.cells[r][4].set('2');
+    cells[++r][0].set("Math with labels");
+    cells[r][1].set('=C7+D7*E7');
+    cells[r][2].set('2');
+    cells[r][3].set('2');
+    cells[r][4].set('2');
 
-    store.cells[++r][0].set("Invalid formulas");
-    store.cells[r][1].set('=C7D7*E7');
-    store.cells[r][2].set('=as325');
-    store.cells[r][3].set('=1**2');
+    cells[++r][0].set("Invalid formulas");
+    cells[r][1].set('=C7D7*E7');
+    cells[r][2].set('=as325');
+    cells[r][3].set('=1**2');
 
-    store.cells[++r][0].set("* and / order");
+    cells[++r][0].set("* and / order");
     x = "3/3*3";
-    store.cells[r][1].set("=" + x);
-    store.cells[r][2].set(`is ${eval(x)}`);
+    cells[r][1].set("=" + x);
+    cells[r][2].set(`is ${eval(x)}`);
 
-    store.cells[++r][0].set("- at the begging and --");
+    cells[++r][0].set("- at the begging and --");
     x = "-1+2";
-    store.cells[r][1].set("=" + x);
-    store.cells[r][2].set(`is ${eval(x)}`);
+    cells[r][1].set("=" + x);
+    cells[r][2].set(`is ${eval(x)}`);
 
-    store.cells[++r][0].set("function call");
-    store.cells[r][1].set("=suma(C11;D11;E11)");
+    cells[++r][0].set("function call");
+    cells[r][1].set("=suma(C11;D11;E11)");
 
 
   }, []);
