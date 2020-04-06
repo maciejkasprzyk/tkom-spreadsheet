@@ -39,15 +39,4 @@ lexer.next = (next => () => {
   return tok;
 })(lexer.next);
 
-export function findLabelsReferenced(string) {
-  lexer.reset(string);
-  let references = [];
-  let tok = lexer.next();
-  while (tok !== undefined) {
-    if (tok.type === 'variable') {
-      references.push(tok.value);
-    }
-    tok = lexer.next();
-  }
-  return references;
-}
+

@@ -3,8 +3,10 @@ import React, {useEffect} from 'react';
 import './App.css';
 import Spreadsheet from "./components/Spreadsheet";
 import {SpreadsheetStore} from "./mobx/SpreadsheetStore";
+import {functions} from "./interpreter/functions";
 
-const store = new SpreadsheetStore(5, 15, {});
+
+const store = new SpreadsheetStore(5, 15, functions);
 
 function App() {
 
@@ -63,7 +65,16 @@ function App() {
     cells[r][2].set(`is ${eval(x)}`);
 
     cells[++r][0].set("function call");
-    cells[r][1].set("=suma(C11;D11;E11)");
+    cells[r][1].set("=sum(C11;D11;E11)");
+    cells[r][2].set("1");
+    cells[r][3].set("2");
+    cells[r][4].set("3");
+
+    cells[++r][0].set("function with range");
+    cells[r][1].set("=sum(C11:E12)");
+    cells[r][2].set("1");
+    cells[r][3].set("2");
+    cells[r][4].set("3");
 
 
   }, []);

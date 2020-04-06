@@ -1,5 +1,6 @@
 import * as nearley from 'nearley';
 import grammar from "./grammar.js";
+import {UserError} from "./userError";
 
 
 export class Parser {
@@ -8,7 +9,12 @@ export class Parser {
   }
 
   feed(s) {
-    return this.parser.feed(s);
+    try {
+      return this.parser.feed(s);
+    } catch (e) {
+      // throw new UserError(e.message.split('\n')[0]);
+      throw new UserError("Syntax error");
+    }
   }
 
   get results() {
