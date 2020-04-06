@@ -76,6 +76,9 @@ function App() {
     cells[r][3].set("2");
     cells[r][4].set("3");
 
+    cells[++r][0].set("Not existing function");
+    cells[r][1].set("=foo(C11:E12)");
+
 
   }, []);
 
