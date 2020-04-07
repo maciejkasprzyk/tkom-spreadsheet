@@ -4,7 +4,7 @@ import style from './Editor.module.scss';
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/theme-cobalt";
-
+import "ace-builds/webpack-resolver";
 
 const Editor = props => {
 
