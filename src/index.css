@@ -1,5 +1,11 @@
-* {
+body {
     font-family: Arial, sans-serif;
+}
+
+.error-marker {
+    position: absolute;
+    background: red;
+
 }
 
 body {
@@ -8,7 +14,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.ace_editor {
+    font-size: 20px;
+
 }
+

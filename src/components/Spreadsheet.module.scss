@@ -1,5 +1,8 @@
 .Spreadsheet {
+  flex: 1;
   overflow-x: auto;
+  overflow-y: auto;
+  height: 100%;
   background-color: rgb(231, 231, 231);
 
   & table {
