@@ -16,9 +16,13 @@ const Editor = props => {
       className={style.Editor}
     >
       <div className={style.Top}>
-        <button>Example 1</button>
-        <button>Example 2</button>
-        <button>Example 3</button>
+        {props.examples.map((example, i) =>
+          <button
+            key={i}
+            onClick={() => setCode(example)}
+          > Example {i} </button>
+
+        )}
       </div>
       <AceEditor
         theme="cobalt"
@@ -41,7 +45,15 @@ const Editor = props => {
 };
 
 Editor.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  examples: PropTypes.array,
 };
+
+
+Editor.defaultProps = {
+  examples: ["123","hello world"],
+};
+
+
 
 export default Editor;

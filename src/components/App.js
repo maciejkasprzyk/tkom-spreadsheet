@@ -23,7 +23,7 @@ function App() {
         }}
       />
       <Editor
-        // todo
+        examples={examples}
         onSubmit={(x) => {
           console.log(x)
         }}
@@ -33,6 +33,15 @@ function App() {
 }
 
 export default App;
+
+const examples = [
+`for i in range(5)
+  cell = 5
+hello`,
+
+
+
+];
 
 
 function populateSheet() {
