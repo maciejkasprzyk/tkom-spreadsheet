@@ -2,7 +2,7 @@ import {Parser} from "../interpreter/parser";
 import {nodeTypes} from "../interpreter/nodeTypes";
 import {lexer} from "../interpreter/lexer";
 import {UserError} from "../interpreter/userError";
-import {Variable, Cell} from "../interpreter/Variable";
+import {Cell} from "../interpreter/Variable";
 import {getCellIndexes, isFormula, topologicalSort} from "../interpreter/utils";
 
 

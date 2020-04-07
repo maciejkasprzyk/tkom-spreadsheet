@@ -10,9 +10,9 @@ const tokens = {
       value: x => x.slice(0, -1), // remove last character
     },
     variable: {
-      match: /[a-zA-Z]+[1-9]+[0-9]*/,
+      match: /[a-zA-Z]+[0-9]*/,
       type:moo.keywords({
-        keyword: ['if']
+        "if": "if"
       })
     },
     plus: '+',

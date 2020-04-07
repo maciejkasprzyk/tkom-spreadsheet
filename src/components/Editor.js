@@ -21,7 +21,6 @@ const Editor = props => {
             key={i}
             onClick={() => setCode(example)}
           > Example {i} </button>
-
         )}
       </div>
       <AceEditor
@@ -33,12 +32,9 @@ const Editor = props => {
         // annotations={[{ row: 0, column: 10, type: 'error', text: 'Some error.'}]}
       />
       <div className={style.Bottom}>
-        <button
-
-          onClick={() => props.onSubmit(code)}
-        >
-          Submit
-        </button>
+        <button onClick={() => props.onLogParseTree(code)}> Log parse tree </button>
+        <button onClick={() => props.onLogLexerOutput(code)}> Log tokens </button>
+        <button onClick={() => props.onSubmit(code)}> Run </button>
       </div>
     </div>
   );
@@ -46,14 +42,15 @@ const Editor = props => {
 
 Editor.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onLogLexerOutput: PropTypes.func.isRequired,
+  onLogParseTree: PropTypes.func.isRequired,
   examples: PropTypes.array,
 };
 
 
 Editor.defaultProps = {
-  examples: ["123","hello world"],
+  examples: ["123", "hello world"],
 };
-
 
 
 export default Editor;

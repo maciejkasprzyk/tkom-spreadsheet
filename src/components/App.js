@@ -5,12 +5,39 @@ import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
 import {functions} from "../interpreter/functions";
 import style from './App.module.scss';
 import Editor from "./Editor";
+import {lexer} from '../interpreter/lexer';
+import {Parser} from "../interpreter/parser";
 
 const store = new SpreadsheetStore(5, 100, functions);
 
 function App() {
 
   useEffect(populateSheet, []);
+
+  function logParseTree(code) {
+    try {
+      const parser = new Parser();
+      parser.feed(code);
+      console.log(parser.results);
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
+  function logLexerOutput(code) {
+    try {
+      lexer.reset(code);
+      const result = [];
+      let tok = lexer.next();
+      while (tok !== undefined) {
+        result.push(tok);
+        tok = lexer.next()
+      }
+      console.log(result);
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
 
   return (
     <div className={style.App}>
@@ -24,9 +51,10 @@ function App() {
       />
       <Editor
         examples={examples}
-        onSubmit={(x) => {
-          console.log(x)
+        onSubmit={() => {
         }}
+        onLogLexerOutput={logLexerOutput}
+        onLogParseTree={logParseTree}
       />
     </div>
   );
@@ -34,13 +62,8 @@ function App() {
 
 export default App;
 
-const examples = [
-`for i in range(5)
-  cell = 5
-hello`,
-
-
-
+const examples = [`sum(A1,A2)`,
+`1+2`
 ];
 
 
