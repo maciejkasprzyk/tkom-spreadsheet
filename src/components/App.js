@@ -1,9 +1,9 @@
 /* eslint-disable no-eval */
 import React, {useEffect} from 'react';
 import './App.css';
-import Spreadsheet from "./components/Spreadsheet";
-import {SpreadsheetStore} from "./mobx/SpreadsheetStore";
-import {functions} from "./interpreter/functions";
+import Spreadsheet from "./Spreadsheet";
+import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
+import {functions} from "../interpreter/functions";
 
 
 const store = new SpreadsheetStore(5, 15, functions);
