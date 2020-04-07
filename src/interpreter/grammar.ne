@@ -33,7 +33,7 @@ cell_ref ->
   %variable                                  {% p.variable %}
 
 function_call ->
-  %function_identifier args %func_call_end   {% p.functionCall %}
+  %function_identifier args %rparen          {% p.functionCall %}
 
 args ->
     range                                    {% id %}

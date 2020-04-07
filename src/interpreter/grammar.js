@@ -20,7 +20,7 @@ let ParserRules = [
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
     {"name": "primary", "symbols": ["function_call"], "postprocess": id},
     {"name": "cell_ref", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": p.variable},
-    {"name": "function_call", "symbols": [(lexer.has("function_identifier") ? {type: "function_identifier"} : function_identifier), "args", (lexer.has("func_call_end") ? {type: "func_call_end"} : func_call_end)], "postprocess": p.functionCall},
+    {"name": "function_call", "symbols": [(lexer.has("function_identifier") ? {type: "function_identifier"} : function_identifier), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "args", "symbols": ["range"], "postprocess": id},
     {"name": "args", "symbols": ["list"], "postprocess": p.list},
     {"name": "range", "symbols": [(lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("colon") ? {type: "colon"} : colon), (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": p.range},
