@@ -101,14 +101,15 @@ export class SpreadsheetStore {
         }
         return this.functions[x.identifier](argsList);
       case nodeTypes.ifCondition:
-        if (x.condition) {
+        if (this.executeFormula(x.condition) === true) {
           return this.executeFormula(x.exprTrue);
         } else {
           return this.executeFormula(x.exprFalse);
         }
+      case nodeTypes.comparision:
+        return x.func(this.executeFormula(x.op1), this.executeFormula(x.op2));
       default:
         throw Error("Not handled node type");
-
     }
   }
 

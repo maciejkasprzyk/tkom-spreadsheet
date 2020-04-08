@@ -9,8 +9,14 @@
 
 # note: % references a token from lexer
 
-input ->
-    sum
+array ->
+    expr
+
+expr -> comparison                           {% id %}
+
+comparison ->
+    sum                                      {% id %}
+  | sum %compOperator sum                    {% p.comparison %}
 
 sum ->
     product                                  {% id %}
@@ -23,7 +29,7 @@ product ->
   | product %slash primary                   {% p.division %}
 
 primary ->
-    %lparen sum %rparen                      {% p.return1 %}
+    %lparen expr %rparen                     {% p.return1 %}
   | %number                                  {% p.token %}
   | %minus %number                           {% p.negative %}
   | cell_ref                                 {% id %}
@@ -47,5 +53,5 @@ list ->
   cell_ref (%semicolon cell_ref):*           {% p.listAdd %}
 
 condition ->
-  %kwIf %lparen sum %semicolon sum %semicolon sum %rparen
+  %kwIf %lparen expr %semicolon expr %semicolon expr %rparen
                                              {% p.ifCondition %}

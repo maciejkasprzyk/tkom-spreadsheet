@@ -8,4 +8,5 @@ export const nodeTypes = {
   range: "range",
   list: "list",
   ifCondition: "ifCondition",
+  comparision: "comparision",
 };

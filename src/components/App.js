@@ -137,6 +137,8 @@ function populateSheet() {
   cells[r][1].set("=foo(C11:E12)")
 
   cells[++r][0].set("If");
-  cells[r][1].set("=if(1;1;2)");
+  cells[r][1].set("=if(C14<D14;1;0)");
+  cells[r][2].set("5");
+  cells[r][3].set("6");
 
 }
