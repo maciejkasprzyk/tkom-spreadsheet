@@ -9,7 +9,7 @@
 
 # note: % references a token from lexer
 
-array ->
+entry ->
     expr
 
 expr -> comparison                           {% id %}

@@ -7,7 +7,7 @@ function id(x) { return x[0]; }
   import {lexer} from './lexer.js'
 let Lexer = lexer;
 let ParserRules = [
-    {"name": "array", "symbols": ["expr"]},
+    {"name": "entry", "symbols": ["expr"]},
     {"name": "expr", "symbols": ["comparison"], "postprocess": id},
     {"name": "comparison", "symbols": ["sum"], "postprocess": id},
     {"name": "comparison", "symbols": ["sum", (lexer.has("compOperator") ? {type: "compOperator"} : compOperator), "sum"], "postprocess": p.comparison},
@@ -34,5 +34,5 @@ let ParserRules = [
     {"name": "list", "symbols": ["cell_ref", "list$ebnf$1"], "postprocess": p.listAdd},
     {"name": "condition", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "expr", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.ifCondition}
 ];
-let ParserStart = "array";
+let ParserStart = "entry";
 export default { Lexer, ParserRules, ParserStart };
