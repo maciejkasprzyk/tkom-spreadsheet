@@ -5,7 +5,7 @@ const tokens = {
   identifier: {
     match: /[a-zA-Z]+[0-9]*/,
     type: moo.keywords({
-      "if": "if"
+      "kwIf": "if"
     })
   },
   plus: '+',

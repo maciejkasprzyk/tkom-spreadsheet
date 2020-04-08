@@ -1,7 +1,7 @@
-import {Parser} from "../interpreter/parser";
+import {FormulaParser} from "../interpreter/parsers";
 import {nodeTypes} from "../interpreter/nodeTypes";
-import {UserError} from "../interpreter/userError";
-import {Cell} from "../interpreter/Variable";
+import {UserError} from "../interpreter/errors";
+import {Cell} from "../interpreter/variables";
 import {getCellIndexes, isFormula, topologicalSort} from "../interpreter/utils";
 
 
@@ -28,7 +28,7 @@ export class SpreadsheetStore {
       if (isFormula(string)) {
 
         variable.formula = string;
-        const parser = new Parser();
+        const parser = new FormulaParser();
         parser.feed(variable.formula.substring(1));
 
         variable.ast = parser.results;
@@ -100,7 +100,12 @@ export class SpreadsheetStore {
           argsList = this.getCellsByRange(x.args.cell1.identifier, x.args.cell2.identifier).map((x) => x.value);
         }
         return this.functions[x.identifier](argsList);
-
+      case nodeTypes.ifCondition:
+        if (x.condition) {
+          return this.executeFormula(x.exprTrue);
+        } else {
+          return this.executeFormula(x.exprFalse);
+        }
       default:
         throw Error("Not handled node type");
 

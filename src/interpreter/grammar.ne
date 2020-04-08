@@ -28,6 +28,7 @@ primary ->
   | %minus %number                           {% p.negative %}
   | cell_ref                                 {% id %}
   | function_call                            {% id %}
+  | condition                                {% id %}
 
 cell_ref ->
   %identifier                                {% p.variable %}
@@ -40,9 +41,11 @@ args ->
   | list                                     {% p.list %}
 
 range ->
-  cell_ref %colon cell_ref                 {% p.range %}
+  cell_ref %colon cell_ref                   {% p.range %}
 
 list ->
-  cell_ref (%semicolon cell_ref):*         {% p.listAdd %}
+  cell_ref (%semicolon cell_ref):*           {% p.listAdd %}
 
-
+condition ->
+  %kwIf %lparen sum %semicolon sum %semicolon sum %rparen
+                                             {% p.ifCondition %}

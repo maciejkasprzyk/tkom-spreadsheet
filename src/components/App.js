@@ -6,7 +6,7 @@ import {functions} from "../interpreter/functions";
 import style from './App.module.scss';
 import Editor from "./Editor";
 import {lexer} from '../interpreter/lexer';
-import {Parser} from "../interpreter/parser";
+import {Parser} from "../interpreter/parsers";
 
 const store = new SpreadsheetStore(5, 100, functions);
 
@@ -134,6 +134,9 @@ function populateSheet() {
   cells[r][4].set("3");
 
   cells[++r][0].set("Not existing function");
-  cells[r][1].set("=foo(C11:E12)");
+  cells[r][1].set("=foo(C11:E12)")
+
+  cells[++r][0].set("If");
+  cells[r][1].set("=if(1;1;2)");
 
 }

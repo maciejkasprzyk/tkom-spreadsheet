@@ -19,6 +19,7 @@ let ParserRules = [
     {"name": "primary", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), (lexer.has("number") ? {type: "number"} : number)], "postprocess": p.negative},
     {"name": "primary", "symbols": ["cell_ref"], "postprocess": id},
     {"name": "primary", "symbols": ["function_call"], "postprocess": id},
+    {"name": "primary", "symbols": ["condition"], "postprocess": id},
     {"name": "cell_ref", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier)], "postprocess": p.variable},
     {"name": "function_call", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "args", "symbols": ["range"], "postprocess": id},
@@ -27,7 +28,8 @@ let ParserRules = [
     {"name": "list$ebnf$1", "symbols": []},
     {"name": "list$ebnf$1$subexpression$1", "symbols": [(lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "cell_ref"]},
     {"name": "list$ebnf$1", "symbols": ["list$ebnf$1", "list$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "list", "symbols": ["cell_ref", "list$ebnf$1"], "postprocess": p.listAdd}
+    {"name": "list", "symbols": ["cell_ref", "list$ebnf$1"], "postprocess": p.listAdd},
+    {"name": "condition", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "sum", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "sum", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "sum", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.ifCondition}
 ];
 let ParserStart = "input";
 export default { Lexer, ParserRules, ParserStart };

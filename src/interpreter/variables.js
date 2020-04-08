@@ -1,7 +1,7 @@
 import {observable} from "mobx";
 
 
-export class Variable {
+export class Variables {
 
   @observable formula = null;
   @observable value = null;
@@ -36,7 +36,7 @@ export class Variable {
   }
 }
 
-export class Cell extends Variable {
+export class Cell extends Variables {
 
   constructor(x, y, manager) {
     super();

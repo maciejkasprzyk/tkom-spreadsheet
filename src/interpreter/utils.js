@@ -1,4 +1,4 @@
-import {UserError} from "./userError";
+import {UserError} from "./errors";
 
 export function topologicalSort(startVariable) {
   let visited = [];

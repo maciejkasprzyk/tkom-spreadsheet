@@ -107,6 +107,15 @@ export function listAdd([variable, list]) {
     //el[1] is cell_ref
     result.push(el[1]);
   }
-  return result
+  return result;
+}
+
+export function ifCondition(data) {
+  return {
+    condition: data[2],
+    exprTrue: data[4],
+    exprFalse: data[6],
+    type: nodeTypes.ifCondition
+  };
 }
 

@@ -7,4 +7,5 @@ export const nodeTypes = {
   variable: "variable",
   range: "range",
   list: "list",
+  ifCondition: "ifCondition",
 };
