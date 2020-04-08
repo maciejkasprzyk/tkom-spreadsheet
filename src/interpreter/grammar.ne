@@ -30,19 +30,19 @@ primary ->
   | function_call                            {% id %}
 
 cell_ref ->
-  %variable                                  {% p.variable %}
+  %identifier                                {% p.variable %}
 
 function_call ->
-  %function_identifier args %rparen          {% p.functionCall %}
+  %identifier %lparen args %rparen           {% p.functionCall %}
 
 args ->
     range                                    {% id %}
   | list                                     {% p.list %}
 
 range ->
-  %variable %colon %variable                 {% p.range %}
+  cell_ref %colon cell_ref                 {% p.range %}
 
 list ->
-  %variable (%semicolon %variable):*         {% p.listAdd %}
+  cell_ref (%semicolon cell_ref):*         {% p.listAdd %}
 
 

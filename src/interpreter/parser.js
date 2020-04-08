@@ -10,7 +10,7 @@ export class Parser {
 
   feed(s) {
     try {
-      return this.parser.feed(s);
+      this.parser.feed(s);
     } catch (e) {
       // throw new UserError(e.message.split('\n')[0]);
       throw new UserError("Syntax error");
@@ -18,6 +18,10 @@ export class Parser {
   }
 
   get results() {
-    return this.parser.results[0][0];
+    try {
+      return this.parser.results[0][0];
+    }catch (e) {
+      return null;
+    }
   }
 }

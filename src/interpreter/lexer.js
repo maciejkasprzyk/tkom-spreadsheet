@@ -1,13 +1,8 @@
 import * as moo from 'moo'
 
-// lexer has two states: main and func_args
 const tokens = {
   whitespace: {match: /[\s]+/, lineBreaks: true},
-  function_identifier: {
-    match: /[a-zA-Z_$][0-9a-zA-Z_$]*\(/,
-    value: x => x.slice(0, -1), // remove last character
-  },
-  variable: {
+  identifier: {
     match: /[a-zA-Z]+[0-9]*/,
     type: moo.keywords({
       "if": "if"

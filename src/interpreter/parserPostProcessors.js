@@ -63,7 +63,7 @@ export function negative([_,number]) {
   return -number.value;
 }
 
-export function functionCall([identifier, args]) {
+export function functionCall([identifier,_, args]) {
   log("func_name:", identifier.value);
   log("args:", args);
   return {
@@ -81,12 +81,12 @@ export function variable([identifier]) {
   };
 }
 
-export function range([identifier1, _, identifier2]) {
-  log("identifier1:", identifier1.value);
-  log("identifier2:", identifier2.value);
+export function range([cell1, _, cell2]) {
+  log("cell1:", cell1);
+  log("cell2:", cell2);
   return {
-    identifier1: identifier1.value,
-    identifier2: identifier2.value,
+    cell1: cell1,
+    cell2: cell2,
     type: nodeTypes.range,
   };
 }
@@ -103,6 +103,8 @@ export function listAdd([variable, list]) {
   const result = [variable];
 
   for (const el of list) {
+    //el[0] is semicolon
+    //el[1] is cell_ref
     result.push(el[1]);
   }
   return result

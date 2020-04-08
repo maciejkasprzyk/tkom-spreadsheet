@@ -1,6 +1,5 @@
 import {Parser} from "../interpreter/parser";
 import {nodeTypes} from "../interpreter/nodeTypes";
-import {lexer} from "../interpreter/lexer";
 import {UserError} from "../interpreter/userError";
 import {Cell} from "../interpreter/Variable";
 import {getCellIndexes, isFormula, topologicalSort} from "../interpreter/utils";
@@ -35,7 +34,7 @@ export class SpreadsheetStore {
         variable.ast = parser.results;
         this.updateVariable(variable);
 
-        for (const v of this.findVarsReferenced(variable.formula.substring(1))) {
+        for (const v of this.findVarsReferenced(variable.ast)) {
           variable.observe(v);
         }
       } else {
@@ -95,10 +94,10 @@ export class SpreadsheetStore {
         let argsList = [];
         if (x.args.type === nodeTypes.list) {
           for (const arg of x.args.list) {
-            argsList.push(this.getVarByName(arg.value).value)
+            argsList.push(this.getVarByName(arg.identifier).value)
           }
         } else if (x.args.type === nodeTypes.range) {
-          argsList = this.getCellsByRange(x.args.identifier1, x.args.identifier2).map((x) => x.value);
+          argsList = this.getCellsByRange(x.args.cell1.identifier, x.args.cell2.identifier).map((x) => x.value);
         }
         return this.functions[x.identifier](argsList);
 
@@ -108,19 +107,19 @@ export class SpreadsheetStore {
     }
   }
 
-  getVarByName(name) {
+  getVarByName(identifier) {
     // todo if not a cell look for variable
-    return this.getCellByName(name)
+    return this.getCellByName(identifier)
   }
 
   /**
-   * @param name For example: A2, AB13, C13 etc as string
+   * @param identifier For example: A2, AB13, C13 etc as string
    */
-  getCellByName(name) {
-    const [x_index, y_index] = getCellIndexes(name);
+  getCellByName(identifier) {
+    const [x_index, y_index] = getCellIndexes(identifier);
 
     if (this.x <= x_index || this.y <= y_index) {
-      throw new UserError(`No cell: ${name}`)
+      throw new UserError(`No cell: ${identifier}`)
     }
     return this.cells[y_index][x_index];
   }
@@ -147,23 +146,39 @@ export class SpreadsheetStore {
     return result;
   }
 
-  findVarsReferenced(string) {
-    lexer.reset(string);
-    let references = [];
-    let tok = lexer.next();
-    let last = "";
-    while (tok !== undefined) {
-      if (tok.type === 'variable') {
-        last = tok.value;
-        references.push(this.getVarByName(tok.value));
-      } else if (tok.type === 'colon') {
-        references.pop();
-        const start = last;
-        const end = lexer.next().value;
-        references.push(...this.getCellsByRange(start, end));
+  findVarsReferenced(ast) {
+    function dfs(node) {
+      if (node.type !== undefined) {
+        if (node.type === 'variable') {
+          references.push(node.identifier);
+          return;
+        }
+        if (node.type === 'range') {
+          ranges.push([node.cell1.identifier, node.cell2.identifier]);
+          return;
+        }
+        if (node.type === 'list') {
+          for (const variable of node.list) {
+            references.push(variable.identifier)
+          }
+        }
+        for (const property in node) {
+          if (node.hasOwnProperty(property)) {
+            dfs(node[property]);
+          }
+        }
       }
-      tok = lexer.next();
     }
-    return references;
+    // todo write code to get cells by range
+    const ranges = [];
+    const references = [];
+    dfs(ast);
+
+    const result = [];
+    result.push(...references.map((x) => this.getVarByName(x)));
+    for (let [start, end] of ranges) {
+      result.push(...this.getCellsByRange(start, end));
+    }
+    return result;
   }
 }

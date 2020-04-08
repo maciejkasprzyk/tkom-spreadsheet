@@ -30,16 +30,16 @@ export function isLetter(str) {
   return str.length === 1 && str.match(/[a-z]/i);
 }
 
-export function divideIntoLettersAndNumber(name) {
+export function divideIntoLettersAndNumber(identifier) {
   let index = 0;
-  while (index < name.length && isLetter(name[index])) {
+  while (index < identifier.length && isLetter(identifier[index])) {
     index++;
   }
-  const letters = name.substring(0, index);
-  const digits = name.substring(index);
+  const letters = identifier.substring(0, index);
+  const digits = identifier.substring(index);
 
   if (letters.length === 0 || digits.length === 0) {
-    throw new UserError(`Incorrect name: ${name}`)
+    throw new UserError(`Incorrect identifier: ${identifier}`)
   }
 
   return [letters, digits];
