@@ -17,7 +17,7 @@ const tokens = {
   semicolon: ';',
   colon: ':',
   compOperator: /==|>=|<=|<|>|!=/,
-
+  equal: '=',
   number: {
     match: /[1-9][0-9]*(?:,[0-9]*)?|0(?:\.[0-9]+)?/, // ?: dont create capturing group
     value: x => parseFloat(x),
