@@ -1,7 +1,9 @@
 import * as moo from 'moo'
+import IndentedLexer from './indentedLexer'
 
 const tokens = {
-  whitespace: {match: /[\s]+/, lineBreaks: true},
+  ws: /[ \t\u00A0\u1680\u2000-\u200a\u2028\u2029\u202f\u3000]+/,
+  end: { match: /\n/, lineBreaks: true },
   identifier: {
     match: /[a-zA-Z]+[0-9]*/,
     type: moo.keywords({
@@ -25,12 +27,13 @@ const tokens = {
 
 };
 
-export const lexer = moo.compile(tokens);
+export const lexer = new IndentedLexer(moo.compile(tokens), 'ws', 'end');
+
 
 // ignore whitespaces tokens
 lexer.next = (next => () => {
   let tok;
-  while ((tok = next.call(lexer)) && tok.type === "whitespace") {
+  while ((tok = next.call(lexer)) && tok.type === "ws") {
   }
   return tok;
 })(lexer.next);

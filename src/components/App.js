@@ -62,8 +62,20 @@ function App() {
 
 export default App;
 
-const examples = [`sum(A1,A2)`,
-`1+2`
+const examples = [
+`i = 0
+while i < 5
+  cell[15][i] = i
+  i = i + 1`,
+
+`i = 2
+while i > 0
+  i = i - 1`,
+
+`a
+  b
+    c
+a`
 ];
 
 
