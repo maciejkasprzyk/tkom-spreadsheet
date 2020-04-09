@@ -30,8 +30,11 @@
   }
 
   & td {
-    border: 2px solid white;
+    padding: 2px;
+    background-color: white;
+
     &.focus {
+      padding: 0;
       border: 2px solid #4285f4;
 
     }
@@ -40,7 +43,6 @@
   & div {
     text-align: left;
     font-size: 1em;
-    background-color: white;
     height: 100%;
 
     &.error {

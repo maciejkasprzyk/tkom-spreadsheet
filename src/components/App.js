@@ -2,11 +2,11 @@
 import React, {useEffect} from 'react';
 import Spreadsheet from "./Spreadsheet";
 import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
-import {functions} from "../interpreter/functions";
+import {functions} from "../parser/functions";
 import style from './App.module.scss';
 import Editor from "./Editor";
-import {lexer} from '../interpreter/lexer';
-import {Parser} from "../interpreter/parsers";
+import {lexer} from '../parser/lexer';
+import {Parser} from "../parser/parsers";
 
 const store = new SpreadsheetStore(5, 100, functions);
 
@@ -140,5 +140,6 @@ function populateSheet() {
   cells[r][1].set("=if(C14<D14;1;0)");
   cells[r][2].set("5");
   cells[r][3].set("6");
+
 
 }

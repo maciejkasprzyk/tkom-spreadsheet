@@ -78,6 +78,7 @@ const Spreadsheet = props => {
             <th>{i + 1}</th>
             {row.map((cell, j) =>
               <td
+                style={{backgroundColor: cell.background}}
                 onClick={e => onClick(e, cell)}
                 key={j}>
                 {isEditing(cell) ?
@@ -88,9 +89,9 @@ const Spreadsheet = props => {
                     autoFocus={true}
                   /> :
                   <div
-                    className={cell.error? style.error : ""}
+                    className={cell.error ? style.error : ""}
                   >
-                    {cell.error? cell.error : cell.value}
+                    {cell.error ? cell.error : cell.value}
                   </div>
                 }
               </td>

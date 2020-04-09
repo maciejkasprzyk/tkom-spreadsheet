@@ -1,8 +1,8 @@
-import {FormulaParser} from "../interpreter/parsers";
-import {nodeTypes} from "../interpreter/nodeTypes";
-import {UserError} from "../interpreter/errors";
-import {Cell} from "../interpreter/variables";
-import {getCellIndexes, isFormula, topologicalSort} from "../interpreter/utils";
+import {FormulaParser} from "../parser/parsers";
+import {nodeTypes} from "../parser/nodeTypes";
+import {UserError} from "../parser/errors";
+import {Cell} from "./variables";
+import {getCellIndexes, isFormula, topologicalSort} from "./utils";
 
 
 export class SpreadsheetStore {
@@ -175,7 +175,6 @@ export class SpreadsheetStore {
         }
       }
     }
-    // todo write code to get cells by range
     const ranges = [];
     const references = [];
     dfs(ast);

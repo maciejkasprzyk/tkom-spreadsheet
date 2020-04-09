@@ -38,12 +38,15 @@ export class Variables {
 
 export class Cell extends Variables {
 
+  @observable background = null;
+
   constructor(x, y, manager) {
     super();
     this.x = x;
     this.y = y;
     this.manager = manager;
   }
+
 
   set(str) {
     this.manager.set(this, str)
