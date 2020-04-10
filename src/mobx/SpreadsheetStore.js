@@ -95,7 +95,24 @@ export class SpreadsheetStore {
         return this.functions[x.identifier](...args);
 
       case nodeTypes.comparision:
-        return x.func(this.executeFormula(x.op1), this.executeFormula(x.op2));
+        const a = this.executeFormula(x.op1);
+        const b = this.executeFormula(x.op2);
+        switch (x.operator) {
+          case '==':
+            return a === b;
+          case '>=':
+            return a >= b;
+          case '<=':
+            return a <= b;
+          case '<':
+            return a < b;
+          case '>':
+            return a > b;
+          case '!=':
+            return a !== b;
+          default:
+            throw Error("Unknown comparison operator");
+        }
 
       case nodeTypes.range:
         return this.getCellsByRange(x.cell1.identifier, x.cell2.identifier).map((x) => x.value);

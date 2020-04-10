@@ -36,7 +36,6 @@ primary ->
   | function_call                            {% id %}
   | range                                    {% id %}
 
-
 variable ->
   %identifier                                {% p.variable %}
 

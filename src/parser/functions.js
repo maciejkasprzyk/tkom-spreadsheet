@@ -7,7 +7,6 @@ function avg(...list) {
   return sum(list) / list.length;
 }
 
-
 export const functions = {
   "sum": sum,
   "avg": avg,
