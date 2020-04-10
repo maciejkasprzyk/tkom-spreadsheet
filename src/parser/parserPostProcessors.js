@@ -103,15 +103,6 @@ export function argsAdd([primary, list]) {
   return result;
 }
 
-export function ifCondition(data) {
-  return {
-    condition: data[2],
-    exprTrue: data[4],
-    exprFalse: data[6],
-    type: nodeTypes.ifCondition
-  };
-}
-
 export function comparison([a, operator, b]) {
   let func;
   switch (operator.value) {

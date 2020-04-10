@@ -50,7 +50,6 @@ let ParserRules = [
     },
     {"name": "primary", "symbols": ["variable"], "postprocess": id},
     {"name": "primary", "symbols": ["function_call"], "postprocess": id},
-    {"name": "primary", "symbols": ["condition"], "postprocess": id},
     {"name": "primary", "symbols": ["range"], "postprocess": id},
     {
         "name": "variable",
@@ -60,6 +59,11 @@ let ParserRules = [
     {
         "name": "function_call",
         "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)],
+        "postprocess": p.functionCall
+    },
+    {
+        "name": "function_call",
+        "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)],
         "postprocess": p.functionCall
     },
     {"name": "args$ebnf$1", "symbols": []},
@@ -79,11 +83,6 @@ let ParserRules = [
         "name": "range",
         "symbols": ["variable", (lexer.has("colon") ? {type: "colon"} : colon), "variable"],
         "postprocess": p.range
-    },
-    {
-        "name": "condition",
-        "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "expr", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)],
-        "postprocess": p.ifCondition
     },
     {"name": "entry", "symbols": ["expr"]},
     {"name": "statement", "symbols": ["expr", (lexer.has("end") ? {type: "end"} : end)]}

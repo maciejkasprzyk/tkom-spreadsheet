@@ -34,7 +34,6 @@ primary ->
   | %minus %number                           {% p.negative %}
   | variable                                 {% id %}
   | function_call                            {% id %}
-  | condition                                {% id %}
   | range                                    {% id %}
 
 
@@ -43,13 +42,10 @@ variable ->
 
 function_call ->
   %identifier %lparen args %rparen           {% p.functionCall %}
+  | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->
   expr (%semicolon expr):*                   {% p.argsAdd %}
 
 range ->
   variable %colon variable                   {% p.range %}
-
-condition ->
-  %kwIf %lparen expr %semicolon expr %semicolon expr %rparen
-                                             {% p.ifCondition %}

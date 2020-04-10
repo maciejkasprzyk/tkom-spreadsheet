@@ -7,7 +7,9 @@ function avg(...list) {
   return sum(list) / list.length;
 }
 
+
 export const functions = {
   "sum": sum,
   "avg": avg,
+  "if": (a, b, c) => a ? b : c,
 };

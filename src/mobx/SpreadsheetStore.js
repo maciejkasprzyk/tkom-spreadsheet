@@ -94,17 +94,12 @@ export class SpreadsheetStore {
         const args = x.args.map(a => this.executeFormula(a));
         return this.functions[x.identifier](...args);
 
-      case nodeTypes.ifCondition:
-        if (this.executeFormula(x.condition) === true) {
-          return this.executeFormula(x.exprTrue);
-        } else {
-          return this.executeFormula(x.exprFalse);
-        }
-
       case nodeTypes.comparision:
         return x.func(this.executeFormula(x.op1), this.executeFormula(x.op2));
+
       case nodeTypes.range:
         return this.getCellsByRange(x.cell1.identifier, x.cell2.identifier).map((x) => x.value);
+
       default:
         throw Error(`Not handled node type ${x.type}`);
 
