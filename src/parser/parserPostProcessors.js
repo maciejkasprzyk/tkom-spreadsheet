@@ -92,16 +92,8 @@ export function range([cell1, _, cell2]) {
   };
 }
 
-export function list([list]) {
-  return {
-    list: list,
-    type: nodeTypes.list,
-  };
-}
-
-
-export function listAdd([variable, list]) {
-  const result = [variable];
+export function argsAdd([primary, list]) {
+  const result = [primary];
 
   for (const el of list) {
     //el[0] is semicolon

@@ -1,8 +1,9 @@
 @include "./formulaGrammar.ne"
 
-entry -> statement
+entry -> expr
 
 # todo
-statement -> expr
+statement ->
+  expr %end
 
 

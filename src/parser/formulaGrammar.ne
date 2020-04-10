@@ -32,25 +32,23 @@ primary ->
     %lparen expr %rparen                     {% p.return1 %}
   | %number                                  {% p.token %}
   | %minus %number                           {% p.negative %}
-  | cell_ref                                 {% id %}
+  | variable                                 {% id %}
   | function_call                            {% id %}
   | condition                                {% id %}
+  | range                                    {% id %}
 
-cell_ref ->
+
+variable ->
   %identifier                                {% p.variable %}
 
 function_call ->
   %identifier %lparen args %rparen           {% p.functionCall %}
 
 args ->
-    range                                    {% id %}
-  | list                                     {% p.list %}
+  expr (%semicolon expr):*                   {% p.argsAdd %}
 
 range ->
-  cell_ref %colon cell_ref                   {% p.range %}
-
-list ->
-  cell_ref (%semicolon cell_ref):*           {% p.listAdd %}
+  variable %colon variable                   {% p.range %}
 
 condition ->
   %kwIf %lparen expr %semicolon expr %semicolon expr %rparen

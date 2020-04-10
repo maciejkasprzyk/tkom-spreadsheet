@@ -91,25 +91,23 @@ export class SpreadsheetStore {
         if (!this.functions.hasOwnProperty(x.identifier)) {
           throw new UserError(`No function: ${x.identifier}`);
         }
-        let argsList = [];
-        if (x.args.type === nodeTypes.list) {
-          for (const arg of x.args.list) {
-            argsList.push(this.getVarByName(arg.identifier).value)
-          }
-        } else if (x.args.type === nodeTypes.range) {
-          argsList = this.getCellsByRange(x.args.cell1.identifier, x.args.cell2.identifier).map((x) => x.value);
-        }
-        return this.functions[x.identifier](argsList);
+        const args = x.args.map(a => this.executeFormula(a));
+        return this.functions[x.identifier](...args);
+
       case nodeTypes.ifCondition:
         if (this.executeFormula(x.condition) === true) {
           return this.executeFormula(x.exprTrue);
         } else {
           return this.executeFormula(x.exprFalse);
         }
+
       case nodeTypes.comparision:
         return x.func(this.executeFormula(x.op1), this.executeFormula(x.op2));
+      case nodeTypes.range:
+        return this.getCellsByRange(x.cell1.identifier, x.cell2.identifier).map((x) => x.value);
       default:
-        throw Error("Not handled node type");
+        throw Error(`Not handled node type ${x.type}`);
+
     }
   }
 
@@ -163,18 +161,20 @@ export class SpreadsheetStore {
           ranges.push([node.cell1.identifier, node.cell2.identifier]);
           return;
         }
-        if (node.type === 'list') {
-          for (const variable of node.list) {
-            references.push(variable.identifier)
-          }
-        }
         for (const property in node) {
           if (node.hasOwnProperty(property)) {
-            dfs(node[property]);
+            if (Array.isArray(node[property])) {
+              for (const el of node[property]) {
+                dfs(el);
+              }
+            } else {
+              dfs(node[property]);
+            }
           }
         }
       }
     }
+
     const ranges = [];
     const references = [];
     dfs(ast);
