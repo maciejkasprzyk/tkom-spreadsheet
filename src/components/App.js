@@ -14,12 +14,32 @@ function App() {
 
   useEffect(populateSheet, []);
 
+  function run(code) {
+    if (code === "") {
+      return;
+    }
+    try {
+      const parser = new Parser();
+      parser.feed(code);
+      store.exec(parser.results);
+    } catch (e) {
+      if (e.name !== "UserError") {
+        throw e;
+      }
+      // todo fancy errors
+      console.log(e.message);
+    }
+  }
+
   function logParseTree(code) {
     try {
       const parser = new Parser();
       parser.feed(code);
       console.log(parser.results);
     } catch (e) {
+      if (e.name !== "UserError") {
+        throw e;
+      }
       console.log(e.message);
     }
   }
@@ -35,6 +55,10 @@ function App() {
       }
       console.log(result);
     } catch (e) {
+      if (e.name !== "UserError") {
+        throw e;
+      }
+
       console.log(e.message);
     }
   }
@@ -45,14 +69,13 @@ function App() {
         x={store.x}
         y={store.y}
         cells={store.cells}
-        onCellSet={(cell, value) => {
-          cell.set(value)
+        onCellSet={(cell, value, isFormula) => {
+          cell.set(value, isFormula)
         }}
       />
       <Editor
         examples={examples}
-        onSubmit={() => {
-        }}
+        onSubmit={run}
         onLogLexerOutput={logLexerOutput}
         onLogParseTree={logParseTree}
       />
@@ -63,16 +86,16 @@ function App() {
 export default App;
 
 const examples = [
-`i = 0
+  `i = 0
 while i < 5
   cell[15][i] = i
   i = i + 1`,
 
-`i = 2
+  `i = 2
 while i > 0
   i = i - 1`,
 
-`a
+  `a
   b
     c
 a`

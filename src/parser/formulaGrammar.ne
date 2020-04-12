@@ -30,21 +30,21 @@ product ->
 
 primary ->
     %lparen expr %rparen                     {% p.return1 %}
-  | %number                                  {% p.token %}
+  | %number                                  {% p.number %}
   | %minus %number                           {% p.negative %}
   | variable                                 {% id %}
   | function_call                            {% id %}
   | range                                    {% id %}
 
 variable ->
-  %identifier                                {% p.variable %}
+    %identifier                              {% p.variable %}
 
 function_call ->
-  %identifier %lparen args %rparen           {% p.functionCall %}
+    %identifier %lparen args %rparen         {% p.functionCall %}
   | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->
-  expr (%semicolon expr):*                   {% p.argsAdd %}
+    expr (%semicolon expr):*                 {% p.list %}
 
 range ->
-  variable %colon variable                   {% p.range %}
+    variable %colon variable                 {% p.range %}

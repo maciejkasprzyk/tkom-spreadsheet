@@ -9,4 +9,7 @@ export const nodeTypes = {
   list: "list",
   ifCondition: "ifCondition",
   comparision: "comparision",
+  expr: "expr",
+  assigment: "assigment",
+  primary: "primary",
 };

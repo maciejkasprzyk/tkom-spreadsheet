@@ -1,6 +1,5 @@
 import {nodeTypes} from './nodeTypes.js';
 
-
 export function addition([a, _, b]) {
   return {
     op1: a,
@@ -37,12 +36,18 @@ export function return1(data) {
   return data[1];
 }
 
-export function token([t]) {
-  return t.value;
+export function number([number]) {
+  return {
+    value: number.value,
+    type: nodeTypes.primary
+  }
 }
 
 export function negative([_, number]) {
-  return -number.value;
+  return {
+    value: -number.value,
+    type: nodeTypes.primary
+  }
 }
 
 export function functionCall([identifier, _, args]) {
@@ -68,9 +73,8 @@ export function range([cell1, _, cell2]) {
   };
 }
 
-export function argsAdd([primary, list]) {
-  const result = [primary];
-
+export function list([first, list]) {
+  const result = [first];
   for (const el of list) {
     //el[0] is semicolon
     //el[1] is cell_ref
@@ -88,3 +92,19 @@ export function comparison([a, operator, b]) {
   }
 }
 
+export function expr([expr]) {
+  return {
+    expr: expr,
+    type: nodeTypes.expr,
+  }
+}
+
+export function assigment([left, _, right]) {
+  return {
+    left: left,
+    right: right,
+    type: nodeTypes.assigment,
+  }
+
+
+}

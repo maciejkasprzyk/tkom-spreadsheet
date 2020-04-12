@@ -42,7 +42,7 @@ let ParserRules = [
         "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)],
         "postprocess": p.return1
     },
-    {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": p.token},
+    {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": p.number},
     {
         "name": "primary",
         "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), (lexer.has("number") ? {type: "number"} : number)],
@@ -78,7 +78,7 @@ let ParserRules = [
             return d[0].concat([d[1]]);
         }
     },
-    {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.argsAdd},
+    {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.list},
     {
         "name": "range",
         "symbols": ["variable", (lexer.has("colon") ? {type: "colon"} : colon), "variable"],

@@ -1,17 +1,16 @@
 import {observable} from "mobx";
 
 
-export class Variables {
+export class Variable {
 
   @observable formula = null;
   @observable value = null;
-  @observable error = null;
 
   ast = null;
 
-  // cells that observe us -> we are used in their formula
+  // vars that observe us -> we are used in their formula
   observers = [];
-  // cells that we observe for changes -> we use them in our formula
+  // vars that we observe for changes -> we use them in our formula
   subjects = [];
 
   unregisterFromAllSubjects() {
@@ -36,9 +35,10 @@ export class Variables {
   }
 }
 
-export class Cell extends Variables {
+export class Cell extends Variable {
 
   @observable background = null;
+  @observable error = null;
 
   constructor(x, y, manager) {
     super();
@@ -49,6 +49,6 @@ export class Cell extends Variables {
 
 
   set(str) {
-    this.manager.set(this, str)
+    this.manager.setCell(this, str)
   }
 }

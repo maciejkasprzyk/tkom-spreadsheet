@@ -42,7 +42,7 @@ let ParserRules = [
         "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)],
         "postprocess": p.return1
     },
-    {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": p.token},
+    {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": p.number},
     {
         "name": "primary",
         "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), (lexer.has("number") ? {type: "number"} : number)],
@@ -78,14 +78,30 @@ let ParserRules = [
             return d[0].concat([d[1]]);
         }
     },
-    {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.argsAdd},
+    {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.list},
     {
         "name": "range",
         "symbols": ["variable", (lexer.has("colon") ? {type: "colon"} : colon), "variable"],
         "postprocess": p.range
     },
-    {"name": "entry", "symbols": ["expr"]},
-    {"name": "statement", "symbols": ["expr", (lexer.has("end") ? {type: "end"} : end)]}
+    {"name": "entry", "symbols": ["program"]},
+    {"name": "program$ebnf$1", "symbols": []},
+    {"name": "program$ebnf$1$subexpression$1", "symbols": [(lexer.has("end") ? {type: "end"} : end), "statement"]},
+    {
+        "name": "program$ebnf$1",
+        "symbols": ["program$ebnf$1", "program$ebnf$1$subexpression$1"],
+        "postprocess": function arrpush(d) {
+            return d[0].concat([d[1]]);
+        }
+    },
+    {"name": "program", "symbols": ["statement", "program$ebnf$1"], "postprocess": p.list},
+    {"name": "statement", "symbols": ["expr"], "postprocess": p.expr},
+    {"name": "statement", "symbols": ["assigment"], "postprocess": id},
+    {
+        "name": "assigment",
+        "symbols": ["expr", (lexer.has("assign") ? {type: "assign"} : assign), "expr"],
+        "postprocess": p.assigment
+    }
 ];
 let ParserStart = "entry";
 export default { Lexer, ParserRules, ParserStart };

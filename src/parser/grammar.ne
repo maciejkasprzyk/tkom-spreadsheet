@@ -1,9 +1,15 @@
 @include "./formulaGrammar.ne"
 
-entry -> expr
+entry ->
+    program
 
-# todo
+program ->
+    statement (%end statement):*               {% p.list %}
+
 statement ->
-  expr %end
+    expr                                       {% p.expr %}
+  | assigment                                  {% id %}
 
+assigment ->
+    expr %assign expr                          {% p.assigment %}
 
