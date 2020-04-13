@@ -58,7 +58,7 @@
       if (token.type === this.ws) {
         this.changeIndent(token.value, token.col, token.line, token.offset);
       } else {
-        this.changeIndent("");
+        this.changeIndent("", token.col, token.line, token.offset);
         this.tokens.push(token);
       }
     } else {
@@ -87,6 +87,15 @@
           type: 'dedent',
           text: indent,
           value: indent,
+          lineBreaks: 0,
+          col: col,
+          line: line,
+          offset: offset,
+        });
+        this.tokens.push({
+          type: 'end',
+          text: "afterDedent",
+          value: "afterDedent",
           lineBreaks: 0,
           col: col,
           line: line,
