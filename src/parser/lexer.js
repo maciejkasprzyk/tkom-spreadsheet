@@ -33,13 +33,3 @@ const tokens = {
 
 export const lexer = new IndentedLexer(moo.compile(tokens), 'ws', 'end');
 
-
-// ignore whitespaces tokens
-lexer.next = (next => () => {
-  let tok;
-  while ((tok = next.call(lexer)) && tok.type === "ws") {
-  }
-  return tok;
-})(lexer.next);
-
-

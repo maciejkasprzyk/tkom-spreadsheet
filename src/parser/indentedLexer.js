@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 (function () {
 
   function IndentedLexer(lexer, ws, nl) {
@@ -9,9 +7,49 @@
     this.afterNewLine = true;
     this.ws = ws; // white space token
     this.nl = nl; // new line token
+
+    // used to ignore ends tokens
+    this.previous = null;
+    this.start = true;
   }
 
   IndentedLexer.prototype.next = function () {
+    return this.ignoreExcessiveEndsNext();
+  }
+
+  IndentedLexer.prototype.ignoreExcessiveEndsNext = function () {
+    let tok;
+
+    // skip end tokens at the start
+    if (this.start) {
+      while ((tok = this.ignoreWhiteSpaceNext()) && tok.type === "end") {
+      }
+    } else {
+      this.start = false;
+      tok = this.ignoreWhiteSpaceNext();
+    }
+
+    if (tok === undefined) {
+      return tok;
+    }
+
+    while (this.previous !== null && this.previous.type === 'end' && tok.type === 'end') {
+
+    }
+
+    this.previous = tok;
+    return tok;
+
+  }
+
+  IndentedLexer.prototype.ignoreWhiteSpaceNext = function () {
+    let tok;
+    while ((tok = this.indentedNext()) && tok.type === "ws") {
+    }
+    return tok;
+  }
+
+  IndentedLexer.prototype.indentedNext = function () {
     if (this.tokens.length === 0) {
       this.generateMoreTokens();
     }
@@ -43,11 +81,21 @@
     while (indent !== this.indents[this.indents.length - 1]) {
       let prev = this.indents[this.indents.length - 1];
       if (startsWith(indent, prev)) {  // more indentation than we had.
-        this.tokens.push({type: 'indent'});
+        this.tokens.push({
+          type: 'indent',
+          text: indent,
+          value: indent,
+          lineBreaks: 0,
+        });
         this.indents.push(indent);
         return;
       } else if (startsWith(prev, indent)) { // less indentation than we had.
-        this.tokens.push({type: 'dedent'});
+        this.tokens.push({
+          type: 'dedent',
+          text: indent,
+          value: indent,
+          lineBreaks: 0,
+        });
         this.indents.pop();  // check the previous one.
       } else {
         prev = unicodeDebugString(prev);
