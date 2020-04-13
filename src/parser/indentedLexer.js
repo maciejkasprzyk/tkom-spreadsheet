@@ -22,7 +22,7 @@
 
     // skip end tokens at the start
     if (this.start) {
-      while ((tok = this.ignoreWhiteSpaceNext()) && tok.type === "end") {
+      while ((tok = this.ignoreWhiteSpaceNext()) && tok.type === this.end) {
       }
     } else {
       this.start = false;
@@ -33,7 +33,7 @@
       return tok;
     }
 
-    while (this.previous !== null && this.previous.type === 'end' && tok.type === 'end') {
+    while (this.previous !== null && this.previous.type === this.end && tok.type === this.end) {
 
     }
 
@@ -44,21 +44,22 @@
 
   IndentedLexer.prototype.ignoreWhiteSpaceNext = function () {
     let tok;
-    while ((tok = this.indentedNext()) && tok.type === "ws") {
+    while ((tok = this.indentedNext()) && tok.type === this.ws) {
     }
     return tok;
   }
 
   IndentedLexer.prototype.indentedNext = function () {
-    if (this.tokens.length === 0) {
+    while (this.tokens.length === 0) {
       this.generateMoreTokens();
     }
-    return this.tokens.shift();
+    return this.tokens.shift()
   }
 
   IndentedLexer.prototype.generateMoreTokens = function () {
     let token = this.lexer.next(this);
     if (!token) {
+      this.changeIndent("");
       this.tokens.push(token);
       return;
     }
@@ -66,7 +67,7 @@
     if (this.afterNewLine) {
       this.afterNewLine = false;
       if (token.type === this.ws) {
-        this.changeIndent(token.value);
+        this.changeIndent(token.value, token.col, token.line, token.offset);
       } else {
         this.changeIndent("");
         this.tokens.push(token);
@@ -77,7 +78,7 @@
     this.afterNewLine = (token.type === this.nl);
   };
 
-  IndentedLexer.prototype.changeIndent = function (indent) {
+  IndentedLexer.prototype.changeIndent = function (indent, col, line, offset) {
     while (indent !== this.indents[this.indents.length - 1]) {
       let prev = this.indents[this.indents.length - 1];
       if (startsWith(indent, prev)) {  // more indentation than we had.
@@ -86,6 +87,9 @@
           text: indent,
           value: indent,
           lineBreaks: 0,
+          col: col,
+          line: line,
+          offset: offset,
         });
         this.indents.push(indent);
         return;
@@ -95,6 +99,9 @@
           text: indent,
           value: indent,
           lineBreaks: 0,
+          col: col,
+          line: line,
+          offset: offset,
         });
         this.indents.pop();  // check the previous one.
       } else {

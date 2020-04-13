@@ -97,6 +97,7 @@ while i > 0
 
   `a
   b
+  b
     c
 a`
 ];
