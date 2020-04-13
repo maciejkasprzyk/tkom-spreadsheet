@@ -88,18 +88,20 @@ export default App;
 const examples = [
   `i = 0
 while i < 5
-  cell[15][i] = i
-  i = i + 1`,
+    cell[15][i] = i
+    i = i + 1`,
 
-  `i = 2
+`A1 = 5
+i = 5
 while i > 0
-  i = i - 1`,
+    i = i - 1
+    A1 = A1 + 2`,
 
-  `a
-  b
-  b
-    c
-a`
+`if A1 == 5
+    A2 = 5
+else
+    A2 = 10  
+`
 ];
 
 

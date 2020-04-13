@@ -4,7 +4,7 @@ entry ->
     code
 
 code ->
-    statement ((%end):+ statement):*           {% p.list %}
+    statement (%end statement):*               {% p.list %}
 
 statement ->
     expr                                       {% p.expr %}

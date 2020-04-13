@@ -49,6 +49,11 @@ export class SpreadsheetStore {
         return right;
       case nodeTypes.expr:
         return this.execExpr(x.expr);
+      case nodeTypes.whileLoop:
+        while (this.execExpr(x.condition)) {
+          this.exec(x.block);
+        }
+        break;
       default:
         throw Error(`Not handled node type ${x.type}`);
     }
@@ -182,7 +187,12 @@ export class SpreadsheetStore {
    * @param identifier For example: A2, AB13, C13 etc as string
    */
   getCellByName(identifier) {
-    const [x_index, y_index] = getCellIndexes(identifier);
+    let x_index, y_index;
+    try {
+      [x_index, y_index] = getCellIndexes(identifier);
+    }catch (e) {
+      return null;
+    }
 
     if (this.x <= x_index || this.y <= y_index) {
       return null;
