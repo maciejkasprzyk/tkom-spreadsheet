@@ -3,7 +3,6 @@ import {nodeTypes} from "../parser/nodeTypes";
 import {UserError} from "../parser/errors";
 import {Cell, Variable} from "./variables";
 import {getCellIndexes, isFormula, topologicalSort} from "./utils";
-import {elseBlock} from "../parser/parserPostProcessors";
 
 
 export class SpreadsheetStore {
@@ -44,9 +43,10 @@ export class SpreadsheetStore {
     }
     switch (node.type) {
       case nodeTypes.assigment:
-        const left = node.left.identifier;
+        const left = this.execLeft(node.left);
         const right = this.execExpr(node.right);
-        this.setVariable(left, right);
+        // todo check for errors
+        left.value = right;
         return right;
       case nodeTypes.expr:
         return this.execExpr(node.expr);
@@ -66,6 +66,13 @@ export class SpreadsheetStore {
         break;
       default:
         throw Error(`Not handled node type ${node.type}`);
+    }
+  }
+
+  execLeft(node) {
+    switch (node.type) {
+      case nodeTypes.variable:
+        return this.getOrCreateVar(node.identifier);
     }
   }
 
