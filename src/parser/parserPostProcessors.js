@@ -131,5 +131,3 @@ export function ifElse([,condition, block, elseBlock]) {
 export function elseBlock([,,block]) {
   return block;
 }
-
-// todo move types as first property
