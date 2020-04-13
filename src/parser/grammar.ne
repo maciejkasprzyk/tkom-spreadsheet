@@ -10,6 +10,7 @@ statement ->
     expr                                       {% p.expr %}
   | assigment                                  {% id %}
   | blockStart                                 {% id %}
+  | null                                       {% null %}
 
 blockStart ->
     %kwWhile expr %end block                   {% p.whileLoop %}
@@ -22,4 +23,4 @@ assigment ->
     expr %assign expr                          {% p.assigment %}
 
 block ->
-    %indent code %dedent                       {% p.block %}
+    %indent code %dedent (%end):?              {% p.block %}

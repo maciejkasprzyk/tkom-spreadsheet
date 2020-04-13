@@ -3,6 +3,7 @@ import {nodeTypes} from "../parser/nodeTypes";
 import {UserError} from "../parser/errors";
 import {Cell, Variable} from "./variables";
 import {getCellIndexes, isFormula, topologicalSort} from "./utils";
+import {elseBlock} from "../parser/parserPostProcessors";
 
 
 export class SpreadsheetStore {
@@ -33,63 +34,72 @@ export class SpreadsheetStore {
   }
 
 
-  exec(x) {
+  exec(node) {
     // its either a list or a object with property type set
-    if (Array.isArray(x)) {
-      for (const x1 of x) {
+    if (Array.isArray(node)) {
+      for (const x1 of node) {
         this.exec(x1);
       }
       return;
     }
-    switch (x.type) {
+    switch (node.type) {
       case nodeTypes.assigment:
-        const left = x.left.identifier;
-        const right = this.execExpr(x.right);
+        const left = node.left.identifier;
+        const right = this.execExpr(node.right);
         this.setVariable(left, right);
         return right;
       case nodeTypes.expr:
-        return this.execExpr(x.expr);
+        return this.execExpr(node.expr);
       case nodeTypes.whileLoop:
-        while (this.execExpr(x.condition)) {
-          this.exec(x.block);
+        while (this.execExpr(node.condition)) {
+          this.exec(node.block);
+        }
+        break;
+      case nodeTypes.ifElse:
+        if (this.execExpr(node.condition)) {
+          this.exec(node.block);
+        } else {
+          if (node.elseBlock !== null) {
+            this.exec(node.elseBlock);
+          }
         }
         break;
       default:
-        throw Error(`Not handled node type ${x.type}`);
+        throw Error(`Not handled node type ${node.type}`);
     }
   }
 
-  execExpr(x) {
+  execExpr(node) {
 
-    switch (x.type) {
+    switch (node.type) {
       case nodeTypes.primary:
-        return x.value;
+        return node.value;
       case nodeTypes.variable:
-        return this.getVarByName(x.identifier).value;
+        return this.getVarByName(node.identifier).value;
 
       case nodeTypes.multiplication:
-        return this.execExpr(x.op1) * this.execExpr(x.op2);
+        return this.execExpr(node.op1) * this.execExpr(node.op2);
 
       case nodeTypes.division:
-        return this.execExpr(x.op1) / this.execExpr(x.op2);
+        return this.execExpr(node.op1) / this.execExpr(node.op2);
 
       case nodeTypes.addition:
-        return this.execExpr(x.op1) + this.execExpr(x.op2);
+        return this.execExpr(node.op1) + this.execExpr(node.op2);
 
       case nodeTypes.subtraction:
-        return this.execExpr(x.op1) - this.execExpr(x.op2);
+        return this.execExpr(node.op1) - this.execExpr(node.op2);
 
       case nodeTypes.functionCall:
-        if (!this.functions.hasOwnProperty(x.identifier)) {
-          throw new UserError(`No function: ${x.identifier}`);
+        if (!this.functions.hasOwnProperty(node.identifier)) {
+          throw new UserError(`No function: ${node.identifier}`);
         }
-        const args = x.args.map(a => this.execExpr(a));
-        return this.functions[x.identifier](...args);
+        const args = node.args.map(a => this.execExpr(a));
+        return this.functions[node.identifier](...args);
 
       case nodeTypes.comparision:
-        const a = this.execExpr(x.op1);
-        const b = this.execExpr(x.op2);
-        switch (x.operator) {
+        const a = this.execExpr(node.op1);
+        const b = this.execExpr(node.op2);
+        switch (node.operator) {
           case '==':
             return a === b;
           case '>=':
@@ -107,10 +117,10 @@ export class SpreadsheetStore {
         }
 
       case nodeTypes.range:
-        return this.getCellsByRange(x.cell1.identifier, x.cell2.identifier).map((x) => x.value);
+        return this.getCellsByRange(node.cell1.identifier, node.cell2.identifier).map((x) => x.value);
 
       default:
-        throw Error(`Not handled node type ${x.type}`);
+        throw Error(`Not handled node type ${node.type}`);
 
     }
   }

@@ -111,18 +111,18 @@ export function block([,code]) {
   return code;
 }
 
-export function whileLoop([,condition,, block]) {
+export function whileLoop([,expr,, block]) {
   return {
     type: nodeTypes.whileLoop,
-    condition: condition,
+    condition: expr,
     block: block,
   }
 }
 
-export function ifElse([,condition, block, elseBlock]) {
+export function ifElse([,expr,, block, elseBlock]) {
   return {
     type: nodeTypes.ifElse,
-    condition: condition,
+    condition: expr,
     block: block,
     elseBlock: elseBlock,
   }

@@ -39,6 +39,7 @@ let ParserRules = [
     {"name": "statement", "symbols": ["expr"], "postprocess": p.expr},
     {"name": "statement", "symbols": ["assigment"], "postprocess": id},
     {"name": "statement", "symbols": ["blockStart"], "postprocess": id},
+    {"name": "statement", "symbols": [], "postprocess": null},
     {"name": "blockStart", "symbols": [(lexer.has("kwWhile") ? {type: "kwWhile"} : kwWhile), "expr", (lexer.has("end") ? {type: "end"} : end), "block"], "postprocess": p.whileLoop},
     {"name": "blockStart$ebnf$1$subexpression$1", "symbols": ["else"]},
     {"name": "blockStart$ebnf$1", "symbols": ["blockStart$ebnf$1$subexpression$1"], "postprocess": id},
@@ -46,7 +47,10 @@ let ParserRules = [
     {"name": "blockStart", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), "expr", (lexer.has("end") ? {type: "end"} : end), "block", "blockStart$ebnf$1"], "postprocess": p.ifElse},
     {"name": "else", "symbols": [(lexer.has("kwElse") ? {type: "kwElse"} : kwElse), (lexer.has("end") ? {type: "end"} : end), "block"], "postprocess": p.elseBlock},
     {"name": "assigment", "symbols": ["expr", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
-    {"name": "block", "symbols": [(lexer.has("indent") ? {type: "indent"} : indent), "code", (lexer.has("dedent") ? {type: "dedent"} : dedent)], "postprocess": p.block}
+    {"name": "block$ebnf$1$subexpression$1", "symbols": [(lexer.has("end") ? {type: "end"} : end)]},
+    {"name": "block$ebnf$1", "symbols": ["block$ebnf$1$subexpression$1"], "postprocess": id},
+    {"name": "block$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "block", "symbols": [(lexer.has("indent") ? {type: "indent"} : indent), "code", (lexer.has("dedent") ? {type: "dedent"} : dedent), "block$ebnf$1"], "postprocess": p.block}
 ];
 let ParserStart = "entry";
 export default { Lexer, ParserRules, ParserStart };
