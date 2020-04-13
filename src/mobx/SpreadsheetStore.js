@@ -73,6 +73,8 @@ export class SpreadsheetStore {
     switch (node.type) {
       case nodeTypes.variable:
         return this.getOrCreateVar(node.identifier);
+      default:
+        throw new UserError("Assign to rvalue.")
     }
   }
 
