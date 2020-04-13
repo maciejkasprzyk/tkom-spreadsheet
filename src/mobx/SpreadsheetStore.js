@@ -2,7 +2,7 @@ import {FormulaParser} from "../parser/parsers";
 import {nodeTypes} from "../parser/nodeTypes";
 import {UserError} from "../parser/errors";
 import {Cell, Variable} from "./variables";
-import {getCellIndexes, isFormula, topologicalSort} from "./utils";
+import {getCellIndexes, isFormula, isFunction, topologicalSort} from "./utils";
 
 
 export class SpreadsheetStore {
@@ -12,7 +12,7 @@ export class SpreadsheetStore {
   constructor(x, y, functions) {
     this.x = x;
     this.y = y;
-    this.functions = functions;
+    this.variables = functions;
     this.cells = Array(y);
     for (let i = 0; i < y; i++) {
       this.cells[i] = Array(x);
@@ -99,11 +99,15 @@ export class SpreadsheetStore {
         return this.execExpr(node.op1) - this.execExpr(node.op2);
 
       case nodeTypes.functionCall:
-        if (!this.functions.hasOwnProperty(node.identifier)) {
+        if (!this.variables.hasOwnProperty(node.identifier)) {
           throw new UserError(`No function: ${node.identifier}`);
         }
+        const func = this.variables[node.identifier];
+        if (!isFunction(func)) {
+          throw new UserError(`${node.identifier} is not a function.`)
+        }
         const args = node.args.map(a => this.execExpr(a));
-        return this.functions[node.identifier](...args);
+        return func(...args);
 
       case nodeTypes.comparision:
         const a = this.execExpr(node.op1);

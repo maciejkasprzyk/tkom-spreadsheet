@@ -58,3 +58,7 @@ export function getCellIndexes(name) {
   }
   return [x_index, y_index];
 }
+
+export function isFunction(obj) {
+  return !!(obj && obj.constructor && obj.call && obj.apply);
+}

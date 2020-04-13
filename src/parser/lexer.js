@@ -15,6 +15,7 @@ const tokens = {
 
     })
   },
+  dot: '.',
   lparen: '(',
   rparen: ')',
   lsquare: '[',
