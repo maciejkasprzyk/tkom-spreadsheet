@@ -10,7 +10,6 @@
 
     // used to ignore ends tokens
     this.previous = null;
-    this.start = true;
   }
 
   IndentedLexer.prototype.next = function () {
@@ -18,17 +17,7 @@
   }
 
   IndentedLexer.prototype.ignoreExcessiveEndsNext = function () {
-    let tok;
-
-    // skip end tokens at the start
-    if (this.start) {
-      while ((tok = this.ignoreWhiteSpaceNext()) && tok.type === this.end) {
-      }
-    } else {
-      this.start = false;
-      tok = this.ignoreWhiteSpaceNext();
-    }
-
+    let tok = this.ignoreWhiteSpaceNext();
     if (tok === undefined) {
       return tok;
     }
@@ -117,7 +106,8 @@
   }
 
   IndentedLexer.prototype.reset = function (data, info) {
-    this.lexer.reset(data, info);
+    // remove all new lines at both ends
+    this.lexer.reset(data.replace(/^\n|\n$/g, ''), info);
     this.indents = [''];
     this.tokens = [];
     this.afterNewLine = true;
