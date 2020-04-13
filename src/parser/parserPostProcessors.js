@@ -2,33 +2,33 @@ import {nodeTypes} from './nodeTypes.js';
 
 export function addition([a, _, b]) {
   return {
+    type: nodeTypes.addition,
     op1: a,
     op2: b,
-    type: nodeTypes.addition
   };
 }
 
 export function subtraction([a, _, b]) {
   return {
+    type: nodeTypes.subtraction,
     op1: a,
     op2: b,
-    type: nodeTypes.subtraction
   };
 }
 
 export function multiplication([a, _, b]) {
   return {
+    type: nodeTypes.multiplication,
     op1: a,
     op2: b,
-    type: nodeTypes.multiplication
   };
 }
 
 export function division([a, _, b]) {
   return {
+    type: nodeTypes.division,
     op1: a,
     op2: b,
-    type: nodeTypes.division
   };
 }
 
@@ -38,23 +38,23 @@ export function return1(data) {
 
 export function number([number]) {
   return {
+    type: nodeTypes.primary,
     value: number.value,
-    type: nodeTypes.primary
   }
 }
 
 export function negative([_, number]) {
   return {
+    type: nodeTypes.primary,
     value: -number.value,
-    type: nodeTypes.primary
   }
 }
 
 export function functionCall([identifier, _, args]) {
   return {
+    type: nodeTypes.functionCall,
     identifier: identifier.value,
     args: args,
-    type: nodeTypes.functionCall
   };
 }
 
@@ -67,9 +67,9 @@ export function variable([identifier]) {
 
 export function range([cell1, _, cell2]) {
   return {
+    type: nodeTypes.range,
     cell1: cell1,
     cell2: cell2,
-    type: nodeTypes.range,
   };
 }
 
@@ -85,10 +85,10 @@ export function list([first, list]) {
 
 export function comparison([a, operator, b]) {
   return {
+    type: nodeTypes.comparision,
     op1: a,
     op2: b,
     operator: operator.value,
-    type: nodeTypes.comparision
   }
 }
 
@@ -101,10 +101,35 @@ export function expr([expr]) {
 
 export function assigment([left, _, right]) {
   return {
+    type: nodeTypes.assigment,
     left: left,
     right: right,
-    type: nodeTypes.assigment,
   }
-
-
 }
+
+export function block([,code]) {
+  return code;
+}
+
+export function whileLoop([,condition,, block]) {
+  return {
+    type: nodeTypes.whileLoop,
+    condition: condition,
+    block: block,
+  }
+}
+
+export function ifElse([,condition, block, elseBlock]) {
+  return {
+    type: nodeTypes.ifElse,
+    condition: condition,
+    block: block,
+    elseBlock: elseBlock,
+  }
+}
+
+export function elseBlock([,,block]) {
+  return block;
+}
+
+// todo move types as first property

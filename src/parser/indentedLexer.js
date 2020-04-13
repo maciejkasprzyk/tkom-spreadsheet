@@ -124,7 +124,7 @@
   }
 
   IndentedLexer.prototype.formatError = function (token) {
-    return this.lexer.formatError(token);
+    return this.lexer.formatError(token,"Invalid syntax");
   }
 
   IndentedLexer.prototype.has = function (name) {

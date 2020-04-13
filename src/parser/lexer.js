@@ -10,6 +10,9 @@ const tokens = {
       "kwIf": "if",
       "kwWhile": "while",
       "kwFor": "for",
+      "kwElse": "else",
+      "kwDef": "def"
+
     })
   },
   lparen: '(',

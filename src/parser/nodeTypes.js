@@ -12,4 +12,6 @@ export const nodeTypes = {
   expr: "expr",
   assigment: "assigment",
   primary: "primary",
+  whileLoop: "whileLoop",
+  ifElse: "ifElse",
 };
