@@ -101,7 +101,8 @@ while i > 0
     A2 = 5
 else
     A2 = 10  
-`
+`,
+`A1.background = "#52A"`
 ];
 
 
