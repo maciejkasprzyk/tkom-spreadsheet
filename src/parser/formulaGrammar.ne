@@ -45,6 +45,7 @@ function_call ->
 
 args ->
     expr (%semicolon expr):*                 {% p.list %}
+  | null                                     {% p.emptyList %}
 
 range ->
     variable %colon variable                 {% p.range %}

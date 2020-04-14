@@ -131,3 +131,7 @@ export function ifElse([,expr,, block, elseBlock]) {
 export function elseBlock([,,block]) {
   return block;
 }
+
+export function emptyList() {
+  return []
+}
