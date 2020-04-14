@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/tkom-spreadsheet/precache-manifest.fea9c80a0773fe8eb6af3221ff85e95f.js"
+  "/tkom-spreadsheet/precache-manifest.d09e2125848099254aae27d38cadc814.js"
 );
 
 self.addEventListener('message', (event) => {
