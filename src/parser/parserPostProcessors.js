@@ -135,3 +135,10 @@ export function elseBlock([,,block]) {
 export function emptyList() {
   return []
 }
+
+export function cell([cell]) {
+  return {
+    type: nodeTypes.cell,
+    value: cell.value,
+  }
+}

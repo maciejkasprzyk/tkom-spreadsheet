@@ -14,4 +14,5 @@ export const nodeTypes = {
   primary: "primary",
   whileLoop: "whileLoop",
   ifElse: "ifElse",
+  cell: "cell"
 };

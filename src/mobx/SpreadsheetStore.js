@@ -2,7 +2,7 @@ import {FormulaParser} from "../parser/parsers";
 import {nodeTypes} from "../parser/nodeTypes";
 import {UserError} from "../parser/errors";
 import {Cell, Variable} from "./variables";
-import {getCellIndexes, isFormula, isFunction, topologicalSort} from "./utils";
+import {isFormula, isFunction, topologicalSort} from "./utils";
 
 
 export class SpreadsheetStore {
@@ -81,6 +81,9 @@ export class SpreadsheetStore {
   execExpr(node) {
 
     switch (node.type) {
+      case nodeTypes.cell:
+        return this.getCell(node.value[0], node.value[1]).value;
+
       case nodeTypes.primary:
         return node.value;
       case nodeTypes.variable:
@@ -130,13 +133,15 @@ export class SpreadsheetStore {
         }
 
       case nodeTypes.range:
-        return this.getCellsByRange(node.cell1.identifier, node.cell2.identifier).map((x) => x.value);
+        console.log("test",node.cell1.value)
+        return this.getCellsByRange(node.cell1.value, node.cell2.value).map((x) => x.value);
 
       default:
         throw Error(`Not handled node type ${node.type}`);
 
     }
   }
+
 
   setCell(cell, string) {
     cell.unregisterFromAllSubjects();
@@ -180,6 +185,15 @@ export class SpreadsheetStore {
     }
   }
 
+  getCell(x,y) {
+    try {
+      return this.cells[y][x];
+    }
+    catch (e) {
+      throw new UserError("No such cell");
+    }
+  }
+
   setVariable(identifier, value) {
     let variable = this.getOrCreateVar(identifier);
     this.setValue(variable, value);
@@ -206,26 +220,10 @@ export class SpreadsheetStore {
   }
 
 
-  /**
-   * @param identifier For example: A2, AB13, C13 etc as string
-   */
-  getCellByName(identifier) {
-    let x_index, y_index;
-    try {
-      [x_index, y_index] = getCellIndexes(identifier);
-    }catch (e) {
-      return null;
-    }
-
-    if (this.x <= x_index || this.y <= y_index) {
-      return null;
-    }
-    return this.cells[y_index][x_index];
-  }
-
   getCellsByRange(start, end) {
-    const [x1, y1] = getCellIndexes(start);
-    const [x2, y2] = getCellIndexes(end);
+    console.log(start);
+    const [x1, y1] = start;
+    const [x2, y2] = end;
 
     if (this.x <= x1 || this.y <= y1) {
       throw new UserError(`No cell: ${start}`)
@@ -253,7 +251,7 @@ export class SpreadsheetStore {
           return;
         }
         if (node.type === 'range') {
-          ranges.push([node.cell1.identifier, node.cell2.identifier]);
+          ranges.push([node.cell1.value, node.cell2.value]);
           return;
         }
         for (const property in node) {

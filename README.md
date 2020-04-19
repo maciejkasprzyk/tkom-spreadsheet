@@ -82,11 +82,12 @@ module.exports = {
 Parser uses [precedence climbing method](https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method) to execute parenthesis and operators in adequate order.  
 [Diagram](https://maciejkasprzyk.github.io/tkom-spreadsheet/grammar) of parser structure.  
 
-#### Macros (brief concept only)
-Macros will use Javascript (or its superset) in order to be super easy to pick up for someone who knows JS already. I'm not really sure about the functionality yet.  
-Things I am taking into consideration:
-* aliases for cells and ranges
-* [reactive](https://en.wikipedia.org/wiki/Reactive_programming) variables
-* possibility to permanently bind Javascript functions to cells (in other words: use JS to write complex formulas)
+### po konsultacjach
 
-I still need to think about syntax so I will not give examples here. I hope (please have mercy) that's not a big issue.
+- nody maja byc obiektami klas z metodą exec
+- mam obserwowac tylko zmienne, ktore sa podane jako argumenty (jak funkcje bez efektow ubocznych)
+- można wywoływać funkcje
+- ma byc zapisywanie do pliku -> wszystkie formuly mogę zapisać w funkcji onLoad, która będzie automatycznie uruchamiana i nie wyswietlana użytkownikowi w okienku edycji
+- brak odowołań do komórek poprzez A1 A2 itp tylko np ["A","1"] // tego najbardziej nie rozumiem, chyba zostawie to na koniec
+
+

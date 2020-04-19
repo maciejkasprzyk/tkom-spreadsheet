@@ -32,15 +32,16 @@ primary ->
     %lparen expr %rparen                     {% p.return1 %}
   | %number                                  {% p.number %}
   | %minus %number                           {% p.negative %}
-  | variable                                 {% id %}
+  | %variable                                {% p.variable %}
   | function_call                            {% id %}
   | range                                    {% id %}
+  | cell                                    {% id %}
 
-variable ->
-    %identifier                              {% p.variable %}
+
+cell -> %cell                                {% p.cell %}
 
 function_call ->
-    %identifier %lparen args %rparen         {% p.functionCall %}
+    %variable %lparen args %rparen         {% p.functionCall %}
   | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->
@@ -48,5 +49,5 @@ args ->
   | null                                     {% p.emptyList %}
 
 range ->
-    variable %colon variable                 {% p.range %}
+    cell %colon cell                 {% p.range %}
 
