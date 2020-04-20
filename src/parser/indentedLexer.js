@@ -1,19 +1,19 @@
 (function () {
 
-  function IndentedLexer(lexer, ws, nl) {
+  function IndentedLexer(lexer, ws, end) {
     this.lexer = lexer;
-    this.indents = [];
-    this.tokens = [""];
-    this.afterNewLine = true;
     this.ws = ws; // white space token
-    this.nl = nl; // new line token
-
-    // used to ignore ends tokens
-    this.previous = null;
+    this.end = end; // new line token
   }
 
   IndentedLexer.prototype.next = function () {
-    return this.ignoreExcessiveEndsNext();
+    try {
+      return this.ignoreExcessiveEndsNext();
+    }
+    catch (e) {
+      const errors = require('./errors')
+      throw new errors.UserError(e.message);
+    }
   }
 
   IndentedLexer.prototype.ignoreExcessiveEndsNext = function () {
@@ -22,7 +22,9 @@
       return tok;
     }
 
-    while (this.previous !== null && this.previous.type === this.end && tok.type === this.end) {}
+    while (this.previous !== null && this.previous.type === this.end && tok.type === this.end) {
+      tok = this.ignoreWhiteSpaceNext();
+    }
     this.previous = tok;
     return tok;
   }
@@ -60,7 +62,7 @@
     } else {
       this.tokens.push(token);
     }
-    this.afterNewLine = (token.type === this.nl);
+    this.afterNewLine = (token.type === this.end);
   };
 
   IndentedLexer.prototype.changeIndent = function (indent, col, line, offset) {
@@ -112,10 +114,13 @@
 
   IndentedLexer.prototype.reset = function (data, info) {
     // remove all new lines at both ends
-    this.lexer.reset(data.replace(/^\n|\n$/g, ''), info);
+    this.lexer.reset(data.replace(/^(\n)*|(\n)*$/g, ''), info);
     this.indents = [''];
     this.tokens = [];
     this.afterNewLine = true;
+
+    // used to ignore ends tokens
+    this.previous = null;
   }
 
   IndentedLexer.prototype.formatError = function (token) {

@@ -38,6 +38,7 @@ const tokens = {
       "kwDef": "def",
     })
   },
+  ampersand: '&',
   dot: '.',
   lparen: '(',
   rparen: ')',
