@@ -7,7 +7,7 @@ code ->
     statement (%end statement):*               {% p.list %}
 
 statement ->
-    expr                                       {% p.expr %}
+    expr                                       {% id %}
   | assigment                                  {% id %}
   | blockStart                                 {% id %}
   | null                                       {% null %}

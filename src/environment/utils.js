@@ -26,7 +26,3 @@ export function isFormula(x) {
   return x.charAt(0) === '=';
 }
 
-
-export function isFunction(obj) {
-  return !!(obj && obj.constructor && obj.call && obj.apply);
-}

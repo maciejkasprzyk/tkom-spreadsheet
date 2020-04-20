@@ -16,7 +16,12 @@ expr -> comparison                           {% id %}
 
 comparison ->
     sum                                      {% id %}
-  | sum %compOperator sum                    {% p.comparison %}
+  | sum %equal sum                           {% p.equal %}
+  | sum %greaterEqual sum                    {% p.greaterEqual %}
+  | sum %lessEqual sum                       {% p.lessEqual %}
+  | sum %less sum                            {% p.less %}
+  | sum %greater sum                         {% p.greater %}
+  | sum %notEqual sum                        {% p.notEqual %}
 
 sum ->
     product                                  {% id %}
@@ -31,17 +36,17 @@ product ->
 primary ->
     %lparen expr %rparen                     {% p.return1 %}
   | %number                                  {% p.number %}
-  | %minus %number                           {% p.negative %}
   | %variable                                {% p.variable %}
   | function_call                            {% id %}
   | range                                    {% id %}
-  | cell                                    {% id %}
+  | cell                                     {% id %}
+  | %minus primary                           {% p.negative %}
 
 
 cell -> %cell                                {% p.cell %}
 
 function_call ->
-    %variable %lparen args %rparen         {% p.functionCall %}
+    %variable %lparen args %rparen           {% p.functionCall %}
   | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->
@@ -49,5 +54,5 @@ args ->
   | null                                     {% p.emptyList %}
 
 range ->
-    cell %colon cell                 {% p.range %}
+    cell %colon cell                         {% p.range %}
 

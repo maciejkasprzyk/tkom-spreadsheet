@@ -18,7 +18,7 @@ export function getCellIndexes(cellIdentifier) {
     x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
     x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
   }
-  return [x_index, y_index];
+  return {x:x_index, y: y_index}
 }
 
 const tokens = {
@@ -35,8 +35,7 @@ const tokens = {
       "kwWhile": "while",
       "kwFor": "for",
       "kwElse": "else",
-      "kwDef": "def"
-
+      "kwDef": "def",
     })
   },
   dot: '.',
@@ -50,10 +49,16 @@ const tokens = {
   minus: '-',
   semicolon: ';',
   colon: ':',
-  compOperator: /==|>=|<=|<|>|!=/,
+  equal: '==',
+  greaterEqual: '>=',
+  lessEqual: '<=',
+  less: '<',
+  greater: '>',
+  notEqual: '!=',
   assign: '=',
+  string: /".*?"/,
   number: {
-    match: /[1-9][0-9]*(?:,[0-9]*)?|0(?:\.[0-9]+)?/, // ?: dont create capturing group
+    match: /[1-9][0-9]*(?:,[0-9]*)?|0(?:\.[0-9]+)?/, // (?: non capturing group
     value: x => parseFloat(x),
   },
 

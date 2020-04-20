@@ -22,13 +22,9 @@
       return tok;
     }
 
-    while (this.previous !== null && this.previous.type === this.end && tok.type === this.end) {
-
-    }
-
+    while (this.previous !== null && this.previous.type === this.end && tok.type === this.end) {}
     this.previous = tok;
     return tok;
-
   }
 
   IndentedLexer.prototype.ignoreWhiteSpaceNext = function () {

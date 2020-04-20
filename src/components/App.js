@@ -2,82 +2,31 @@
 import React, {useEffect} from 'react';
 import Spreadsheet from "./Spreadsheet";
 import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
-import {functions} from "../parser/functions";
 import style from './App.module.scss';
 import Editor from "./Editor";
-import {lexer} from '../parser/lexer';
-import {Parser} from "../parser/parsers";
 
-const store = new SpreadsheetStore(5, 100, functions);
+const store = new SpreadsheetStore(5, 100);
+
+
+
 
 function App() {
 
   useEffect(populateSheet, []);
 
-  function run(code) {
-    if (code === "") {
-      return;
-    }
-    try {
-      const parser = new Parser();
-      parser.feed(code);
-      store.exec(parser.results);
-    } catch (e) {
-      if (e.name !== "UserError") {
-        throw e;
-      }
-      // todo fancy errors
-      console.log(e.message);
-    }
-  }
-
-  function logParseTree(code) {
-    try {
-      const parser = new Parser();
-      parser.feed(code);
-      console.log(parser.results);
-    } catch (e) {
-      if (e.name !== "UserError") {
-        throw e;
-      }
-      console.log(e.message);
-    }
-  }
-
-  function logLexerOutput(code) {
-    try {
-      lexer.reset(code);
-      const result = [];
-      let tok = lexer.next();
-      while (tok !== undefined) {
-        result.push(tok);
-        tok = lexer.next()
-      }
-      console.log(result);
-    } catch (e) {
-      if (e.name !== "UserError") {
-        throw e;
-      }
-
-      console.log(e.message);
-    }
-  }
-
   return (
     <div className={style.App}>
       <Spreadsheet
-        x={store.x}
-        y={store.y}
-        cells={store.cells}
-        onCellSet={(cell, value, isFormula) => {
-          cell.set(value, isFormula)
-        }}
+        x={store.env.x}
+        y={store.env.y}
+        cells={store.env.cells}
+        onCellSet={(x,y,v) => store.onCellSet(x,y,v)}
       />
       <Editor
         examples={examples}
-        onSubmit={run}
-        onLogLexerOutput={logLexerOutput}
-        onLogParseTree={logParseTree}
+        onSubmit={(code) => store.run(code)}
+        onLogLexerOutput={(code) => store.logLexerOutput(code)}
+        onLogParseTree={(code) => store.logParseTree(code)}
       />
     </div>
   );
@@ -108,77 +57,81 @@ else
 
 function populateSheet() {
 
-  const cells = store.cells;
+  // cells\[(.*)\]\[(.*)\].set\((.*)\);
+  // store.onCellSet($2,$1,$3);
 
   let r = 0;
 
-  cells[r][0].set("Self reference");
-  cells[r][1].set("=B1");
+  store.onCellSet(0, r, "Self reference");
 
-  cells[++r][0].set("Cycle");
-  cells[r][1].set("=C2");
-  cells[r][2].set("=B2");
 
-  cells[++r][0].set("Auto update working");
-  cells[r][2].set("=B3");
-  cells[r][3].set("=B3+C3");
-  cells[r][1].set("coś");
+  store.onCellSet(0,r,"Self reference");
+  store.onCellSet(1,r,"=B1");
 
-  cells[++r][0].set("Simple math");
+  store.onCellSet(0,++r,"Cycle");
+  store.onCellSet(1,r,"=C2");
+  store.onCellSet(2,r,"=B2");
+
+  store.onCellSet(0,++r,"Auto update working");
+  store.onCellSet(2,r,"=B3");
+  store.onCellSet(3,r,"=B3+C3");
+  store.onCellSet(1,r,"coś");
+
+  store.onCellSet(0,++r,"Simple math");
   let x = "1+2*(5+5)+2/3+((1*3))/2";
-  cells[r][1].set("=" + x);
-  cells[r][2].set(`is ${eval(x)}`);
+  store.onCellSet(1,r,"=" + x);
+  store.onCellSet(2,r,`is ${eval(x)}`);
 
-  cells[++r][0].set("Complex math");
+  store.onCellSet(0,++r,"Complex math");
   x = "1-1+2*(5+5)+2/3+((1*3))/2";
-  cells[r][1].set("=" + x);
-  cells[r][2].set(`is ${eval(x)}`);
+  store.onCellSet(1,r,"=" + x);
+  store.onCellSet(2,r,`is ${eval(x)}`);
 
-  cells[++r][0].set("Negative numbers");
+  store.onCellSet(0,++r,"Negative numbers");
   x = "1-1+1";
-  cells[r][1].set("=" + x);
-  cells[r][2].set(`is ${eval(x)}`);
+  store.onCellSet(1,r,"=" + x);
+  store.onCellSet(2,r,`is ${eval(x)}`);
 
-  cells[++r][0].set("Math with labels");
-  cells[r][1].set('=C7+D7*E7');
-  cells[r][2].set('2');
-  cells[r][3].set('2');
-  cells[r][4].set('2');
+  store.onCellSet(0,++r,"Math with labels");
+  store.onCellSet(1,r,'=C7+D7*E7');
+  store.onCellSet(2,r,'2');
+  store.onCellSet(3,r,'2');
+  store.onCellSet(4,r,'2');
 
-  cells[++r][0].set("Invalid formulas");
-  cells[r][1].set('=C7D7*E7');
-  cells[r][2].set('=as325');
-  cells[r][3].set('=1**2');
+  store.onCellSet(0,++r,"Invalid formulas");
+  store.onCellSet(1,r,'=C7D7*E7');
+  store.onCellSet(2,r,'=as325');
+  store.onCellSet(3,r,'=1**2');
 
-  cells[++r][0].set("* and / order");
+  store.onCellSet(0,++r,"* and / order");
   x = "3/3*3";
-  cells[r][1].set("=" + x);
-  cells[r][2].set(`is ${eval(x)}`);
+  store.onCellSet(1,r,"=" + x);
+  store.onCellSet(2,r,`is ${eval(x)}`);
 
-  cells[++r][0].set("- at the begging and --");
+  store.onCellSet(0,++r,"- at the begging and --");
   x = "-1+2";
-  cells[r][1].set("=" + x);
-  cells[r][2].set(`is ${eval(x)}`);
+  store.onCellSet(1,r,"=" + x);
+  store.onCellSet(2,r,`is ${eval(x)}`);
 
-  cells[++r][0].set("function call");
-  cells[r][1].set("=sum(C11;D11;E11)");
-  cells[r][2].set("1");
-  cells[r][3].set("2");
-  cells[r][4].set("3");
+  store.onCellSet(0,++r,"function call");
+  store.onCellSet(1,r,"=sum(C11;D11;E11)");
+  store.onCellSet(2,r,"1");
+  store.onCellSet(3,r,"2");
+  store.onCellSet(4,r,"3");
 
-  cells[++r][0].set("function with range");
-  cells[r][1].set("=sum(C11:E12)");
-  cells[r][2].set("1");
-  cells[r][3].set("2");
-  cells[r][4].set("3");
+  store.onCellSet(0,++r,"function with range");
+  store.onCellSet(1,r,"=sum(C11:E12)");
+  store.onCellSet(2,r,"1");
+  store.onCellSet(3,r,"2");
+  store.onCellSet(4,r,"3");
 
-  cells[++r][0].set("Not existing function");
-  cells[r][1].set("=foo(C11:E12)")
+  store.onCellSet(0,++r,"Not existing function");
+  store.onCellSet(1,r,"=foo(C11:E12)");
 
-  cells[++r][0].set("If");
-  cells[r][1].set("=if(C14<D14;1;0)");
-  cells[r][2].set("5");
-  cells[r][3].set("6");
+  store.onCellSet(0,++r,"If");
+  store.onCellSet(1,r,"=if(C14<D14;1;0)");
+  store.onCellSet(2,r,"5");
+  store.onCellSet(3,r,"6");
 
 
 }

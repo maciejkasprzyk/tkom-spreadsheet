@@ -41,7 +41,7 @@ const Spreadsheet = props => {
   };
 
   const onBlur = (e, cell) => {
-    props.onCellSet(cell, e.target.value);
+    props.onCellSet(cell.x, cell.y, e.target.value);
     e.target.parentNode.classList.remove(style.focus);
     if (isEditing(cell)){
       setEditing(null);

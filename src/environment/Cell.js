@@ -1,17 +1,22 @@
 import {observable} from "mobx";
 
-
-export class Variable {
+export class Cell {
 
   @observable formula = null;
   @observable value = null;
+  @observable background = null;
+  @observable error = null;
 
   ast = null;
-
   // vars that observe us -> we are used in their formula
   observers = [];
   // vars that we observe for changes -> we use them in our formula
   subjects = [];
+
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 
   unregisterFromAllSubjects() {
     for (const cell of this.subjects) {
@@ -32,23 +37,5 @@ export class Variable {
     } else {
       this.observers[index] = this.observers.pop();
     }
-  }
-}
-
-export class Cell extends Variable {
-
-  @observable background = null;
-  @observable error = null;
-
-  constructor(x, y, manager) {
-    super();
-    this.x = x;
-    this.y = y;
-    this.manager = manager;
-  }
-
-
-  set(str) {
-    this.manager.setCell(this, str)
   }
 }
