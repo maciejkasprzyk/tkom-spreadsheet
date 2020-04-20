@@ -28,7 +28,7 @@ const tokens = {
     match: /[a-zA-Z]+[0-9]+/,
     value: x => getCellIndexes(x),
   },
-  variable: {
+  identifier: {
     match: /[a-zA-Z]+/,
     type: moo.keywords({
       "kwIf": "if",

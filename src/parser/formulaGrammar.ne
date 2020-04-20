@@ -36,7 +36,7 @@ product ->
 primary ->
     %lparen expr %rparen                     {% p.return1 %}
   | %number                                  {% p.number %}
-  | %variable                                {% p.variable %}
+  | %identifier                              {% p.variable %}
   | function_call                            {% id %}
   | range                                    {% id %}
   | cell                                     {% id %}
@@ -46,7 +46,7 @@ primary ->
 cell -> %cell                                {% p.cell %}
 
 function_call ->
-    %variable %lparen args %rparen           {% p.functionCall %}
+    %identifier %lparen args %rparen           {% p.functionCall %}
   | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->
