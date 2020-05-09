@@ -46,7 +46,7 @@ primary ->
 cell -> %cell                                {% p.cell %}
 
 function_call ->
-    %identifier %lparen args %rparen           {% p.functionCall %}
+    %identifier %lparen args %rparen         {% p.functionCall %}
   | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->

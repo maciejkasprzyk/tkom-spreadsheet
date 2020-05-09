@@ -18,7 +18,7 @@ export function getCellIndexes(cellIdentifier) {
     x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
     x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
   }
-  return {x:x_index, y: y_index}
+  return {x: x_index, y: y_index}
 }
 
 const tokens = {
@@ -36,6 +36,7 @@ const tokens = {
       "kwFor": "for",
       "kwElse": "else",
       "kwDef": "def",
+      "kwReturn": "return",
     })
   },
   ampersand: '&',

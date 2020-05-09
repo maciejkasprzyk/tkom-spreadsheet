@@ -52,6 +52,7 @@ let ParserRules = [
     {"name": "blockStart$ebnf$1", "symbols": ["blockStart$ebnf$1$subexpression$1"], "postprocess": id},
     {"name": "blockStart$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
     {"name": "blockStart", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), "expr", (lexer.has("end") ? {type: "end"} : end), "block", "blockStart$ebnf$1"], "postprocess": p.ifElse},
+    {"name": "blockStart", "symbols": [(lexer.has("kwDef") ? {type: "kwDef"} : kwDef), (lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen), (lexer.has("end") ? {type: "end"} : end), "block"], "postprocess": p.functionDef},
     {"name": "else", "symbols": [(lexer.has("kwElse") ? {type: "kwElse"} : kwElse), (lexer.has("end") ? {type: "end"} : end), "block"], "postprocess": p.elseBlock},
     {"name": "assigment", "symbols": ["expr", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
     {"name": "block$ebnf$1$subexpression$1", "symbols": [(lexer.has("end") ? {type: "end"} : end)]},

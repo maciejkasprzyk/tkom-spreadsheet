@@ -18,6 +18,7 @@ import {LessEqualNode} from "../nodes/LessEqualNode";
 import {LessNode} from "../nodes/LessNode";
 import {GreaterNode} from "../nodes/GreaterNode";
 import {NotEqualNode} from "../nodes/NotEqualNode";
+import {FunctionDefNode} from "../nodes/FunctionDefNode";
 
 export function addition([a, _, b]) {
   return new AdditionNode(a, b);
@@ -122,4 +123,8 @@ export function emptyList() {
 
 export function cell([cell]) {
   return new CellNode(cell);
+}
+
+export function functionDef([_def, identifierToken, _lparen, args, _rparen, _end, block]) {
+  return new FunctionDefNode(identifierToken, args, block)
 }
