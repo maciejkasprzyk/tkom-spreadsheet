@@ -11,4 +11,8 @@ export class BinaryOperationNode extends BaseNode {
     return this.left.findCellsReferenced(env).concat(this.right.findCellsReferenced(env));
   }
 
+  unParse(env) {
+    return '( ' + this.left.unParse(env) + " " +  this.symbol + " " + this.right.unParse(env) + ' )';
+  }
+
 }

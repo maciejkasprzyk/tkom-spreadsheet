@@ -21,20 +21,17 @@ export class Environment {
     this.variablesScopes = [{}];
   }
 
-  // this is called only by store
   setCell(x, y, string) {
     const cell = this.getCell(x, y);
     cell.unregisterFromAllSubjects();
     try {
+
       if (isFormula(string)) {
-        cell.formula = string;
-        const parser = new FormulaParser();
-        parser.feed(cell.formula.substring(1));
-        const ast = parser.results;
-        this.setCellAst(cell, ast);
+        this._setCellFormula(cell, string)
       } else {
         this._setCellValue(cell, string);
       }
+
       this.updateObservers(cell);
       cell.error = null;
     } catch (e) {
@@ -45,8 +42,12 @@ export class Environment {
     }
   }
 
-  setCellAst(cell, ast) {
-    cell.ast = ast;
+
+  _setCellFormula(cell, formula) {
+    cell.formula = formula;
+    const parser = new FormulaParser();
+    parser.feed(formula.substring(1));
+    cell.ast = parser.results;
     cell.value = cell.ast.exec(this);
 
     const varsReferenced = cell.ast.findCellsReferenced(this);

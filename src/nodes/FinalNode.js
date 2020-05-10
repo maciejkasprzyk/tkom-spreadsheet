@@ -19,4 +19,8 @@ export class FinalNode extends BaseNode {
   getErrorLineCol() {
     return [this.col, this.line];
   }
+
+  unParse(env) {
+    return this.text;
+  }
 }

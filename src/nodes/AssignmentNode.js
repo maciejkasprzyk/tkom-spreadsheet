@@ -2,6 +2,8 @@ import {BinaryOperationNode} from "./BinaryOperationNode";
 import {UserError} from "../parser/errors";
 import {VariableNode} from "./VariableNode";
 import {CellNode} from "./CellNode";
+import {NumberNode} from "./NumberNode";
+import {BaseNode} from "./BaseNode";
 
 export class AssignmentNode extends BinaryOperationNode {
 
@@ -9,14 +11,34 @@ export class AssignmentNode extends BinaryOperationNode {
 
     if (this.left instanceof VariableNode) {
       env.setVariable(this.left.value, this.right.exec(env));
-    }
-    else if (this.left instanceof CellNode) {
-      // todo tutaj trzeba jakos przetworzyć wezly ktore sa zmiennymi
-      console.log(this.left)
-      const cell = env.getCell(this.left.x, this.left.y);
-      env.setCellAst(cell, this.right)
+    } else if (this.left instanceof CellNode) {
+      let ast = this.right;
+
+      // hack wrapper to stay DRY
+      const wrapper = {ast: ast};
+      replaceVariablesWithConstants(wrapper, env);
+      ast = wrapper.ast;
+      console.log(ast)
+      const formula = "=" + ast.unParse(env);
+      env.setCell(this.left.x, this.left.y, formula);
+
     } else {
       throw new UserError("Assign not to variable");
+    }
+  }
+}
+
+function replaceVariablesWithConstants(ast, env) {
+  for (let property in ast) {
+    if (ast.hasOwnProperty(property)) {
+
+      if (ast[property] instanceof VariableNode) {
+        const varValue = env.getVarByName(ast[property].identifier).value
+        ast[property] = new NumberNode({value: varValue});
+      } else if (ast[property] instanceof BaseNode) {
+        replaceVariablesWithConstants(ast[property], env);
+      }
+      
     }
   }
 }
@@ -31,7 +53,6 @@ export class AssignmentNode extends BinaryOperationNode {
 // na wezel typu stałej, o wartoscie zmiennej i w danym momemencie
 // mysle zeby to zrobic w metodzie exec wezla assignment node, przejde po calym ast i podstawie wszystkie wywolania
 // zmiennych
-
 
 
 // super trudny przypadek

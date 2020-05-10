@@ -51,7 +51,13 @@ while i > 0
 else
     A2 = 10  
 `,
-`A1.background = "#52A"`
+`A1.background = "#52A"`,
+`x = 5
+A2 = 3
+A1 = x + 10 + A2
+`
+
+
 ];
 
 
