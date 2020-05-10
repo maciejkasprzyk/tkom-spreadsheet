@@ -19,6 +19,7 @@ import {LessNode} from "../nodes/LessNode";
 import {GreaterNode} from "../nodes/GreaterNode";
 import {NotEqualNode} from "../nodes/NotEqualNode";
 import {FunctionDefNode} from "../nodes/FunctionDefNode";
+import {DynamicCellNode} from "../nodes/DynamicCellNode";
 
 export function addition([a, _, b]) {
   return new AdditionNode(a, b);
@@ -125,4 +126,8 @@ export function cell([cell]) {
 
 export function functionDef([_def, identifierToken, _lparen, args, _rparen, _end, block]) {
   return new FunctionDefNode(identifierToken, args, block)
+}
+
+export function dynamicCell([_lsquare, x, _semicolon, y, _rsquare]) {
+  return new DynamicCellNode(x, y);
 }

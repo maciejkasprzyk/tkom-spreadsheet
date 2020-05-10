@@ -5,6 +5,7 @@ import {CellNode} from "./CellNode";
 import {NumberNode} from "./NumberNode";
 import {BaseNode} from "./BaseNode";
 import _ from 'lodash';
+import {DynamicCellNode} from "./DynamicCellNode";
 
 export class AssignmentNode extends BinaryOperationNode {
 
@@ -12,9 +13,17 @@ export class AssignmentNode extends BinaryOperationNode {
 
     if (this.left instanceof VariableNode) {
       env.setVariable(this.left.value, this.right.exec(env));
-    } else if (this.left instanceof CellNode) {
-      // create copy by unparsing and parsing cause im lazy
-      console.log(this.right)
+    } else if (this.left instanceof CellNode || this.left instanceof DynamicCellNode) {
+      let x, y;
+      if (this.left instanceof CellNode) {
+        x = this.left.x;
+        y = this.left.y;
+      } else {
+        x = this.left.x.exec(env);
+        y = this.left.y.exec(env);
+        console.log("x:",x," y:",y)
+      }
+
       let ast = _.cloneDeep(this.right);
 
       // hack wrapper to stay DRY
@@ -22,7 +31,7 @@ export class AssignmentNode extends BinaryOperationNode {
       replaceVariablesWithConstants(wrapper, env);
       ast = wrapper.ast;
       const formula = "=" + ast.unParse(env);
-      env.setCell(this.left.x, this.left.y, formula);
+      env.setCell(x, y, formula);
 
     } else {
       throw new UserError("Assign not to variable");

@@ -29,6 +29,7 @@ let ParserRules = [
     {"name": "primary", "symbols": ["range"], "postprocess": id},
     {"name": "primary", "symbols": ["cell"], "postprocess": id},
     {"name": "primary", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), "primary"], "postprocess": p.negative},
+    {"name": "primary", "symbols": [(lexer.has("lsquare") ? {type: "lsquare"} : lsquare), "sum", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "sum", (lexer.has("rsquare") ? {type: "rsquare"} : rsquare)], "postprocess": p.dynamicCell},
     {"name": "cell", "symbols": [(lexer.has("cell") ? {type: "cell"} : cell)], "postprocess": p.cell},
     {"name": "function_call", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "function_call", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},

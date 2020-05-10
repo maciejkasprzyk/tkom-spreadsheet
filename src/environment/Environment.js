@@ -1,6 +1,6 @@
 import {UserError} from "../parser/errors";
 import {FormulaParser} from "../parser/parsers";
-import {isFormula, topologicalSort} from "./utils";
+import {isFormula, letterLabelGenerator, topologicalSort} from "../utils";
 import {Variable} from "./Variable";
 import {Cell} from "./Cell";
 
@@ -13,8 +13,10 @@ export class Environment {
     this.cells = Array(y);
     for (let i = 0; i < y; i++) {
       this.cells[i] = Array(x);
+      const gen = letterLabelGenerator();
       for (let j = 0; j < x; j++) {
-        this.cells[i][j] = new Cell(j, i, this);
+        const label = gen.next().value + (i + 1).toString();
+        this.cells[i][j] = new Cell(j, i, label);
       }
     }
 

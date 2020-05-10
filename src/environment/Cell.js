@@ -13,9 +13,10 @@ export class Cell {
   // vars that we observe for changes -> we use them in our formula
   subjects = [];
 
-  constructor(x, y) {
+  constructor(x, y, label) {
     this.x = x;
     this.y = y;
+    this.label = label;
   }
 
   unregisterFromAllSubjects() {

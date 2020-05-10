@@ -2,31 +2,8 @@ import React, {useState} from 'react';
 import {observer} from "mobx-react";
 import style from './Spreadsheet.module.scss'
 import PropTypes from 'prop-types'
+import {letterLabelGenerator} from "../utils";
 
-/**
- * It returns strings like this: "A", "B", ... , "Z", "AA", "AB", ...
- */
-function* letterLabelGenerator() {
-  function nextChar(c) {
-    return String.fromCharCode(c.charCodeAt(0) + 1);
-  }
-
-  const label = ['A'];
-  while (true) {
-    yield label.slice().reverse().join("");
-    let index = 0;
-    label[index] = nextChar(label[index]);
-    while (label[index].charCodeAt(0) > 'Z'.charCodeAt(0)) {
-      label[index] = 'A';
-      index++;
-      if (index >= label.length) {
-        label.push('A');
-        break;
-      }
-      label[index] = nextChar(label[index]);
-    }
-  }
-}
 
 
 const Spreadsheet = props => {
