@@ -8,6 +8,7 @@ code ->
 
 statement ->
     expr ends                                           {% id %}
+  | reference                                           {% id %}
   | assigment ends                                      {% id %}
   | blockStatement                                      {% id %}
 
@@ -20,13 +21,16 @@ blockStatement ->
 else ->
     %kwElse ends block                                  {% p.elseBlock %}
 
-# todo
 assigment ->
-    expr %assign expr                                   {% p.assigment %}
+    variable %assign expr                               {% p.assigment %}
+  | cell %assign expr                                   {% p.assigment %}
 
 block ->
     %indent code %dedent                                {% p.block %}
 
-
 ends ->
-    (%end):+                                             {% null %}
+    (%end):+                                            {% null %}
+
+reference ->
+    %identifier %assign %ampersand range                {% p.reference %}
+  | %identifier %assign %ampersand cell                 {% p.reference %}

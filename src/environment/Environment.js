@@ -121,7 +121,13 @@ export class Environment {
 
   setVariable(identifier, value) {
     const variables = this.variablesScopes[this.variablesScopes.length - 1];
-    variables[identifier] = new Variable(value);
+    let variable;
+    try {
+      variable = this.getVarByName(identifier);
+      variable.value = value;
+    } catch (e) {
+      variables[identifier] = new Variable(value);
+    }
   }
 
 

@@ -10,7 +10,7 @@
 # note: % references a token from lexer
 
 formulaEntry ->
-    expr
+    sum
 
 expr -> comparison                           {% id %}
 
@@ -34,9 +34,9 @@ product ->
   | product %slash primary                   {% p.division %}
 
 primary ->
-    %lparen expr %rparen                     {% p.return1 %}
+    %lparen expr %rparen                     {% (data) => data[1] %}
   | %number                                  {% p.number %}
-  | %identifier                              {% p.variable %}
+  | variable                                 {% id %}
   | function_call                            {% id %}
   | range                                    {% id %}
   | cell                                     {% id %}
@@ -45,6 +45,8 @@ primary ->
 
 
 cell -> %cell                                {% p.cell %}
+
+variable -> %identifier                      {% p.variable %}
 
 function_call ->
     %identifier %lparen args %rparen         {% p.functionCall %}

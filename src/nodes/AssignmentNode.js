@@ -21,7 +21,6 @@ export class AssignmentNode extends BinaryOperationNode {
       } else {
         x = this.left.x.exec(env);
         y = this.left.y.exec(env);
-        console.log("x:",x," y:",y)
       }
 
       let ast = _.cloneDeep(this.right);

@@ -20,6 +20,7 @@ import {GreaterNode} from "../nodes/GreaterNode";
 import {NotEqualNode} from "../nodes/NotEqualNode";
 import {FunctionDefNode} from "../nodes/FunctionDefNode";
 import {DynamicCellNode} from "../nodes/DynamicCellNode";
+import {ReferenceNode} from "../nodes/ReferenceNode";
 
 export function addition([a, _, b]) {
   return new AdditionNode(a, b);
@@ -37,10 +38,6 @@ export function multiplication([a, _, b]) {
 export function division([a, _, b]) {
   return new DivisionNode(a, b);
 
-}
-
-export function return1(data) {
-  return data[1];
 }
 
 export function number([token]) {
@@ -130,4 +127,8 @@ export function functionDef([_def, identifierToken, _lparen, args, _rparen, _end
 
 export function dynamicCell([_lsquare, x, _semicolon, y, _rsquare]) {
   return new DynamicCellNode(x, y);
+}
+
+export function reference([identifier, _assign, _ampersand, referenced]) {
+  return new ReferenceNode(identifier, referenced);
 }

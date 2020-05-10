@@ -7,7 +7,7 @@ function id(x) { return x[0]; }
   import {lexer} from './lexer.js'
 let Lexer = lexer;
 let ParserRules = [
-    {"name": "formulaEntry", "symbols": ["expr"]},
+    {"name": "formulaEntry", "symbols": ["sum"]},
     {"name": "expr", "symbols": ["comparison"], "postprocess": id},
     {"name": "comparison", "symbols": ["sum"], "postprocess": id},
     {"name": "comparison", "symbols": ["sum", (lexer.has("equal") ? {type: "equal"} : equal), "sum"], "postprocess": p.equal},
@@ -22,15 +22,16 @@ let ParserRules = [
     {"name": "product", "symbols": ["primary"], "postprocess": id},
     {"name": "product", "symbols": ["product", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": p.multiplication},
     {"name": "product", "symbols": ["product", (lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": p.division},
-    {"name": "primary", "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.return1},
+    {"name": "primary", "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": (data) => data[1]},
     {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": p.number},
-    {"name": "primary", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier)], "postprocess": p.variable},
+    {"name": "primary", "symbols": ["variable"], "postprocess": id},
     {"name": "primary", "symbols": ["function_call"], "postprocess": id},
     {"name": "primary", "symbols": ["range"], "postprocess": id},
     {"name": "primary", "symbols": ["cell"], "postprocess": id},
     {"name": "primary", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), "primary"], "postprocess": p.negative},
     {"name": "primary", "symbols": [(lexer.has("lsquare") ? {type: "lsquare"} : lsquare), "sum", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "sum", (lexer.has("rsquare") ? {type: "rsquare"} : rsquare)], "postprocess": p.dynamicCell},
     {"name": "cell", "symbols": [(lexer.has("cell") ? {type: "cell"} : cell)], "postprocess": p.cell},
+    {"name": "variable", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier)], "postprocess": p.variable},
     {"name": "function_call", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "function_call", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "args$ebnf$1", "symbols": []},

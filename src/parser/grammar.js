@@ -7,7 +7,7 @@ function id(x) { return x[0]; }
   import {lexer} from './lexer.js'
 let Lexer = lexer;
 let ParserRules = [
-    {"name": "formulaEntry", "symbols": ["expr"]},
+    {"name": "formulaEntry", "symbols": ["sum"]},
     {"name": "expr", "symbols": ["comparison"], "postprocess": id},
     {"name": "comparison", "symbols": ["sum"], "postprocess": id},
     {"name": "comparison", "symbols": ["sum", (lexer.has("equal") ? {type: "equal"} : equal), "sum"], "postprocess": p.equal},
@@ -22,15 +22,16 @@ let ParserRules = [
     {"name": "product", "symbols": ["primary"], "postprocess": id},
     {"name": "product", "symbols": ["product", (lexer.has("asterisk") ? {type: "asterisk"} : asterisk), "primary"], "postprocess": p.multiplication},
     {"name": "product", "symbols": ["product", (lexer.has("slash") ? {type: "slash"} : slash), "primary"], "postprocess": p.division},
-    {"name": "primary", "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.return1},
+    {"name": "primary", "symbols": [(lexer.has("lparen") ? {type: "lparen"} : lparen), "expr", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": (data) => data[1]},
     {"name": "primary", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess": p.number},
-    {"name": "primary", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier)], "postprocess": p.variable},
+    {"name": "primary", "symbols": ["variable"], "postprocess": id},
     {"name": "primary", "symbols": ["function_call"], "postprocess": id},
     {"name": "primary", "symbols": ["range"], "postprocess": id},
     {"name": "primary", "symbols": ["cell"], "postprocess": id},
     {"name": "primary", "symbols": [(lexer.has("minus") ? {type: "minus"} : minus), "primary"], "postprocess": p.negative},
     {"name": "primary", "symbols": [(lexer.has("lsquare") ? {type: "lsquare"} : lsquare), "sum", (lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "sum", (lexer.has("rsquare") ? {type: "rsquare"} : rsquare)], "postprocess": p.dynamicCell},
     {"name": "cell", "symbols": [(lexer.has("cell") ? {type: "cell"} : cell)], "postprocess": p.cell},
+    {"name": "variable", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier)], "postprocess": p.variable},
     {"name": "function_call", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "function_call", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "args$ebnf$1", "symbols": []},
@@ -51,6 +52,7 @@ let ParserRules = [
     {"name": "code$ebnf$1", "symbols": ["code$ebnf$1", "code$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "code", "symbols": ["statement", "code$ebnf$1"], "postprocess": p.list},
     {"name": "statement", "symbols": ["expr", "ends"], "postprocess": id},
+    {"name": "statement", "symbols": ["reference"], "postprocess": id},
     {"name": "statement", "symbols": ["assigment", "ends"], "postprocess": id},
     {"name": "statement", "symbols": ["blockStatement"], "postprocess": id},
     {"name": "blockStatement", "symbols": [(lexer.has("kwWhile") ? {type: "kwWhile"} : kwWhile), "expr", "ends", "block"], "postprocess": p.whileLoop},
@@ -60,13 +62,16 @@ let ParserRules = [
     {"name": "blockStatement", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), "expr", "ends", "block", "blockStatement$ebnf$1"], "postprocess": p.ifElse},
     {"name": "blockStatement", "symbols": [(lexer.has("kwDef") ? {type: "kwDef"} : kwDef), (lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen), "ends", "block"], "postprocess": p.functionDef},
     {"name": "else", "symbols": [(lexer.has("kwElse") ? {type: "kwElse"} : kwElse), "ends", "block"], "postprocess": p.elseBlock},
-    {"name": "assigment", "symbols": ["expr", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
+    {"name": "assigment", "symbols": ["variable", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
+    {"name": "assigment", "symbols": ["cell", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
     {"name": "block", "symbols": [(lexer.has("indent") ? {type: "indent"} : indent), "code", (lexer.has("dedent") ? {type: "dedent"} : dedent)], "postprocess": p.block},
     {"name": "ends$ebnf$1$subexpression$1", "symbols": [(lexer.has("end") ? {type: "end"} : end)]},
     {"name": "ends$ebnf$1", "symbols": ["ends$ebnf$1$subexpression$1"]},
     {"name": "ends$ebnf$1$subexpression$2", "symbols": [(lexer.has("end") ? {type: "end"} : end)]},
     {"name": "ends$ebnf$1", "symbols": ["ends$ebnf$1", "ends$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "ends", "symbols": ["ends$ebnf$1"], "postprocess": null}
+    {"name": "ends", "symbols": ["ends$ebnf$1"], "postprocess": null},
+    {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "range"], "postprocess": p.reference},
+    {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "cell"], "postprocess": p.reference}
 ];
 let ParserStart = "entry";
 export default { Lexer, ParserRules, ParserStart };
