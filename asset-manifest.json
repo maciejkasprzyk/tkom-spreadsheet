@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/tkom-spreadsheet/static/css/main.7d14ec45.chunk.css",
-    "main.js": "/tkom-spreadsheet/static/js/main.05521ce0.chunk.js",
-    "main.js.map": "/tkom-spreadsheet/static/js/main.05521ce0.chunk.js.map",
+    "main.js": "/tkom-spreadsheet/static/js/main.08257337.chunk.js",
+    "main.js.map": "/tkom-spreadsheet/static/js/main.08257337.chunk.js.map",
     "runtime-main.js": "/tkom-spreadsheet/static/js/runtime-main.afbecbf5.js",
     "runtime-main.js.map": "/tkom-spreadsheet/static/js/runtime-main.afbecbf5.js.map",
-    "static/js/2.b574a735.chunk.js": "/tkom-spreadsheet/static/js/2.b574a735.chunk.js",
-    "static/js/2.b574a735.chunk.js.map": "/tkom-spreadsheet/static/js/2.b574a735.chunk.js.map",
+    "static/js/2.f6944961.chunk.js": "/tkom-spreadsheet/static/js/2.f6944961.chunk.js",
+    "static/js/2.f6944961.chunk.js.map": "/tkom-spreadsheet/static/js/2.f6944961.chunk.js.map",
     "crystal.js": "/tkom-spreadsheet/00c719096ea6c0678627c6447bd356bb.js",
     "mode-xml.js": "/tkom-spreadsheet/01eade92f3c728f412f540d90ac988ee.js",
     "dart.js": "/tkom-spreadsheet/0236553edf9c92a7a3c8d970abaae216.js",
@@ -424,15 +424,15 @@
     "theme-gruvbox.js": "/tkom-spreadsheet/feff703ce532f20391dfed8199b6971e.js",
     "jsx.js": "/tkom-spreadsheet/ff7acf7df3cdb56d704a5bd29f08fd55.js",
     "index.html": "/tkom-spreadsheet/index.html",
-    "precache-manifest.d09e2125848099254aae27d38cadc814.js": "/tkom-spreadsheet/precache-manifest.d09e2125848099254aae27d38cadc814.js",
+    "precache-manifest.81901903dc7c7d81a36da7b6c6b3ba88.js": "/tkom-spreadsheet/precache-manifest.81901903dc7c7d81a36da7b6c6b3ba88.js",
     "service-worker.js": "/tkom-spreadsheet/service-worker.js",
     "static/css/main.7d14ec45.chunk.css.map": "/tkom-spreadsheet/static/css/main.7d14ec45.chunk.css.map",
-    "static/js/2.b574a735.chunk.js.LICENSE.txt": "/tkom-spreadsheet/static/js/2.b574a735.chunk.js.LICENSE.txt"
+    "static/js/2.f6944961.chunk.js.LICENSE.txt": "/tkom-spreadsheet/static/js/2.f6944961.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.afbecbf5.js",
-    "static/js/2.b574a735.chunk.js",
+    "static/js/2.f6944961.chunk.js",
     "static/css/main.7d14ec45.chunk.css",
-    "static/js/main.05521ce0.chunk.js"
+    "static/js/main.08257337.chunk.js"
   ]
 }
