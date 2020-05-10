@@ -17,10 +17,11 @@ export class Environment {
         this.cells[i][j] = new Cell(j, i, this);
       }
     }
+
+    this.variablesScopes = [{}];
   }
 
-  // this is called only by store, there's no equivalent in code to just
-  // typing a value into a cell (without =)
+  // this is called only by store
   setCell(x, y, string) {
     const cell = this.getCell(x, y);
     cell.unregisterFromAllSubjects();
@@ -48,7 +49,7 @@ export class Environment {
     cell.ast = ast;
     cell.value = cell.ast.exec(this);
 
-    const varsReferenced = cell.ast.findVarsReferenced(this);
+    const varsReferenced = cell.ast.findCellsReferenced(this);
     for (const v of varsReferenced) {
       cell.observe(v);
     }
@@ -100,8 +101,8 @@ export class Environment {
   }
 
 
-  updateObservers(variable) {
-    for (const x of topologicalSort(variable)) {
+  updateObservers(cell) {
+    for (const x of topologicalSort(cell)) {
       x.value = x.ast.exec(this);
     }
   }
@@ -115,40 +116,18 @@ export class Environment {
   }
 
 
-
-
-  ////////////////////////////////////////////////////////////////////////////
-
-
   setVariable(identifier, value) {
-    let variable = this.getOrCreateVar(identifier);
-    this.setValue(variable, value);
+    const variables = this.variablesScopes[this.variablesScopes.length - 1];
+    variables[identifier] = new Variable(value);
   }
-
-
-
-
-
-
-  getOrCreateVar(identifier) {
-    try {
-      return this.getVarByName(identifier);
-    } catch (e) {
-      return this.variables[identifier] = new Variable();
-    }
-  }
-
 
 
   getVarByName(identifier) {
-    let variable = this.getCellByName(identifier);
-    if (variable == null) {
-      if (this.variables.hasOwnProperty(identifier)) {
-        return this.variables[identifier];
-      } else {
-        throw new UserError(`No variable: ${identifier}`);
-      }
+    const variables = this.variablesScopes[this.variablesScopes.length - 1];
+    if (variables.hasOwnProperty(identifier)) {
+      return variables[identifier];
+    } else {
+      throw new UserError(`No variable: ${identifier}`);
     }
-    return variable;
   }
 }

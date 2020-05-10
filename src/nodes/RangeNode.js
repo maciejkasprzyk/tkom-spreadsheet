@@ -11,7 +11,7 @@ export class RangeNode extends BaseNode {
     return env.getCellsByRange(this.cell1,this.cell2).map(x=>x.value);
   }
 
-  findVarsReferenced(env) {
+  findCellsReferenced(env) {
     return env.getCellsByRange(this.cell1, this.cell2);
   }
 

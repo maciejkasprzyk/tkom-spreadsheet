@@ -8,12 +8,13 @@ export class AssignmentNode extends BinaryOperationNode {
   exec(env) {
 
     if (this.left instanceof VariableNode) {
-      // todo create var
       env.setVariable(this.left.value, this.right.exec(env));
     }
     else if (this.left instanceof CellNode) {
       // todo tutaj trzeba jakos przetworzyć wezly ktore sa zmiennymi
-      env.setCellAst(this.right);
+      console.log(this.left)
+      const cell = env.getCell(this.left.x, this.left.y);
+      env.setCellAst(cell, this.right)
     } else {
       throw new UserError("Assign not to variable");
     }
@@ -87,3 +88,6 @@ export class AssignmentNode extends BinaryOperationNode {
 // 1) przejsc sie po drzewie parsowania i podstawic stale w miejsce odwolan do zmiennych
 // 2) w kazdym nodzie uzywanym w formulaGrammar zaimplementowac metode unparse, ktora pozwoli stoworzyc
 // stringa na podstawie drzewa parsowania
+
+
+// czy w kodzie jest jakis odpowiednik wpisania

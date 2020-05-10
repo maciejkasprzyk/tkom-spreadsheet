@@ -1,6 +1,6 @@
 export class BaseNode {
 
-  findVarsReferenced(env) {
+  findCellsReferenced(env) {
     return [];
   }
 }

@@ -8,6 +8,7 @@ export class ListNode extends BaseNode {
 
   exec(env) {
     for (const node of this.list) {
+      console.log(node)
       node.exec(env);
     }
   }

@@ -90,9 +90,7 @@ export function range([cell1, _, cell2]) {
 export function list([first, list]) {
   const result = [first];
   for (const el of list) {
-    //el[0] is semicolon
-    //el[1] is cell_ref
-    result.push(el[1]);
+    result.push(el[0]);
   }
   return new ListNode(result);
 }

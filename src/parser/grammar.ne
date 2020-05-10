@@ -1,30 +1,32 @@
 @include "./formulaGrammar.ne"
 
 entry ->
-    code
+    (%end):* code (%end):*                              {% (data) => [data[1]] %}
 
 code ->
-    statement (%end statement):*                        {% p.list %}
+    statement (statement):*                             {% p.list %}
 
 statement ->
-    expr                                                {% id %}
-  | assigment                                           {% id %}
-  | blockStart                                          {% id %}
-  | null                                                {% null %}
+    expr ends                                           {% id %}
+  | assigment ends                                      {% id %}
+  | blockStatement                                      {% id %}
 
-blockStart ->
-    %kwWhile expr %end block                            {% p.whileLoop %}
-  | %kwIf expr %end block (else):?                      {% p.ifElse %}
-  | %kwDef %identifier %lparen args %rparen %end block  {% p.functionDef %}
+blockStatement ->
+    %kwWhile expr ends block                            {% p.whileLoop %}
+  | %kwIf expr ends block (else):?                      {% p.ifElse %}
+  | %kwDef %identifier %lparen args %rparen ends block  {% p.functionDef %}
 
 
 else ->
-    %kwElse %end block                                  {% p.elseBlock %}
+    %kwElse ends block                                  {% p.elseBlock %}
 
 # todo
 assigment ->
     expr %assign expr                                   {% p.assigment %}
 
 block ->
-    %indent code %dedent (%end):?                       {% p.block %}
+    %indent code %dedent                                {% p.block %}
 
+
+ends ->
+    (%end):+                                             {% null %}

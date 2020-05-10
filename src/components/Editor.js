@@ -9,8 +9,15 @@ import "ace-builds/webpack-resolver";
 
 const Editor = props => {
 
-  let [code, setCode] = useState("");
+  let [code, setCodeState] = useState("");
 
+  // todo document this
+  const setCode = (code) => {
+    if (code[code.length - 1] !== '\n') {
+      code += '\n';
+    }
+    setCodeState(code);
+  }
 
   return (
     <div

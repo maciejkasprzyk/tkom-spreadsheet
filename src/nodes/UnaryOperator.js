@@ -6,7 +6,7 @@ export class UnaryOperator extends BaseNode {
     this.operand = operand;
   }
 
-  findVarsReferenced(env) {
-    return this.operand.findVarsReferenced(env);
+  findCellsReferenced(env) {
+    return this.operand.findCellsReferenced(env);
   }
 }

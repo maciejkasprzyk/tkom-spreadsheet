@@ -8,25 +8,11 @@
 
   IndentedLexer.prototype.next = function () {
     try {
-      return this.ignoreExcessiveEndsNext();
-    }
-    catch (e) {
+      return this.ignoreWhiteSpaceNext();
+    } catch (e) {
       const errors = require('./errors')
       throw new errors.UserError(e.message);
     }
-  }
-
-  IndentedLexer.prototype.ignoreExcessiveEndsNext = function () {
-    let tok = this.ignoreWhiteSpaceNext();
-    if (tok === undefined) {
-      return tok;
-    }
-
-    while (this.previous !== null && this.previous.type === this.end && tok.type === this.end) {
-      tok = this.ignoreWhiteSpaceNext();
-    }
-    this.previous = tok;
-    return tok;
   }
 
   IndentedLexer.prototype.ignoreWhiteSpaceNext = function () {
@@ -90,15 +76,6 @@
           line: line,
           offset: offset,
         });
-        this.tokens.push({
-          type: 'end',
-          text: "afterDedent",
-          value: "afterDedent",
-          lineBreaks: 0,
-          col: col,
-          line: line,
-          offset: offset,
-        });
         this.indents.pop();  // check the previous one.
       } else {
         prev = unicodeDebugString(prev);
@@ -113,18 +90,14 @@
   }
 
   IndentedLexer.prototype.reset = function (data, info) {
-    // remove all new lines at both ends
-    this.lexer.reset(data.replace(/^(\n)*|(\n)*$/g, ''), info);
+    this.lexer.reset(data, info);
     this.indents = [''];
     this.tokens = [];
     this.afterNewLine = true;
-
-    // used to ignore ends tokens
-    this.previous = null;
   }
 
   IndentedLexer.prototype.formatError = function (token) {
-    return this.lexer.formatError(token,"Invalid syntax");
+    return this.lexer.formatError(token, "Invalid syntax");
   }
 
   IndentedLexer.prototype.has = function (name) {

@@ -7,8 +7,8 @@ export class BinaryOperationNode extends BaseNode {
     this.right = right;
   }
 
-  findVarsReferenced(env) {
-    return this.left.findVarsReferenced(env).concat(this.right.findVarsReferenced(env));
+  findCellsReferenced(env) {
+    return this.left.findCellsReferenced(env).concat(this.right.findCellsReferenced(env));
   }
 
 }

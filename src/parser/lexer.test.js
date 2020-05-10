@@ -73,7 +73,7 @@ test('math symbols_with_labels', () => {
 test('defFunction', () => {
   lexer.reset('def func()\n' +
     '    body\n' +
-    'cos');
+    'cos\n');
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "kwDef"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "lparen"}));
@@ -83,8 +83,8 @@ test('defFunction', () => {
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
-  expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
+  expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
 });
 
 
@@ -94,7 +94,7 @@ test('indication', () => {
     '    b\n' +
     '    c\n' +
     '        d\n' +
-    'e');
+    'e\n');
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "indent"}));
@@ -106,44 +106,17 @@ test('indication', () => {
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
-	expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
-	expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
-	expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
-  });
-
-test('remove_excessive_ends', () => {
-
-  lexer.reset('a\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    'b');
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
 	expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
-	expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
   });
 
-
-test('remove_starting_end', () => {
-
-  lexer.reset('\n' +
-    '\n' +
-    '\n' +
-    'b');
-	expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
-  });
 
 test('if_whole', () => {
   lexer.reset('if A1 == 5\n' +
     '    A2 = 5\n' +
     'else\n' +
-    '    A2 = 10');
+    '    A2 = 10\n');
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "kwIf"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "cell"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "equal"}));
@@ -155,15 +128,14 @@ test('if_whole', () => {
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "number"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
-  expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "kwElse"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "indent"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "cell"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "assign"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "number"}));
-  expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
+  expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
 });
 
 
@@ -191,6 +163,6 @@ test('while_whole', () => {
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "rsquare"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "assign"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "identifier"}));
-  expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
   expect(lexer.next()).toEqual(expect.objectContaining({"type": "end"}));
+  expect(lexer.next()).toEqual(expect.objectContaining({"type": "dedent"}));
 });

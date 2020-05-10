@@ -12,7 +12,7 @@ export class CellNode extends FinalNode {
     return env.getCell(this.x, this.y).value;
   }
 
-  findVarsReferenced(env) {
+  findCellsReferenced(env) {
     return [env.getCell(this.x, this.y)];
   }
 }
