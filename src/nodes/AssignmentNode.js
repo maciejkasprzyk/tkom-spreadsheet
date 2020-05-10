@@ -4,6 +4,7 @@ import {VariableNode} from "./VariableNode";
 import {CellNode} from "./CellNode";
 import {NumberNode} from "./NumberNode";
 import {BaseNode} from "./BaseNode";
+import _ from 'lodash';
 
 export class AssignmentNode extends BinaryOperationNode {
 
@@ -12,13 +13,14 @@ export class AssignmentNode extends BinaryOperationNode {
     if (this.left instanceof VariableNode) {
       env.setVariable(this.left.value, this.right.exec(env));
     } else if (this.left instanceof CellNode) {
-      let ast = this.right;
+      // create copy by unparsing and parsing cause im lazy
+      console.log(this.right)
+      let ast = _.cloneDeep(this.right);
 
       // hack wrapper to stay DRY
       const wrapper = {ast: ast};
       replaceVariablesWithConstants(wrapper, env);
       ast = wrapper.ast;
-      console.log(ast)
       const formula = "=" + ast.unParse(env);
       env.setCell(this.left.x, this.left.y, formula);
 
@@ -38,7 +40,7 @@ function replaceVariablesWithConstants(ast, env) {
       } else if (ast[property] instanceof BaseNode) {
         replaceVariablesWithConstants(ast[property], env);
       }
-      
+
     }
   }
 }

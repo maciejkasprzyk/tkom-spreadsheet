@@ -40,11 +40,12 @@ while i < 5
     cell[15][i] = i
     i = i + 1`,
 
-`A1 = 5
+`A1 = 1
 i = 5
 while i > 0
     i = i - 1
-    A1 = A1 + 2`,
+    a = A1
+    A1 = a + 1`,
 
 `if A1 == 5
     A2 = 5
