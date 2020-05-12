@@ -1248,11 +1248,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tkom-spreadsheet/ff7acf7df3cdb56d704a5bd29f08fd55.js"
   },
   {
-    "revision": "59c1367919fb29b363bc7a4f5d356e23",
+    "revision": "90947425bc87b79430a73796ee4c3207",
     "url": "/tkom-spreadsheet/index.html"
   },
   {
-    "revision": "8c8f36f8d163862b1fb8",
+    "revision": "850b0cea1d9e1779eb88",
     "url": "/tkom-spreadsheet/static/css/main.7d14ec45.chunk.css"
   },
   {
@@ -1264,8 +1264,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tkom-spreadsheet/static/js/2.f6944961.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "8c8f36f8d163862b1fb8",
-    "url": "/tkom-spreadsheet/static/js/main.08257337.chunk.js"
+    "revision": "850b0cea1d9e1779eb88",
+    "url": "/tkom-spreadsheet/static/js/main.ac0b9d5b.chunk.js"
   },
   {
     "revision": "54c48444078cb055e270",
