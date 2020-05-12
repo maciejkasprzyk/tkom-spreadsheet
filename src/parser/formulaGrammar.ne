@@ -41,8 +41,10 @@ primary ->
   | range                                    {% id %}
   | cell                                     {% id %}
   | %minus primary                           {% p.negative %}
-  | %lsquare sum %semicolon sum %rsquare     {% p.dynamicCell %}
+  | dynamicCell                              {% id %}
 
+dynamicCell ->
+  %lsquare sum %semicolon sum %rsquare       {% p.dynamicCell %}
 
 cell -> %cell                                {% p.cell %}
 

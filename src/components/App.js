@@ -37,7 +37,7 @@ export default App;
 const examples = [
   `i = 0
 while i < 5
-    cell[15][i] = i
+    [0;i] = i
     i = i + 1`,
 
 `A1 = 1

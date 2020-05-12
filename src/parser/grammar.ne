@@ -24,6 +24,7 @@ else ->
 assigment ->
     variable %assign expr                               {% p.assigment %}
   | cell %assign expr                                   {% p.assigment %}
+  | dynamicCell %assign expr                            {% p.assigment %}
 
 block ->
     %indent code %dedent                                {% p.block %}
