@@ -106,6 +106,9 @@ export function whileLoop([, expr, , block]) {
 }
 
 export function ifElse([, expr, , block, elseBlock]) {
+  if (elseBlock !== null) {
+    elseBlock = elseBlock[0];
+  }
   return new ifElseNode(expr, block, elseBlock);
 }
 
