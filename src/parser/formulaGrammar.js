@@ -38,7 +38,7 @@ let ParserRules = [
     {"name": "args$ebnf$1", "symbols": []},
     {"name": "args$ebnf$1$subexpression$1", "symbols": [(lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "expr"]},
     {"name": "args$ebnf$1", "symbols": ["args$ebnf$1", "args$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.list},
+    {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.argsList},
     {"name": "args", "symbols": [], "postprocess": p.emptyList},
     {"name": "range", "symbols": ["cell", (lexer.has("colon") ? {type: "colon"} : colon), "cell"], "postprocess": p.range}
 ];

@@ -21,6 +21,7 @@ import {NotEqualNode} from "../nodes/NotEqualNode";
 import {FunctionDefNode} from "../nodes/FunctionDefNode";
 import {DynamicCellNode} from "../nodes/DynamicCellNode";
 import {ReferenceNode} from "../nodes/ReferenceNode";
+import {ReturnNode} from "../nodes/ReturnNode";
 
 export function addition([a, _, b]) {
   return new AdditionNode(a, b);
@@ -134,4 +135,16 @@ export function dynamicCell([_lsquare, x, _semicolon, y, _rsquare]) {
 
 export function reference([identifier, _assign, _ampersand, referenced]) {
   return new ReferenceNode(identifier, referenced);
+}
+
+export function returnNode([_, expr]) {
+  return new ReturnNode(expr)
+}
+
+export function argsList([first, list]) {
+  const result = [first];
+  for (const el of list) {
+    result.push(el[1]);
+  }
+  return result;
 }

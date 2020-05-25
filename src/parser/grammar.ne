@@ -9,8 +9,9 @@ code ->
 statement ->
     expr ends                                           {% id %}
   | reference ends                                      {% id %}
+  | return ends                                         {% id %}
   | assigment ends                                      {% id %}
-  | blockStatement                                      {% id %}
+  | blockStatement (%end):*                             {% id %}
 
 blockStatement ->
     %kwWhile expr ends block                            {% p.whileLoop %}
@@ -36,3 +37,6 @@ reference ->
     %identifier %assign %ampersand range                {% p.reference %}
   | %identifier %assign %ampersand cell                 {% p.reference %}
   | %identifier %assign %ampersand variable             {% p.reference %}
+
+return ->
+    %kwReturn expr                                      {% p.returnNode %}

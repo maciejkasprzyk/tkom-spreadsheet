@@ -37,7 +37,7 @@ export class Environment {
         this._setCellValue(cell, string);
       }
 
-      this.updateObservers(cell);
+      this._updateObservers(cell);
       cell.error = null;
     } catch (e) {
       if (e.name !== "UserError") {
@@ -107,18 +107,10 @@ export class Environment {
   }
 
 
-  updateObservers(cell) {
+  _updateObservers(cell) {
     for (const x of topologicalSort(cell)) {
       x.value = x.ast.exec(this);
     }
-  }
-
-
-  getFunctionAst(identifier) {
-    if (!this.funcitons.hasOwnProperty(identifier)) {
-      throw new UserError(`No function: ${identifier}`);
-    }
-    return this.funcitons[identifier];
   }
 
 
@@ -153,6 +145,27 @@ export class Environment {
       x = this.getReference(x.identifier);
     }
     return x;
+  }
+
+  setFunction(identifier, args, block) {
+    this.funcitons[identifier] = {args: args, block: block};
+  }
+
+  getFunction(identifier) {
+    if (!this.funcitons.hasOwnProperty(identifier)) {
+      throw new UserError(`No function: ${identifier}`);
+    }
+    return this.funcitons[identifier];
+  }
+
+  newScope() {
+    this.variablesScopes.push({});
+    this.referencesScopes.push({});
+  }
+
+  popScope() {
+    this.variablesScopes.pop();
+    this.referencesScopes.pop();
   }
 
 }
