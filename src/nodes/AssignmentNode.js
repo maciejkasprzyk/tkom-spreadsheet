@@ -11,16 +11,25 @@ export class AssignmentNode extends BinaryOperationNode {
 
   exec(env) {
 
-    if (this.left instanceof VariableNode) {
-      env.setVariable(this.left.value, this.right.exec(env));
-    } else if (this.left instanceof CellNode || this.left instanceof DynamicCellNode) {
+    let left = this.left
+    // check if this left is an reference
+    if (left instanceof VariableNode) {
+      // if reference get referenced value
+      const x = env.getReference(left.identifier);
+      if (x !== undefined) {
+        left = x
+      }
+    }
+    if (left instanceof VariableNode) {
+      env.setVariable(left.value, this.right.exec(env));
+    } else if (left instanceof CellNode || left instanceof DynamicCellNode) {
       let x, y;
-      if (this.left instanceof CellNode) {
-        x = this.left.x;
-        y = this.left.y;
+      if (left instanceof CellNode) {
+        x = left.x;
+        y = left.y;
       } else {
-        x = this.left.x.exec(env);
-        y = this.left.y.exec(env);
+        x = left.x.exec(env);
+        y = left.y.exec(env);
       }
 
       let ast = _.cloneDeep(this.right);
@@ -41,9 +50,16 @@ export class AssignmentNode extends BinaryOperationNode {
 function replaceVariablesWithConstants(ast, env) {
   for (let property in ast) {
     if (ast.hasOwnProperty(property)) {
+      if (ast[property] instanceof VariableNode) {
+
+        const x = env.getReference(ast[property].identifier);
+        if (x !== undefined) {
+          ast[property] = x;
+        }
+      }
 
       if (ast[property] instanceof VariableNode) {
-        const varValue = env.getVarByName(ast[property].identifier).value
+        const varValue = ast[property].exec(env);
         ast[property] = new NumberNode({value: varValue});
       } else if (ast[property] instanceof BaseNode) {
         replaceVariablesWithConstants(ast[property], env);
@@ -83,8 +99,7 @@ function replaceVariablesWithConstants(ast, env) {
 // albo (latwiej) nie pozwalac na wykorzystywanie zmiennych globalnych w funkcjach
 
 
-// nie moge pozwalac na konstrukcje w ktory dynamiczne odwolanie jest po prawej stronie: A1 = cell(A2,A3)
-// a w konstrukcjach typu cell(A2,A3) = 5*A1  zostanie wykokonane przypisanie do komorki o wspolrzednych,
+// w konstrukcjach typu cell(A2,A3) = 5*A1  zostanie wykokonane przypisanie do komorki o wspolrzednych,
 // ktore okreslaja A2 oraz A3 w momencie wykonania, pozniejsze zmiany A2 i A3 nie beda mialy wplywy na to przypisanie
 
 
@@ -122,3 +137,19 @@ function replaceVariablesWithConstants(ast, env) {
 
 
 // czy w kodzie jest jakis odpowiednik wpisania
+
+
+// jeszcze zastanówmy się nad zapisywanie
+// problematyczne będzie zapisaywanie komorek w postaci kodu ponieważ w komorkach mozna wpisywać wartosc
+// poprzez value a nie poprzez formule. najlatiwej bedzie jezeli arkusz po prostu zapisze oddzielnie
+// w prostej postaci tablic/obiektow JSON i tyle
+// nie bede musial wtedy implementowac przypisaywanie do value w kodzie
+
+
+// musze sie jeszce zastanowic nad wywylywaniem funkcji -> jak przekazywac argumenty a wszczegolnoscio
+// jak rozwiazac problem przekzywania do funkcji rangów? czy pozwalać na zmienna ilosc argumentów?
+// może zrobić to tak fajnie że można przekażać dowolną ilość argumentów a interpreter je wszystkie zbiera
+// (rozpakowuje range) w jedna konstrukcje aka liste. Ta lista jedyne na co pozwala to iterowanie
+// przy iterowaniu moglbym uzyc konstrukcji for cell in args
+// a w poszegolnych obrotach moglbym skorzystac z tego samego sposobu w jaki zaimplementuje alias
+// zeby ustawiac aliasy na kolejne komorki w liscie

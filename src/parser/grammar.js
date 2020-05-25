@@ -53,7 +53,7 @@ let ParserRules = [
     {"name": "code$ebnf$1", "symbols": ["code$ebnf$1", "code$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "code", "symbols": ["statement", "code$ebnf$1"], "postprocess": p.list},
     {"name": "statement", "symbols": ["expr", "ends"], "postprocess": id},
-    {"name": "statement", "symbols": ["reference"], "postprocess": id},
+    {"name": "statement", "symbols": ["reference", "ends"], "postprocess": id},
     {"name": "statement", "symbols": ["assigment", "ends"], "postprocess": id},
     {"name": "statement", "symbols": ["blockStatement"], "postprocess": id},
     {"name": "blockStatement", "symbols": [(lexer.has("kwWhile") ? {type: "kwWhile"} : kwWhile), "expr", "ends", "block"], "postprocess": p.whileLoop},
@@ -73,7 +73,8 @@ let ParserRules = [
     {"name": "ends$ebnf$1", "symbols": ["ends$ebnf$1", "ends$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "ends", "symbols": ["ends$ebnf$1"], "postprocess": null},
     {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "range"], "postprocess": p.reference},
-    {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "cell"], "postprocess": p.reference}
+    {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "cell"], "postprocess": p.reference},
+    {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "variable"], "postprocess": p.reference}
 ];
 let ParserStart = "entry";
 export default { Lexer, ParserRules, ParserStart };

@@ -3,6 +3,7 @@ import {FormulaParser} from "../parser/parsers";
 import {isFormula, letterLabelGenerator, topologicalSort} from "../utils";
 import {Variable} from "./Variable";
 import {Cell} from "./Cell";
+import {ReferenceNode} from "../nodes/ReferenceNode";
 
 export class Environment {
 
@@ -20,7 +21,9 @@ export class Environment {
       }
     }
 
+    // new scope is only used in functions (to prevent them from accessing external variables)
     this.variablesScopes = [{}];
+    this.referencesScopes = [{}];
   }
 
   setCell(x, y, string) {
@@ -139,4 +142,17 @@ export class Environment {
       throw new UserError(`No variable: ${identifier}`);
     }
   }
+
+  setReference(identifier, node) {
+    this.referencesScopes[this.referencesScopes.length - 1][identifier] = node;
+  }
+
+  getReference(identifier) {
+    let x = this.referencesScopes[this.referencesScopes.length - 1][identifier];
+    if (x instanceof ReferenceNode) {
+      x = this.getReference(x.identifier);
+    }
+    return x;
+  }
+
 }

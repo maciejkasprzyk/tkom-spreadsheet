@@ -6,4 +6,8 @@ export class ReferenceNode extends BaseNode {
     this.identifier = identifier;
     this.referenced = referenced;
   }
+
+  exec(env) {
+    env.setReference(this.identifier, this.referenced);
+  }
 }

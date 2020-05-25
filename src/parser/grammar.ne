@@ -8,7 +8,7 @@ code ->
 
 statement ->
     expr ends                                           {% id %}
-  | reference                                           {% id %}
+  | reference ends                                      {% id %}
   | assigment ends                                      {% id %}
   | blockStatement                                      {% id %}
 
@@ -35,3 +35,4 @@ ends ->
 reference ->
     %identifier %assign %ampersand range                {% p.reference %}
   | %identifier %assign %ampersand cell                 {% p.reference %}
+  | %identifier %assign %ampersand variable             {% p.reference %}

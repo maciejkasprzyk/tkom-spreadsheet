@@ -8,6 +8,11 @@ export class VariableNode extends FinalNode {
   }
 
   exec(env) {
+
+    const x = env.getReference(this.identifier);
+    if (x !== undefined) {
+      return x.exec(env)
+    }
     return env.getVarByName(this.identifier).value;
   }
 }
