@@ -7,7 +7,6 @@ import {observable} from "mobx";
 export class SpreadsheetStore {
 
   @observable annotations = []
-  @observable error = "6345"
 
   constructor(x, y) {
     this.env = new Environment(x, y);
@@ -43,7 +42,6 @@ export class SpreadsheetStore {
 
   run(code) {
     this.annotations = []
-    this.error = ''
     if (code === "") {
       return;
     }
@@ -81,7 +79,6 @@ export class SpreadsheetStore {
 
   logParseTree(code) {
     this.annotations = []
-    this.error = ''
     try {
       const parser = new Parser();
       parser.feed(code);
@@ -96,7 +93,6 @@ export class SpreadsheetStore {
 
   logLexerOutput(code) {
     this.annotations = []
-    this.error = ''
     try {
       lexer.reset(code);
       const result = [];

@@ -58,9 +58,6 @@ const Editor = props => {
         annotations={store.annotations}
       />
       <div className={style.Bottom}>
-        <div className={style.errors}>
-          {store.error}
-        </div>
         <button onClick={() => props.onLogParseTree(code)}>Log parse tree</button>
         <button onClick={() => props.onLogLexerOutput(code)}>Log tokens</button>
         <button onClick={() => props.onSubmit(code)}>Run</button>
