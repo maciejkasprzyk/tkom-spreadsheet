@@ -19,18 +19,32 @@ const Editor = props => {
     setCodeState(code);
   }
 
+  const onLoad = e => {
+
+    const file = e.target.files[0];
+    const fr = new FileReader();
+
+    fr.addEventListener('load', e => {
+      const text = e.target.result;
+      const o = JSON.parse(text);
+
+      const code = o.code;
+      const cells = o.cells
+
+      setCode(code);
+      props.onLoad(cells)
+    })
+    fr.readAsText(file);
+  };
+
   return (
-    <div
-      className={style.Editor}
-    >
+    <div className={style.Editor}>
+
       <div className={style.Top}>
-        {props.examples.map((example, i) =>
-          <button
-            key={i}
-            onClick={() => setCode(example)}
-          > Example {i} </button>
-        )}
+        <label className={style.customFileUpload}> Load <input type="file" onChange={onLoad}/> </label>
+        <button onClick={() => props.onSave(code)}>Save</button>
       </div>
+
       <AceEditor
         mode="python"
         theme="cobalt"
@@ -41,7 +55,6 @@ const Editor = props => {
         // annotations={[{ row: 0, column: 10, type: 'error', text: 'Some error.'}]}
       />
       <div className={style.Bottom}>
-        <button onClick={() => props.onSave(code)}>Save</button>
         <button onClick={() => props.onLogParseTree(code)}>Log parse tree</button>
         <button onClick={() => props.onLogLexerOutput(code)}>Log tokens</button>
         <button onClick={() => props.onSubmit(code)}>Run</button>
@@ -53,6 +66,7 @@ const Editor = props => {
 Editor.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  onLoad: PropTypes.func.isRequired,
   onLogLexerOutput: PropTypes.func.isRequired,
   onLogParseTree: PropTypes.func.isRequired,
   examples: PropTypes.array,

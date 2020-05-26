@@ -26,11 +26,19 @@ export class Environment {
     this.referencesScopes = [{}];
   }
 
+  reset() {
+    for (let i = 0; i < this.y; i++) {
+      for (let j = 0; j < this.x; j++) {
+        this.cells[i][j].reset();
+      }
+    }
+
+  }
+
   setCell(x, y, string) {
     const cell = this.getCell(x, y);
     cell.unregisterFromAllSubjects();
     try {
-
       if (isFormula(string)) {
         this._setCellFormula(cell, string)
       } else {

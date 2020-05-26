@@ -19,6 +19,16 @@ export class Cell {
     this.label = label;
   }
 
+  reset() {
+    this.formula = null
+    this.value = null
+    this.background = null
+    this.error = null
+    this.ast = null;
+    this.observers = [];
+    this.subjects = [];
+  }
+
   unregisterFromAllSubjects() {
     for (const cell of this.subjects) {
       cell._unregisterObserver(this);

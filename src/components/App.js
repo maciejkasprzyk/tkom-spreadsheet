@@ -5,10 +5,15 @@ import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
 import style from './App.module.scss';
 import Editor from "./Editor";
 import { saveAs } from 'file-saver';
+import {getCellIndexes} from "../utils";
 
-const store = new SpreadsheetStore(5, 100);
 
-function save(code,store) {
+const x = 5;
+const y = 30;
+
+const store = new SpreadsheetStore(x, y);
+
+function onSave(code,store) {
   const cells = store.cellsToObjects();
   const o = {
     'cells': cells,
@@ -17,13 +22,32 @@ function save(code,store) {
   const blob = new Blob([JSON.stringify(o,null,1)], {
     type:'text/plain;charset=utf-8'
   })
-  saveAs(blob, "code.txt");
+  saveAs(blob, "spreadsheet.txt");
 }
 
+function onLoad(cells) {
+
+
+  store.reset()
+
+  for (const p in cells) {
+    if (cells.hasOwnProperty(p)) {
+      try{
+        const indexes = getCellIndexes(p);
+        const x = indexes.x;
+        const y = indexes.y;
+        store.onCellSet(x,y,cells[p])
+      }
+      catch (e) {
+
+      }
+    }
+  }
+}
 
 function App() {
 
-  useEffect(populateSheet, []);
+  // useEffect(populateSheet, []);
 
   return (
     <div className={style.App}>
@@ -35,7 +59,8 @@ function App() {
       />
       <Editor
         examples={examples}
-        onSave={x=>save(x,store)}
+        onLoad={cells=>onLoad(cells)}
+        onSave={x=>onSave(x,store)}
         onSubmit={(code) => store.run(code)}
         onLogLexerOutput={(code) => store.logLexerOutput(code)}
         onLogParseTree={(code) => store.logParseTree(code)}

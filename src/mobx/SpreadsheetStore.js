@@ -9,6 +9,10 @@ export class SpreadsheetStore {
     this.env = new Environment(x, y);
   }
 
+  reset() {
+   this.env.reset()
+  }
+
   onCellSet(x, y, value) {
     this.env.setCell(x, y, value);
   }
