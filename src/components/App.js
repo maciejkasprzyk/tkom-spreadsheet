@@ -1,10 +1,10 @@
 /* eslint-disable no-eval */
-import React, {useEffect} from 'react';
+import React from 'react';
 import Spreadsheet from "./Spreadsheet";
 import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
 import style from './App.module.scss';
 import Editor from "./Editor";
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 import {getCellIndexes} from "../utils";
 import {observer} from "mobx-react";
 

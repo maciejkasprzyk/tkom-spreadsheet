@@ -38,7 +38,9 @@
     line-height: 50px;
     background-color: transparent;
     padding: 0 15px;
-
+    &:hover {
+      background-color: #292c3d;
+    }
 
     input[type='file'] {
       display: none;
@@ -59,12 +61,21 @@
     height: 35px;
     padding: 0 15px;
     border-radius: 3px;
-    background-color: #1967d2;
+    background-color: transparent;
     font-weight: bold;
     margin-right: 10px;
 
     &:hover {
-      background-color: #4285f4;
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    &:last-child {
+      background-color: #1967d2;
+
+      &:hover {
+        background-color: #4285f4;
+
+      }
     }
   }
 
