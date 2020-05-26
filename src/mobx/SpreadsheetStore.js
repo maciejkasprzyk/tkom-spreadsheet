@@ -13,8 +13,26 @@ export class SpreadsheetStore {
     this.env.setCell(x, y, value);
   }
 
-  get cells() {
-    return this.env.cells;
+  cellsToObjects() {
+    const result = {};
+
+    for (let i = 0; i < this.env.y; i++) {
+      for (let j = 0; j < this.env.x; j++) {
+        const cell = this.env.getCell(j, i);
+        let x;
+        if (cell.formula) {
+          x = cell.formula
+        }
+        else if (cell.value) {
+          x = cell.value;
+        }
+        else {
+          continue;
+        }
+        result[cell.label] = x;
+      }
+    }
+    return result
   }
 
   run(code) {

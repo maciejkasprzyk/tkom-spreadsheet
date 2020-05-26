@@ -41,9 +41,10 @@ const Editor = props => {
         // annotations={[{ row: 0, column: 10, type: 'error', text: 'Some error.'}]}
       />
       <div className={style.Bottom}>
-        <button onClick={() => props.onLogParseTree(code)}> Log parse tree </button>
-        <button onClick={() => props.onLogLexerOutput(code)}> Log tokens </button>
-        <button onClick={() => props.onSubmit(code)}> Run </button>
+        <button onClick={() => props.onSave(code)}>Save</button>
+        <button onClick={() => props.onLogParseTree(code)}>Log parse tree</button>
+        <button onClick={() => props.onLogLexerOutput(code)}>Log tokens</button>
+        <button onClick={() => props.onSubmit(code)}>Run</button>
       </div>
     </div>
   );
@@ -51,6 +52,7 @@ const Editor = props => {
 
 Editor.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   onLogLexerOutput: PropTypes.func.isRequired,
   onLogParseTree: PropTypes.func.isRequired,
   examples: PropTypes.array,

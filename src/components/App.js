@@ -4,10 +4,21 @@ import Spreadsheet from "./Spreadsheet";
 import {SpreadsheetStore} from "../mobx/SpreadsheetStore";
 import style from './App.module.scss';
 import Editor from "./Editor";
+import { saveAs } from 'file-saver';
 
 const store = new SpreadsheetStore(5, 100);
 
-
+function save(code,store) {
+  const cells = store.cellsToObjects();
+  const o = {
+    'cells': cells,
+    'code': code,
+  };
+  const blob = new Blob([JSON.stringify(o,null,1)], {
+    type:'text/plain;charset=utf-8'
+  })
+  saveAs(blob, "code.txt");
+}
 
 
 function App() {
@@ -24,6 +35,7 @@ function App() {
       />
       <Editor
         examples={examples}
+        onSave={x=>save(x,store)}
         onSubmit={(code) => store.run(code)}
         onLogLexerOutput={(code) => store.logLexerOutput(code)}
         onLogParseTree={(code) => store.logParseTree(code)}

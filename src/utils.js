@@ -52,3 +52,24 @@ export function isFormula(x) {
   return x.charAt(0) === '=';
 }
 
+function divideIntoLettersAndNumber(cellIdentifier) {
+  const regex = /([a-zA-Z]+)([0-9]+)/;
+  const match = regex.exec(cellIdentifier);
+
+  return [match[1], match[2]];
+}
+
+export function getCellIndexes(cellIdentifier) {
+  const [letters, digits] = divideIntoLettersAndNumber(cellIdentifier);
+
+  const y_index = parseInt(digits) - 1;
+
+  let x_index = 0;
+  for (let i = 0; i < letters.length; i++) {
+    x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
+    x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
+  }
+  return {x: x_index, y: y_index}
+}
+
+
