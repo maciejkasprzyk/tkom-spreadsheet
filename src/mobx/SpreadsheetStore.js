@@ -1,16 +1,20 @@
 import {Environment} from "../environment/Environment";
 import {Parser} from "../parser/parsers";
 import {lexer} from "../parser/lexer";
+import {observable} from "mobx";
 
 
 export class SpreadsheetStore {
+
+  @observable annotations = []
+  @observable error = "6345"
 
   constructor(x, y) {
     this.env = new Environment(x, y);
   }
 
   reset() {
-   this.env.reset()
+    this.env.reset()
   }
 
   onCellSet(x, y, value) {
@@ -26,11 +30,9 @@ export class SpreadsheetStore {
         let x;
         if (cell.formula) {
           x = cell.formula
-        }
-        else if (cell.value) {
+        } else if (cell.value) {
           x = cell.value;
-        }
-        else {
+        } else {
           continue;
         }
         result[cell.label] = x;
@@ -40,6 +42,8 @@ export class SpreadsheetStore {
   }
 
   run(code) {
+    this.annotations = []
+    this.error = ''
     if (code === "") {
       return;
     }
@@ -51,12 +55,33 @@ export class SpreadsheetStore {
       if (e.name !== "UserError") {
         throw e;
       }
-      // todo fancy errors
-      console.log(e.message);
+
+      const regex = /.*line (\d*).*col (\d*)/gm;
+
+      const m = regex.exec(e.message)
+      if (m !== null) {
+        const line = parseInt(m[1]) - 1
+        const col = parseInt(m[2])
+        const lines = e.message.split("\n");
+        const n = Math.min(5, lines.length)
+        let message = ""
+        if (4 in lines) {
+          lines[4] = lines[4].substring(0, lines[4].indexOf("Instead"));
+        }
+        for (let i = 0; i < n; i++) {
+          message += '\n' + lines[i]
+        }
+        this.annotations = [{row: line, column: col, type: 'error', text: message}];
+      } else {
+        this.annotations = [{row: 0, column: 0, type: 'error', text: e.message}];
+      }
+      console.log(e.message)
     }
   }
 
   logParseTree(code) {
+    this.annotations = []
+    this.error = ''
     try {
       const parser = new Parser();
       parser.feed(code);
@@ -70,6 +95,8 @@ export class SpreadsheetStore {
   }
 
   logLexerOutput(code) {
+    this.annotations = []
+    this.error = ''
     try {
       lexer.reset(code);
       const result = [];

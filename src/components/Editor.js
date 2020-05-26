@@ -6,6 +6,9 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-cobalt";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/webpack-resolver";
+import {store} from "./App";
+import {observer} from "mobx-react";
+
 
 const Editor = props => {
 
@@ -41,6 +44,12 @@ const Editor = props => {
     <div className={style.Editor}>
 
       <div className={style.Top}>
+        {props.examples.map((example, i) =>
+          <button
+            key={i}
+            onClick={() => setCode(example)}
+          > Example {i} </button>
+        )}
         <label className={style.customFileUpload}> Load <input type="file" onChange={onLoad}/> </label>
         <button onClick={() => props.onSave(code)}>Save</button>
       </div>
@@ -52,9 +61,12 @@ const Editor = props => {
         value={code}
         height={'100%'}
         width={'100%'}
-        // annotations={[{ row: 0, column: 10, type: 'error', text: 'Some error.'}]}
+        annotations={store.annotations}
       />
       <div className={style.Bottom}>
+        <div className={style.errors}>
+          {store.error}
+        </div>
         <button onClick={() => props.onLogParseTree(code)}>Log parse tree</button>
         <button onClick={() => props.onLogLexerOutput(code)}>Log tokens</button>
         <button onClick={() => props.onSubmit(code)}>Run</button>
@@ -70,12 +82,9 @@ Editor.propTypes = {
   onLogLexerOutput: PropTypes.func.isRequired,
   onLogParseTree: PropTypes.func.isRequired,
   examples: PropTypes.array,
+  error: PropTypes.string,
+  annotations: PropTypes.array,
 };
 
 
-Editor.defaultProps = {
-  examples: ["123", "hello world"],
-};
-
-
-export default Editor;
+export default observer(Editor);
