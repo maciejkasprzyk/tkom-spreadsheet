@@ -1,0 +1,4 @@
+{
+ "cells": {},
+ "code": "if 1 == 5\n    A1 = 5\nelse\n    A1 = 10  \n"
+}

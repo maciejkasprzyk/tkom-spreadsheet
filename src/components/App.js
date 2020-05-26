@@ -59,7 +59,6 @@ function App() {
         onCellSet={(x,y,v) => store.onCellSet(x,y,v)}
       />
       <Editor
-        examples={examples}
         onLoad={cells=>onLoad(cells)}
         onSave={x=>onSave(x,store)}
         onSubmit={(code) => store.run(code)}
@@ -72,30 +71,4 @@ function App() {
 
 export default observer(App);
 
-const examples = [
-  `i = 0
-while i < 5
-    [0;i] = i
-    i = i + 1`,
-
-`A1 = 1
-i = 5
-while i > 0
-    i = i - 1
-    a = A1
-    A1 = a + 1`,
-
-`if A1 == 5
-    A2 = 5
-else
-    A2 = 10  
-`,
-`A1.background = "#52A"`,
-`x = 5
-A2 = 3
-A1 = x + 10 + A2
-`
-
-
-];
 

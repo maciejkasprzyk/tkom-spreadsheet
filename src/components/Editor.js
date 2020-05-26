@@ -44,12 +44,6 @@ const Editor = props => {
     <div className={style.Editor}>
 
       <div className={style.Top}>
-        {props.examples.map((example, i) =>
-          <button
-            key={i}
-            onClick={() => setCode(example)}
-          > Example {i} </button>
-        )}
         <label className={style.customFileUpload}> Load <input type="file" onChange={onLoad}/> </label>
         <button onClick={() => props.onSave(code)}>Save</button>
       </div>
@@ -81,7 +75,6 @@ Editor.propTypes = {
   onLoad: PropTypes.func.isRequired,
   onLogLexerOutput: PropTypes.func.isRequired,
   onLogParseTree: PropTypes.func.isRequired,
-  examples: PropTypes.array,
   error: PropTypes.string,
   annotations: PropTypes.array,
 };
