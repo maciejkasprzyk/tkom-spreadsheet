@@ -40,7 +40,10 @@ export class Environment {
     cell.unregisterFromAllSubjects();
     try {
       if (isFormula(string)) {
-        this._setCellFormula(cell, string)
+        if (string.length === 1) {
+          return
+        }
+        this._setCellFormula(cell, string);
       } else {
         this._setCellValue(cell, string);
       }

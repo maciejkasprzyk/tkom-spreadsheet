@@ -1,0 +1,7 @@
+{
+ "cells": {
+  "A1": "=iif(B1==1,2,3)",
+  "B1": "=1"
+ },
+ "code": "def iif(a,b,c)\n    if a\n        return b\n    else \n        return c\n\n"
+}
