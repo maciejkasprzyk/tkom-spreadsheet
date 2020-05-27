@@ -55,7 +55,7 @@ function_call ->
   | %kwIf %lparen args %rparen               {% p.functionCall %}
 
 args ->
-    expr (%semicolon expr):*                 {% p.argsList %}
+    expr (%comma expr):*                     {% p.argsList %}
   | null                                     {% p.emptyList %}
 
 range ->

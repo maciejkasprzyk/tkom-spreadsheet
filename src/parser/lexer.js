@@ -23,6 +23,7 @@ const tokens = {
   },
   ampersand: '&',
   dot: '.',
+  comma: ',',
   lparen: '(',
   rparen: ')',
   lsquare: '[',
@@ -42,7 +43,7 @@ const tokens = {
   assign: '=',
   string: /".*?"/,
   number: {
-    match: /[1-9][0-9]*(?:,[0-9]*)?|0(?:\.[0-9]+)?/, // (?: non capturing group
+    match: /[1-9][0-9]*(?:\.[0-9]*)?|0(?:\.[0-9]+)?/, // (?: non capturing group
     value: x => parseFloat(x),
   },
 

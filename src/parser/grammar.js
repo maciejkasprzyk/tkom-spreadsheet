@@ -36,7 +36,7 @@ let ParserRules = [
     {"name": "function_call", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "function_call", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen)], "postprocess": p.functionCall},
     {"name": "args$ebnf$1", "symbols": []},
-    {"name": "args$ebnf$1$subexpression$1", "symbols": [(lexer.has("semicolon") ? {type: "semicolon"} : semicolon), "expr"]},
+    {"name": "args$ebnf$1$subexpression$1", "symbols": [(lexer.has("comma") ? {type: "comma"} : comma), "expr"]},
     {"name": "args$ebnf$1", "symbols": ["args$ebnf$1", "args$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "args", "symbols": ["expr", "args$ebnf$1"], "postprocess": p.argsList},
     {"name": "args", "symbols": [], "postprocess": p.emptyList},
