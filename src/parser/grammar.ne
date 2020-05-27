@@ -16,7 +16,7 @@ statement ->
 blockStatement ->
     %kwWhile expr ends block                            {% p.whileLoop %}
   | %kwIf expr ends block (else):?                      {% p.ifElse %}
-  | %kwDef %identifier %lparen args %rparen ends block  {% p.functionDef %}
+  | %kwDef %identifier %lparen params %rparen ends block {% p.functionDef %}
 
 
 else ->
@@ -40,3 +40,7 @@ reference ->
 
 return ->
     %kwReturn expr                                      {% p.returnNode %}
+
+params ->
+    variable (%comma variable):*                       {% p.argsList %}
+  | null                                               {% p.emptyList %}

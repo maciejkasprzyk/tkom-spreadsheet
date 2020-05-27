@@ -1,5 +1,5 @@
 import {BaseNode} from "./BaseNode";
-import {UserError} from "../parser/errors";
+import {returnHandler} from "../parser/errors";
 
 export class ReturnNode extends BaseNode {
   constructor(expr) {
@@ -7,7 +7,7 @@ export class ReturnNode extends BaseNode {
     this.expr = expr;
   }
 
-  exec() {
-    throw new UserError("Return in unexpected place");
+  exec(env) {
+    throw new returnHandler(this.expr.exec(env));
   }
 }

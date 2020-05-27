@@ -1,0 +1,6 @@
+{
+ "cells": {
+  "A1": "=returns()"
+ },
+ "code": "def returns()\n    if 1==1\n        return 1\n    else\n        return 2\n\nA1 = returns()\n"
+}

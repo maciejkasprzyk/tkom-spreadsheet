@@ -27,8 +27,6 @@ function onSave(code,store) {
 }
 
 function onLoad(cells) {
-
-
   store.reset()
 
   for (const p in cells) {

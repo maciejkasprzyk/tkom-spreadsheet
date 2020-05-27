@@ -65,7 +65,7 @@ let ParserRules = [
     {"name": "blockStatement$ebnf$1", "symbols": ["blockStatement$ebnf$1$subexpression$1"], "postprocess": id},
     {"name": "blockStatement$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
     {"name": "blockStatement", "symbols": [(lexer.has("kwIf") ? {type: "kwIf"} : kwIf), "expr", "ends", "block", "blockStatement$ebnf$1"], "postprocess": p.ifElse},
-    {"name": "blockStatement", "symbols": [(lexer.has("kwDef") ? {type: "kwDef"} : kwDef), (lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "args", (lexer.has("rparen") ? {type: "rparen"} : rparen), "ends", "block"], "postprocess": p.functionDef},
+    {"name": "blockStatement", "symbols": [(lexer.has("kwDef") ? {type: "kwDef"} : kwDef), (lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("lparen") ? {type: "lparen"} : lparen), "params", (lexer.has("rparen") ? {type: "rparen"} : rparen), "ends", "block"], "postprocess": p.functionDef},
     {"name": "else", "symbols": [(lexer.has("kwElse") ? {type: "kwElse"} : kwElse), "ends", "block"], "postprocess": p.elseBlock},
     {"name": "assigment", "symbols": ["variable", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
     {"name": "assigment", "symbols": ["cell", (lexer.has("assign") ? {type: "assign"} : assign), "expr"], "postprocess": p.assigment},
@@ -79,7 +79,12 @@ let ParserRules = [
     {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "range"], "postprocess": p.reference},
     {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "cell"], "postprocess": p.reference},
     {"name": "reference", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier), (lexer.has("assign") ? {type: "assign"} : assign), (lexer.has("ampersand") ? {type: "ampersand"} : ampersand), "variable"], "postprocess": p.reference},
-    {"name": "return", "symbols": [(lexer.has("kwReturn") ? {type: "kwReturn"} : kwReturn), "expr"], "postprocess": p.returnNode}
+    {"name": "return", "symbols": [(lexer.has("kwReturn") ? {type: "kwReturn"} : kwReturn), "expr"], "postprocess": p.returnNode},
+    {"name": "params$ebnf$1", "symbols": []},
+    {"name": "params$ebnf$1$subexpression$1", "symbols": [(lexer.has("comma") ? {type: "comma"} : comma), "variable"]},
+    {"name": "params$ebnf$1", "symbols": ["params$ebnf$1", "params$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "params", "symbols": ["variable", "params$ebnf$1"], "postprocess": p.argsList},
+    {"name": "params", "symbols": [], "postprocess": p.emptyList}
 ];
 let ParserStart = "entry";
 export default { Lexer, ParserRules, ParserStart };

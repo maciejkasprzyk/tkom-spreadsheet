@@ -1,6 +1,6 @@
 import {BaseNode} from "./BaseNode";
 import {FunctionIdentifierNode} from "./FunctionIdentifierNode";
-import {UserError} from "../parser/errors";
+import {returnMessage, UserError} from "../parser/errors";
 import {ReturnNode} from "./ReturnNode";
 
 export class FunctionCallNode extends BaseNode {
@@ -27,14 +27,16 @@ export class FunctionCallNode extends BaseNode {
       env.setVariable(func.args[i].identifier, argsValues[i]);
     }
 
-
     for (const b of func.block.list) {
-      if (b instanceof ReturnNode) {
-        const result = b.expr.exec(env);
-        env.popScope();
-        return result;
+      try {
+        b.exec(env);
+      } catch (e) {
+        if (e.name === 'returnHandler') {
+          return e.result;
+        } else {
+          throw e;
+        }
       }
-      b.exec(env);
     }
 
     env.popScope();
@@ -42,7 +44,6 @@ export class FunctionCallNode extends BaseNode {
   }
 
   unParse(env) {
-    console.log(this.args)
     const args = [];
     for (const a of this.args) {
       args.push(a.unParse());
