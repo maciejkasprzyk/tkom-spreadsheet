@@ -44,9 +44,9 @@ export class FunctionCallNode extends BaseNode {
   unParse(env) {
     console.log(this.args)
     const args = [];
-    for (const a of this.args.list) {
+    for (const a of this.args) {
       args.push(a.unParse());
     }
-    return this.identifier + '( ' + args.join(';') + ')'
+    return this.identifier.value + '(' + args.join(',') + ')'
   }
 }

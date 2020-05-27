@@ -1,0 +1,6 @@
+{
+ "cells": {
+  "A1": "=suma(1,2)"
+ },
+ "code": "def suma(a,b)\n    return a+b\n\nA1 = suma(1,2)\n"
+}
