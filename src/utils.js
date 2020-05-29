@@ -64,8 +64,9 @@ export function getCellIndexes(cellIdentifier) {
 
   const y_index = parseInt(digits) - 1;
 
-  let x_index = 0;
+  let x_index = -1;
   for (let i = 0; i < letters.length; i++) {
+    x_index += 1
     x_index *= ("Z".charCodeAt(0) - 'A'.charCodeAt(0) + 1);
     x_index += letters[i].charCodeAt(0) - "A".charCodeAt(0);
   }
