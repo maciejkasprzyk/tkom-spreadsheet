@@ -1,6 +1,6 @@
-import {FinalNode} from "./FinalNode";
+import {PositionedNode} from "./PositionedNode";
 
-export class VariableNode extends FinalNode {
+export class VariableNode extends PositionedNode {
 
   constructor(token) {
     super(token);

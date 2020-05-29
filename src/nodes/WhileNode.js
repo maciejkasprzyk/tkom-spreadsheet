@@ -9,7 +9,9 @@ export class WhileNode extends BaseNode {
 
   exec(env) {
     while (this.condition.exec(env)) {
-      this.block.exec(env);
+      for (const line of this.block) {
+        line.exec(env);
+      }
     }
   }
 }

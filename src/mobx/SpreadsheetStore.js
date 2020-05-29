@@ -48,7 +48,9 @@ export class SpreadsheetStore {
     try {
       const parser = new Parser();
       parser.feed(code);
-      parser.results.exec(this.env);
+      for (const line of parser.results) {
+        line.exec(this.env);
+      }
     } catch (e) {
       if (e.name !== "UserError") {
         throw e;

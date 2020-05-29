@@ -1,12 +1,11 @@
-import {BaseNode} from "./BaseNode";
 import {FunctionIdentifierNode} from "./FunctionIdentifierNode";
-import {returnMessage, UserError} from "../parser/errors";
-import {ReturnNode} from "./ReturnNode";
+import {UserError} from "../parser/errors";
+import {PositionedNode} from "./PositionedNode";
 
-export class FunctionCallNode extends BaseNode {
-  constructor(identifierToken, args) {
-    super();
-    this.identifier = new FunctionIdentifierNode(identifierToken);
+export class FunctionCallNode extends PositionedNode {
+  constructor(position, args) {
+    super(position);
+    this.identifier = new FunctionIdentifierNode(position);
     this.args = args;
   }
 
@@ -27,7 +26,7 @@ export class FunctionCallNode extends BaseNode {
       env.setVariable(func.args[i].identifier, argsValues[i]);
     }
 
-    for (const b of func.block.list) {
+    for (const b of func.block) {
       try {
         b.exec(env);
       } catch (e) {

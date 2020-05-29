@@ -11,7 +11,6 @@ import {AssignmentNode} from "../nodes/AssignmentNode";
 import {WhileNode} from "../nodes/WhileNode";
 import {ifElseNode} from "../nodes/IfElseNode";
 import {CellNode} from "../nodes/CellNode";
-import {ListNode} from "../nodes/ListNode";
 import {EqualNode} from "../nodes/EqualNode";
 import {GreaterEqualNode} from "../nodes/GreaterEqualNode";
 import {LessEqualNode} from "../nodes/LessEqualNode";
@@ -50,7 +49,7 @@ export function negative([_, operand]) {
 }
 
 export function functionCall([identifierToken, _, args]) {
-  return new FunctionCallNode(identifierToken, args);
+  return new FunctionCallNode(identifierToken.value,args);
 }
 
 export function equal([a, _, b]) {
@@ -91,7 +90,7 @@ export function list([first, list]) {
   for (const el of list) {
     result.push(el[0]);
   }
-  return new ListNode(result);
+  return result;
 }
 
 export function assigment([left, _, right]) {

@@ -10,10 +10,14 @@ export class ifElseNode extends BaseNode {
 
   exec(env) {
     if (this.condition.exec(env)) {
-      this.block.exec(env);
+      for (const line of this.block) {
+        line.exec(env);
+      }
     } else {
       if (this.elseBlock !== null) {
-        this.elseBlock.exec(env);
+        for (const line of this.block) {
+          line.exec(env);
+        }
       }
     }
   }
