@@ -6,9 +6,11 @@ import {NumberNode} from "./NumberNode";
 import {BaseNode} from "./BaseNode";
 import _ from 'lodash';
 import {DynamicCellNode} from "./DynamicCellNode";
+import {errorInfoExecDecorator} from "../utils";
 
 export class AssignmentNode extends BinaryOperationNode {
 
+  @errorInfoExecDecorator
   exec(env) {
 
     let left = this.left
@@ -39,6 +41,7 @@ export class AssignmentNode extends BinaryOperationNode {
       replaceVariablesWithConstants(wrapper, env);
       ast = wrapper.ast;
       const formula = "=" + ast.unParse(env);
+
       env.setCell(x, y, formula);
 
     } else {
@@ -60,7 +63,7 @@ function replaceVariablesWithConstants(ast, env) {
 
       if (ast[property] instanceof VariableNode) {
         const varValue = ast[property].exec(env);
-        ast[property] = new NumberNode({value: varValue});
+        ast[property] = new NumberNode({value: varValue, text:varValue.toString()});
       } else if (ast[property] instanceof BaseNode) {
         replaceVariablesWithConstants(ast[property], env);
       }

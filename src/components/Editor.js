@@ -36,8 +36,10 @@ const Editor = props => {
 
       setCode(code);
       props.onLoad(cells)
+      props.onSubmit(code)
     })
     fr.readAsText(file);
+
   };
 
   return (

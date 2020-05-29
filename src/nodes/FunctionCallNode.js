@@ -1,11 +1,10 @@
-import {FunctionIdentifierNode} from "./FunctionIdentifierNode";
 import {UserError} from "../parser/errors";
-import {PositionedNode} from "./PositionedNode";
+import {BaseNode} from "./BaseNode";
 
-export class FunctionCallNode extends PositionedNode {
-  constructor(position, args) {
-    super(position);
-    this.identifier = new FunctionIdentifierNode(position);
+export class FunctionCallNode extends BaseNode {
+  constructor(identifier, args, token) {
+    super(token);
+    this.identifier = identifier;
     this.args = args;
   }
 

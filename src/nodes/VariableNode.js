@@ -1,14 +1,15 @@
-import {PositionedNode} from "./PositionedNode";
+import {BaseNode} from "./BaseNode";
+import {errorInfoExecDecorator} from "../utils";
 
-export class VariableNode extends PositionedNode {
+export class VariableNode extends BaseNode {
 
-  constructor(token) {
+  constructor(identifier, token) {
     super(token);
-    this.identifier = token.value;
+    this.identifier = identifier;
   }
 
+  @errorInfoExecDecorator
   exec(env) {
-
     const x = env.getReference(this.identifier);
     if (x !== undefined) {
       return x.exec(env)

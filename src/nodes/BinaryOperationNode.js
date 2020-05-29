@@ -1,8 +1,8 @@
 import {BaseNode} from "./BaseNode";
 
 export class BinaryOperationNode extends BaseNode {
-  constructor(left,right) {
-    super();
+  constructor(left,right, token) {
+    super(token);
     this.left = left;
     this.right = right;
   }
@@ -12,7 +12,7 @@ export class BinaryOperationNode extends BaseNode {
   }
 
   unParse(env) {
-    return '( ' + this.left.unParse(env) + " " +  this.symbol + " " + this.right.unParse(env) + ' )';
+    return '( ' + this.left.unParse(env) + " " +  this.text + " " + this.right.unParse(env) + ' )';
   }
 
 }

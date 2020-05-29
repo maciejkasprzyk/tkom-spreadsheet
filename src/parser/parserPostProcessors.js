@@ -22,21 +22,21 @@ import {DynamicCellNode} from "../nodes/DynamicCellNode";
 import {ReferenceNode} from "../nodes/ReferenceNode";
 import {ReturnNode} from "../nodes/ReturnNode";
 
-export function addition([a, _, b]) {
-  return new AdditionNode(a, b);
+export function addition([a, token, b]) {
+  return new AdditionNode(a, b, token);
 }
 
-export function subtraction([a, _, b]) {
-  return new SubtractionNode(a, b);
+export function subtraction([a, token, b]) {
+  return new SubtractionNode(a, b, token);
 }
 
-export function multiplication([a, _, b]) {
-  return new MultiplicationNode(a, b);
+export function multiplication([a, token, b]) {
+  return new MultiplicationNode(a, b, token);
 
 }
 
-export function division([a, _, b]) {
-  return new DivisionNode(a, b);
+export function division([a, token, b]) {
+  return new DivisionNode(a, b, token);
 
 }
 
@@ -44,45 +44,45 @@ export function number([token]) {
   return new NumberNode(token)
 }
 
-export function negative([_, operand]) {
-  return new NegativeNode(operand);
+export function negative([token, operand]) {
+  return new NegativeNode(operand, token);
 }
 
-export function functionCall([identifierToken, _, args]) {
-  return new FunctionCallNode(identifierToken.value,args);
+export function functionCall([token, _, args]) {
+  return new FunctionCallNode(token.value, args, token);
 }
 
-export function equal([a, _, b]) {
-  return new EqualNode(a, b);
+export function equal([a, token, b]) {
+  return new EqualNode(a, b, token);
 }
 
-export function greaterEqual([a, _, b]) {
-  return new GreaterEqualNode(a, b);
+export function greaterEqual([a, token, b]) {
+  return new GreaterEqualNode(a, b, token);
 }
 
-export function lessEqual([a, _, b]) {
-  return new LessEqualNode(a, b);
+export function lessEqual([a, token, b]) {
+  return new LessEqualNode(a, b, token);
 }
 
-export function less([a, _, b]) {
-  return new LessNode(a, b);
+export function less([a, token, b]) {
+  return new LessNode(a, b, token);
 }
 
-export function greater([a, _, b]) {
-  return new GreaterNode(a, b);
+export function greater([a, token, b]) {
+  return new GreaterNode(a, b, token);
 }
 
-export function notEqual([a, _, b]) {
-  return new NotEqualNode(a, b);
+export function notEqual([a, token, b]) {
+  return new NotEqualNode(a, b, token);
 }
 
 
-export function variable([identifierToken]) {
-  return new VariableNode(identifierToken);
+export function variable([token]) {
+  return new VariableNode(token.value, token);
 }
 
-export function range([cell1, _, cell2]) {
-  return new RangeNode(cell1, cell2);
+export function range([cell1, token, cell2]) {
+  return new RangeNode(cell1, cell2, token);
 }
 
 export function list([first, list]) {
@@ -93,23 +93,23 @@ export function list([first, list]) {
   return result;
 }
 
-export function assigment([left, _, right]) {
-  return new AssignmentNode(left, right);
+export function assigment([left, token, right]) {
+  return new AssignmentNode(left, right, token);
 }
 
 export function block([, code]) {
   return code;
 }
 
-export function whileLoop([, expr, , block]) {
-  return new WhileNode(expr, block);
+export function whileLoop([token, expr, , block]) {
+  return new WhileNode(expr, block, token);
 }
 
-export function ifElse([, expr, , block, elseBlock]) {
+export function ifElse([token, expr, , block, elseBlock]) {
   if (elseBlock !== null) {
     elseBlock = elseBlock[0];
   }
-  return new ifElseNode(expr, block, elseBlock);
+  return new ifElseNode(expr, block, elseBlock, token);
 }
 
 export function elseBlock([, , block]) {
@@ -120,24 +120,24 @@ export function emptyList() {
   return []
 }
 
-export function cell([cell]) {
-  return new CellNode(cell);
+export function cell([token]) {
+  return new CellNode(token.value.x, token.value.y, token);
 }
 
-export function functionDef([_def, identifierToken, _lparen, args, _rparen, _end, block]) {
-  return new FunctionDefNode(identifierToken, args, block)
+export function functionDef([_def, token, _lparen, args, _rparen, _end, block]) {
+  return new FunctionDefNode(token.value, args, block, token)
 }
 
-export function dynamicCell([_lsquare, x, _semicolon, y, _rsquare]) {
-  return new DynamicCellNode(x, y);
+export function dynamicCell([_lsquare, x, _semicolon, y, token]) {
+  return new DynamicCellNode(x, y, token);
 }
 
-export function reference([identifier, _assign, _ampersand, referenced]) {
-  return new ReferenceNode(identifier, referenced);
+export function reference([identifier, _assign, token, referenced]) {
+  return new ReferenceNode(identifier, referenced, token);
 }
 
-export function returnNode([_, expr]) {
-  return new ReturnNode(expr)
+export function returnNode([token, expr]) {
+  return new ReturnNode(expr,token)
 }
 
 export function argsList([first, list]) {

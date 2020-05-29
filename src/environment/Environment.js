@@ -110,11 +110,15 @@ export class Environment {
   }
 
   getCell(x, y) {
+    let cell;
     try {
-      return this.cells[y][x];
+      cell = this.cells[y][x];
     } catch (e) {
+    }
+    if (cell === undefined) {
       throw new UserError("No such cell");
     }
+    return cell;
   }
 
 

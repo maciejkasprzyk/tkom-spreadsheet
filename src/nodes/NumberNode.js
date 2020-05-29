@@ -1,10 +1,6 @@
-import {PositionedNode} from "./PositionedNode";
+import {BaseNode} from "./BaseNode";
 
-export class NumberNode extends PositionedNode {
-  unParse(env) {
-    return this.value.toString();
-  }
-
+export class NumberNode extends BaseNode {
   exec() {
     return this.value;
   }

@@ -1,8 +1,8 @@
 import {BaseNode} from "./BaseNode";
 
 export class WhileNode extends BaseNode {
-  constructor(condition, block) {
-    super();
+  constructor(condition, block, token) {
+    super(token);
     this.condition = condition;
     this.block = block;
   }

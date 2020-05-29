@@ -1,8 +1,8 @@
 import {BaseNode} from "./BaseNode";
 
 export class ifElseNode extends BaseNode {
-  constructor(condition, block, elseBlock) {
-    super();
+  constructor(condition, block, elseBlock, token) {
+    super(token);
     this.condition = condition;
     this.block = block;
     this.elseBlock = elseBlock;

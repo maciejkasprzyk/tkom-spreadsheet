@@ -1,13 +1,15 @@
-import {PositionedNode} from "./PositionedNode";
+import {BaseNode} from "./BaseNode";
+import {errorInfoExecDecorator} from "../utils";
 
-export class CellNode extends PositionedNode {
+export class CellNode extends BaseNode {
 
-  constructor(token) {
+  constructor(x,y,token) {
     super(token);
-    this.x = token.value.x;
-    this.y = token.value.y;
+    this.x = x;
+    this.y = y;
   }
 
+  @errorInfoExecDecorator
   exec(env) {
     return env.getCell(this.x, this.y).value;
   }

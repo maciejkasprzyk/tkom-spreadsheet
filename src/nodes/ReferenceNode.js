@@ -1,8 +1,8 @@
 import {BaseNode} from "./BaseNode";
 
 export class ReferenceNode extends BaseNode {
-  constructor(identifier, referenced) {
-    super();
+  constructor(identifier, referenced, token) {
+    super(token);
     this.identifier = identifier;
     this.referenced = referenced;
   }

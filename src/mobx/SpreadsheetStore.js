@@ -69,7 +69,7 @@ export class SpreadsheetStore {
           lines[4] = lines[4].substring(0, lines[4].indexOf("Instead"));
         }
         for (let i = 0; i < n; i++) {
-          message += '\n' + lines[i]
+          message +=lines[i] + '\n'
         }
         this.annotations = [{row: line, column: col, type: 'error', text: message}];
       } else {

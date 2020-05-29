@@ -1,8 +1,8 @@
 import {BaseNode} from "./BaseNode";
 
 export class RangeNode extends BaseNode {
-  constructor(startCell, endCell) {
-    super();
+  constructor(startCell, endCell, token) {
+    super(token);
     this.cell1 = startCell;
     this.cell2 = endCell;
   }

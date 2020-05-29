@@ -72,4 +72,22 @@ export function getCellIndexes(cellIdentifier) {
   return {x: x_index, y: y_index}
 }
 
-
+export function errorInfoExecDecorator(target, name, descriptor) {
+  const original = descriptor.value;
+  if (typeof original === 'function') {
+    descriptor.value = function (...args) {
+    debugger
+      try {
+        return original.apply(this, args)
+      } catch (e) {
+        if (e.name === "UserError") {
+          e.message = 'Execution error at line ' + this.line + ' col ' + this.col + ':\n' + e.message;
+          throw e;
+        } else {
+          throw e;
+        }
+      }
+    }
+  }
+  return descriptor
+}
