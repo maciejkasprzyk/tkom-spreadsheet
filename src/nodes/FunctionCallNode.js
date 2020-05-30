@@ -48,4 +48,12 @@ export class FunctionCallNode extends BaseNode {
     }
     return this.identifier.value + '(' + args.join(',') + ')'
   }
+
+  findCellsReferenced(env) {
+    let cells = []
+    for (let a of this.args) {
+      cells = cells.concat(a.findCellsReferenced(env));
+    }
+    return cells;
+  }
 }

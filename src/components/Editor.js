@@ -35,8 +35,8 @@ const Editor = props => {
       const cells = o.cells
 
       setCode(code);
-      props.onLoad(cells)
       props.onSubmit(code)
+      props.onLoad(cells)
     })
     fr.readAsText(file);
 

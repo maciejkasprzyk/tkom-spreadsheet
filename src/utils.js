@@ -77,7 +77,6 @@ export function errorInfoExecDecorator(target, name, descriptor) {
   const original = descriptor.value;
   if (typeof original === 'function') {
     descriptor.value = function (...args) {
-    debugger
       try {
         return original.apply(this, args)
       } catch (e) {

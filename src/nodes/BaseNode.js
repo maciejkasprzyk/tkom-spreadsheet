@@ -9,8 +9,15 @@ export class BaseNode {
   }
 
   findCellsReferenced(env) {
-    return [];
+    let cells = []
+    for (let property in this) {
+      if (this[property] instanceof BaseNode) {
+        cells = cells.concat(this[property].findCellsReferenced(env));
+      }
+    }
+    return cells;
   }
+
 
   unParse(env) {
     return this.text;

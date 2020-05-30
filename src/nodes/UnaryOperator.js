@@ -5,8 +5,4 @@ export class UnaryOperator extends BaseNode {
     super(token);
     this.operand = operand;
   }
-
-  findCellsReferenced(env) {
-    return this.operand.findCellsReferenced(env);
-  }
 }

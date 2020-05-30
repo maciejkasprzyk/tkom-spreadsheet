@@ -9,13 +9,14 @@ export class ifElseNode extends BaseNode {
   }
 
   exec(env) {
+    debugger
     if (this.condition.exec(env)) {
       for (const line of this.block) {
         line.exec(env);
       }
     } else {
       if (this.elseBlock !== null) {
-        for (const line of this.block) {
+        for (const line of this.elseBlock) {
           line.exec(env);
         }
       }

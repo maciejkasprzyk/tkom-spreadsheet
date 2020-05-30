@@ -8,7 +8,7 @@ export class RangeNode extends BaseNode {
   }
 
   exec(env) {
-    return env.getCellsByRange(this.cell1,this.cell2).map(x=>x.value);
+    // return env.getCellsByRange(this.cell1,this.cell2).map(x=>x.value);
   }
 
   findCellsReferenced(env) {

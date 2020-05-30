@@ -52,15 +52,12 @@ export class AssignmentNode extends BinaryOperationNode {
 
 function replaceVariablesWithConstants(ast, env) {
   for (let property in ast) {
-    if (ast.hasOwnProperty(property)) {
-      if (ast[property] instanceof VariableNode) {
-
+    if (ast[property] instanceof VariableNode) {
         const x = env.getReference(ast[property].identifier);
         if (x !== undefined) {
           ast[property] = x;
         }
       }
-
       if (ast[property] instanceof VariableNode) {
         const varValue = ast[property].exec(env);
         ast[property] = new NumberNode({value: varValue, text:varValue.toString()});
@@ -68,7 +65,6 @@ function replaceVariablesWithConstants(ast, env) {
         replaceVariablesWithConstants(ast[property], env);
       }
 
-    }
   }
 }
 
