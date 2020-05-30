@@ -132,8 +132,8 @@ export function dynamicCell([_lsquare, x, _semicolon, y, token]) {
   return new DynamicCellNode(x, y, token);
 }
 
-export function reference([identifier, _assign, token, referenced]) {
-  return new ReferenceNode(identifier, referenced, token);
+export function reference([identifierToken, _assign, _equal, referenced]) {
+  return new ReferenceNode(identifierToken.value, referenced, identifierToken);
 }
 
 export function returnNode([token, expr]) {
@@ -147,3 +147,8 @@ export function argsList([first, list]) {
   }
   return result;
 }
+
+export function forLoop([forToken, identifier]) {
+
+}
+

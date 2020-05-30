@@ -5,6 +5,7 @@ export class ReferenceNode extends BaseNode {
     super(token);
     this.identifier = identifier;
     this.referenced = referenced;
+    console.log(identifier,referenced)
   }
 
   exec(env) {

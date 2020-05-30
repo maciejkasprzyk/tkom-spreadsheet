@@ -150,10 +150,18 @@ export class Environment {
   }
 
   setReference(identifier, node) {
+    if (!identifier instanceof String) {
+      console.log(identifier)
+      throw Error('setReference called with wrong type');
+    }
     this.referencesScopes[this.referencesScopes.length - 1][identifier] = node;
   }
 
   getReference(identifier) {
+    if (!identifier instanceof String) {
+      console.log(identifier)
+      throw Error('getReference called with wrong type');
+    }
     let x = this.referencesScopes[this.referencesScopes.length - 1][identifier];
     if (x instanceof ReferenceNode) {
       x = this.getReference(x.identifier);

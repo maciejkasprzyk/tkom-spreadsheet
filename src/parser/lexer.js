@@ -19,6 +19,7 @@ const tokens = {
       "kwElse": "else",
       "kwDef": "def",
       "kwReturn": "return",
+      "kwIn": "in",
     })
   },
   ampersand: '&',
