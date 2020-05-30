@@ -65,8 +65,6 @@ export class Environment {
     parser.feed(formula.substring(1));
     cell.ast = parser.results;
     cell.value = cell.ast.exec(this);
-
-    debugger
     const varsReferenced = cell.ast.findCellsReferenced(this);
     for (const v of varsReferenced) {
       cell.observe(v);

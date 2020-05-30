@@ -21,7 +21,8 @@
     "react-ace": "^8.1.0",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "react-tooltip": "^4.2.6"
   },
   "scripts": {
     "predeploy": "npm run build",

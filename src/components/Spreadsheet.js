@@ -3,7 +3,7 @@ import {observer} from "mobx-react";
 import style from './Spreadsheet.module.scss'
 import PropTypes from 'prop-types'
 import {letterLabelGenerator} from "../utils";
-
+import ReactTooltip from "react-tooltip";
 
 
 const Spreadsheet = props => {
@@ -20,7 +20,7 @@ const Spreadsheet = props => {
   const onBlur = (e, cell) => {
     props.onCellSet(cell.x, cell.y, e.target.value);
     e.target.parentNode.classList.remove(style.focus);
-    if (isEditing(cell)){
+    if (isEditing(cell)) {
       setEditing(null);
     }
   };
@@ -34,10 +34,31 @@ const Spreadsheet = props => {
     setEditing(cell);
   };
 
+  const getContent = (tip) => {
+    if (tip === null) {
+      return null;
+    }
+    let [i,j] = tip.split(" ");
+    i = parseInt(i)
+    j = parseInt(j)
+    const cell = props.cells[i][j];
+    if (cell.error !== null) {
+      return cell.error
+    }
+    if (cell.value !== null) {
+      return cell.value;
+    }
+    return null
+  }
+
   const rowLabelsGen = letterLabelGenerator();
 
   return (
     <div className={style.Spreadsheet}>
+      <ReactTooltip
+        id='tooltip'
+        getContent={(tip) => getContent(tip)}
+      />
       <table>
         <thead>
         <tr>
@@ -57,7 +78,11 @@ const Spreadsheet = props => {
               <td
                 style={{backgroundColor: cell.background}}
                 onClick={e => onClick(e, cell)}
-                key={j}>
+                key={j}
+                data-tip={i + ' ' + j}
+                data-for='tooltip'
+              >
+
                 {isEditing(cell) ?
                   <input
                     onKeyDown={onInputKeyDown}
@@ -66,7 +91,7 @@ const Spreadsheet = props => {
                     autoFocus={true}
                   /> :
                   <div
-                    className={cell.error ? style.error : ""}
+                    className={`${style.cell} ${cell.error ? style.error : ""}`}
                   >
                     {cell.error ? cell.error : cell.value}
                   </div>
@@ -77,6 +102,7 @@ const Spreadsheet = props => {
         )}
         </tbody>
       </table>
+
     </div>
   );
 };
@@ -89,8 +115,7 @@ function useEditing(initial) {
   const setEditing = (cell) => {
     if (cell == null) {
       _setEditing(null)
-    }
-    else {
+    } else {
       _setEditing({x: cell.x, y: cell.y})
     }
   };

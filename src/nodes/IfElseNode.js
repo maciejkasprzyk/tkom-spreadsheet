@@ -9,7 +9,6 @@ export class ifElseNode extends BaseNode {
   }
 
   exec(env) {
-    debugger
     if (this.condition.exec(env)) {
       for (const line of this.block) {
         line.exec(env);
