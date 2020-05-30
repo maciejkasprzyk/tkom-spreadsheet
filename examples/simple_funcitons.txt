@@ -1,0 +1,9 @@
+{
+ "cells": {
+  "A1": "=avg(5,10)",
+  "A2": "=sum(5,10)",
+  "A3": "=max(5,10)",
+  "A4": "=min(5,10)"
+ },
+ "code": "def avg(a,b)\n    return (a+b)/2\n\ndef sum(a,b)\n    return a+b\n    \ndef max(a,b)\n    if a>b\n        return a\n    return b\n\ndef min(a,b)\n    if a<b\n        return a\n    return b\n\n\nA1 = avg(5,10)\nA2 = sum(5,10)\nA3 = max(5,10)\nA4 = min(5,10)\n"
+}

@@ -74,3 +74,44 @@ A1 = suma(1,2)
   expect(x).toEqual(3);
 
 });
+
+
+test('functions', () => {
+
+  const store = new SpreadsheetStore(10, 10)
+  const code = `
+def avg(a,b)
+    return (a+b)/2
+
+def sum(a,b)
+    return a+b
+    
+def max(a,b)
+    if a>b
+        return a
+    return b
+
+def min(a,b)
+    if a<b
+        return a
+    return b
+
+
+A1 = avg(5,10)
+A2 = sum(5,10)
+A3 = max(5,10)
+A4 = min(5,10)
+`
+  store.run(code);
+  let x = store.env.getCell(0, 0).value;
+  expect(x).toEqual(7.5);
+  x = store.env.getCell(0, 1).value;
+  expect(x).toEqual(15);
+  x = store.env.getCell(0, 2).value;
+  expect(x).toEqual(10);
+  x = store.env.getCell(0, 3).value;
+  expect(x).toEqual(5);
+
+});
+
+
