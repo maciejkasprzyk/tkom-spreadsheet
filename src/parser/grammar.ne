@@ -17,6 +17,7 @@ blockStatement ->
     %kwWhile expr ends block                            {% p.whileLoop %}
   | %kwIf expr ends block (else):?                      {% p.ifElse %}
   | %kwDef %identifier %lparen params %rparen ends block {% p.functionDef %}
+  | %kwFor %identifier
 
 
 else ->
