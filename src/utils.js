@@ -81,7 +81,11 @@ export function errorInfoExecDecorator(target, name, descriptor) {
         return original.apply(this, args)
       } catch (e) {
         if (e.name === "UserError") {
-          e.message = 'Execution error at line ' + this.line + ' col ' + this.col + ':\n' + e.message;
+          const regex = /.*line (\d*).*col (\d*)/gm;
+          const m = regex.exec(e.message)
+          if (m === null) {
+            e.message = 'Execution error at line ' + this.line + ' col ' + this.col + ':\n' + e.message;
+          }
           throw e;
         } else {
           throw e;

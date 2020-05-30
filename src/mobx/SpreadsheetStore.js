@@ -48,8 +48,10 @@ export class SpreadsheetStore {
     try {
       const parser = new Parser();
       parser.feed(code);
-      for (const line of parser.results) {
-        line.exec(this.env);
+      if (parser.results) {
+        for (const line of parser.results) {
+          line.exec(this.env);
+        }
       }
     } catch (e) {
       if (e.name !== "UserError") {
@@ -69,7 +71,7 @@ export class SpreadsheetStore {
           lines[4] = lines[4].substring(0, lines[4].indexOf("Instead"));
         }
         for (let i = 0; i < n; i++) {
-          message +=lines[i] + '\n'
+          message += lines[i] + '\n'
         }
         this.annotations = [{row: line, column: col, type: 'error', text: message}];
       } else {

@@ -88,10 +88,20 @@ In a result a formula `= 5 + ( 5 * ( 2*B1 ) )` will be assigned to cell `A1`
 It's achieved with a couple of steps:
 - those two lines are first tokenized then parsed into an abstract syntax tree
 - statement `a = 5` is executed setting the `a` variable in the environment
-- the interpreter realizes the second statement is an assign to a cell
+- the interpreter realizes the secoznd statement is an assign to a cell
 - it travels the right sight of assignment replacing variables with their values a the time of execution. \
 In out case: the node which symbolizes variable `a` is changed to constant node with value of `5`
 - then the interpreter unparses the syntax tree into a new string `= 5 + ( 5 * ( 2*B1 ) )`
 - the formula for cell A1 is set as this string, then the normal logic of setting a cell node starts: the formula is parsed and executed, all other cells that depend on `A1` are updated etc...
 
 ### Testing
+
+Test are mostly constructed like this:
+- run some code
+- check if cells have appropriate values
+Test can be found in files with `.test.js` extension.
+Most of then are located [here](src/mobx/SpreadsheetStore.test.js)
+
+
+To run tests:
+`npm run test`
