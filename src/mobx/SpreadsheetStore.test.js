@@ -115,3 +115,20 @@ A4 = min(5,10)
 });
 
 
+test('references', () => {
+
+  const store = new SpreadsheetStore(10, 10)
+  const code = `
+cell =& A1
+cell = 5
+A2 = cell
+`
+  store.run(code);
+  let x = store.env.getCell(0, 0).value;
+  expect(x).toEqual(5);
+  x = store.env.getCell(0, 1).value;
+  expect(x).toEqual(5);
+
+});
+
+

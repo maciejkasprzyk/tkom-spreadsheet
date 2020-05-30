@@ -1,0 +1,7 @@
+{
+ "cells": {
+  "A1": "=5",
+  "A2": "=A1"
+ },
+ "code": "cell =& A1\ncell = 5\nA2 = cell\n"
+}
