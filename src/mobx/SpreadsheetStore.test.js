@@ -120,14 +120,24 @@ test('references', () => {
   const store = new SpreadsheetStore(10, 10)
   const code = `
 cell =& A1
+secondCell =& B1
+
 cell = 5
 A2 = cell
+secondCell = 10
+B2 = secondCell
+
 `
   store.run(code);
   let x = store.env.getCell(0, 0).value;
   expect(x).toEqual(5);
   x = store.env.getCell(0, 1).value;
   expect(x).toEqual(5);
+
+  x = store.env.getCell(1, 0).value;
+  expect(x).toEqual(10);
+  x = store.env.getCell(1, 1).value;
+  expect(x).toEqual(10);
 
 });
 
