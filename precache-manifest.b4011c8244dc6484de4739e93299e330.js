@@ -1248,24 +1248,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tkom-spreadsheet/ff7acf7df3cdb56d704a5bd29f08fd55.js"
   },
   {
-    "revision": "90947425bc87b79430a73796ee4c3207",
+    "revision": "773f411a53aba4576aaea08e26f099cf",
     "url": "/tkom-spreadsheet/index.html"
   },
   {
-    "revision": "850b0cea1d9e1779eb88",
-    "url": "/tkom-spreadsheet/static/css/main.7d14ec45.chunk.css"
+    "revision": "760d5e0b9274735afb7a",
+    "url": "/tkom-spreadsheet/static/css/main.b9c6a219.chunk.css"
   },
   {
-    "revision": "50d1bb94e390e2360dde",
-    "url": "/tkom-spreadsheet/static/js/2.f6944961.chunk.js"
+    "revision": "58f52a3eabf0616900b1",
+    "url": "/tkom-spreadsheet/static/js/2.6ec7e3e4.chunk.js"
   },
   {
     "revision": "806a98f318263a7af6eb94d73465b791",
-    "url": "/tkom-spreadsheet/static/js/2.f6944961.chunk.js.LICENSE.txt"
+    "url": "/tkom-spreadsheet/static/js/2.6ec7e3e4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "850b0cea1d9e1779eb88",
-    "url": "/tkom-spreadsheet/static/js/main.ac0b9d5b.chunk.js"
+    "revision": "760d5e0b9274735afb7a",
+    "url": "/tkom-spreadsheet/static/js/main.260ba385.chunk.js"
   },
   {
     "revision": "54c48444078cb055e270",
