@@ -16,7 +16,7 @@
     "moo": "^0.5.1",
     "nearley": "^2.19.1",
     "nearley-moo": "^1.0.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-ace": "^8.1.0",
     "react-app-rewired": "^2.1.5",
@@ -28,7 +28,7 @@
     "deploy": "gh-pages -d build",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-scripts test",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
