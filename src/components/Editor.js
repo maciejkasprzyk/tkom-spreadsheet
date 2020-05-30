@@ -46,7 +46,7 @@ const Editor = props => {
     <div className={style.Editor}>
 
       <div className={style.Top}>
-        <label className={style.customFileUpload}> Load <input type="file" onChange={onLoad}/> </label>
+        <label className={style.customFileUpload}>Open<input type="file" onChange={onLoad}/> </label>
         <button onClick={() => props.onSave(code)}>Save</button>
       </div>
 
