@@ -59,3 +59,18 @@ test('variable', () => {
   expect(x).toEqual(5);
 
 });
+
+test('function call', () => {
+
+  const store = new SpreadsheetStore(10, 10)
+  const code = `
+def suma(a,b)
+    return a+b
+
+A1 = suma(1,2)
+`
+  store.run(code);
+  const x = store.env.getCell(0, 0).value;
+  expect(x).toEqual(3);
+
+});

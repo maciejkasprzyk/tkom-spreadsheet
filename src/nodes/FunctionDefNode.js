@@ -7,10 +7,8 @@ export class FunctionDefNode extends BaseNode{
     this.args = args;
     this.block = block;
   }
-
-
   exec(env) {
-    env.setFunction(this.identifier.value, this.args, this.block);
+    env.setFunction(this.identifier, this.args, this.block);
   }
 }
 

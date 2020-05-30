@@ -168,7 +168,7 @@ export class Environment {
   }
 
   getFunction(identifier) {
-    if (!this.funcitons.hasOwnProperty(identifier)) {
+    if (!identifier instanceof String || !this.funcitons.hasOwnProperty(identifier)) {
       throw new UserError(`No function: ${identifier}`);
     }
     return this.funcitons[identifier];

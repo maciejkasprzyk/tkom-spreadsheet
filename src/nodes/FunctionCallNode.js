@@ -9,7 +9,7 @@ export class FunctionCallNode extends BaseNode {
   }
 
   exec(env) {
-    const func = env.getFunction(this.identifier.value);
+    const func = env.getFunction(this.identifier);
 
     if (this.args.length !== func.args.length) {
       throw new UserError(`${func.args.length} params function called with ${this.args.length} params.`);
@@ -46,7 +46,7 @@ export class FunctionCallNode extends BaseNode {
     for (const a of this.args) {
       args.push(a.unParse());
     }
-    return this.identifier.value + '(' + args.join(',') + ')'
+    return this.identifier + '(' + args.join(',') + ')'
   }
 
   findCellsReferenced(env) {
