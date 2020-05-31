@@ -47,6 +47,11 @@ var = 5
 def foo(b):
     A1 = b
 ```
+- you can loop over ranges
+```
+for a in A1:A5
+    a = 5
+```
 Referencing var from `foo` would cause an execution error. 
 ## Implementation
 This project uses [moo](https://github.com/no-context/moo) as tokenizer and [nearleyjs](https://nearley.js.org/) as parser. View is implemented in [react](https://reactjs.org/) with the help of state management library [mobx](https://mobx.js.org/.)
