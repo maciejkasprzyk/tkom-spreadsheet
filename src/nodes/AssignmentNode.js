@@ -7,6 +7,8 @@ import {BaseNode} from "./BaseNode";
 import _ from 'lodash';
 import {DynamicCellNode} from "./DynamicCellNode";
 import {errorInfoExecDecorator} from "../utils";
+import {RangeNode} from "./RangeNode";
+import {FunctionCallNode} from "./FunctionCallNode";
 
 export class AssignmentNode extends BinaryOperationNode {
 
@@ -41,7 +43,6 @@ export class AssignmentNode extends BinaryOperationNode {
       replaceVariablesWithConstants(wrapper, env);
       ast = wrapper.ast;
       const formula = "=" + ast.unParse(env);
-
       env.setCell(x, y, formula);
 
     } else {
@@ -53,17 +54,19 @@ export class AssignmentNode extends BinaryOperationNode {
 function replaceVariablesWithConstants(ast, env) {
   for (let property in ast) {
     if (ast[property] instanceof VariableNode) {
-        const x = env.getReference(ast[property].identifier);
-        if (x !== undefined) {
-          ast[property] = x;
-        }
+      const x = env.getReference(ast[property].identifier);
+      if (x !== undefined) {
+        ast[property] = x;
       }
-      if (ast[property] instanceof VariableNode) {
-        const varValue = ast[property].exec(env);
-        ast[property] = new NumberNode({value: varValue, text:varValue.toString()});
-      } else if (ast[property] instanceof BaseNode) {
-        replaceVariablesWithConstants(ast[property], env);
-      }
+    }
+    if (ast[property] instanceof VariableNode) {
+      const varValue = ast[property].exec(env);
+      ast[property] = new NumberNode({value: varValue, text: varValue.toString()});
+    } else if (ast[property] instanceof FunctionCallNode) {
+      replaceVariablesWithConstants(ast[property].args, env);
+    } else if (ast[property] instanceof BaseNode) {
+      replaceVariablesWithConstants(ast[property], env);
+    }
 
   }
 }

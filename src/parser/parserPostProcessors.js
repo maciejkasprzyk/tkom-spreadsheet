@@ -21,6 +21,7 @@ import {FunctionDefNode} from "../nodes/FunctionDefNode";
 import {DynamicCellNode} from "../nodes/DynamicCellNode";
 import {ReferenceNode} from "../nodes/ReferenceNode";
 import {ReturnNode} from "../nodes/ReturnNode";
+import {ForNode} from "../nodes/ForNode";
 
 export function addition([a, token, b]) {
   return new AdditionNode(a, b, token);
@@ -148,7 +149,7 @@ export function argsList([first, list]) {
   return result;
 }
 
-export function forLoop([forToken, identifier]) {
-
+export function forLoop([_forToken, identifierToken, _inToken, expr, _ends, block]) {
+  return new ForNode(identifierToken.value, expr, block, identifierToken);
 }
 

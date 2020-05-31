@@ -14,10 +14,10 @@ statement ->
   | blockStatement (%end):*                             {% id %}
 
 blockStatement ->
-    %kwWhile expr ends block                            {% p.whileLoop %}
-  | %kwIf expr ends block (else):?                      {% p.ifElse %}
-  | %kwDef %identifier %lparen params %rparen ends block {% p.functionDef %}
-  | %kwFor %identifier %kwIn expr                       {% p.forLoop %}
+    %kwWhile expr (%end):? block                        {% p.whileLoop %}
+  | %kwIf expr (%end):? block (else):?                  {% p.ifElse %}
+  | %kwDef %identifier %lparen params %rparen (%end):? block   {% p.functionDef %}
+  | %kwFor %identifier %kwIn expr (%end):? block        {% p.forLoop %}
 
 
 else ->

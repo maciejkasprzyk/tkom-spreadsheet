@@ -54,7 +54,8 @@ export class Environment {
       if (e.name !== "UserError") {
         throw e;
       }
-      cell.error = e.message;
+
+      cell.error = e.message.split("\n")[1];
     }
   }
 
@@ -82,13 +83,11 @@ export class Environment {
     variable.ast = null;
   }
 
-
   getCellsByRange(start, end) {
-
     const x1 = start.x;
     const y1 = start.y;
-    const x2 = start.x;
-    const y2 = start.y;
+    const x2 = end.x;
+    const y2 = end.y;
 
     if (this.x <= x1 || this.y <= y1) {
       throw new UserError(`No cell: ${start}`)
@@ -159,10 +158,12 @@ export class Environment {
 
   getReference(identifier) {
     if (!identifier instanceof String) {
-      console.log(identifier)
       throw Error('getReference called with wrong type');
     }
+    // console.log(identifier)
+    // console.log(this.referencesScopes)
     let x = this.referencesScopes[this.referencesScopes.length - 1][identifier];
+    // console.log(x)
     if (x instanceof ReferenceNode) {
       x = this.getReference(x.identifier);
     }

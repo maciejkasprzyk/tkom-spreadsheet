@@ -7,12 +7,19 @@ export class RangeNode extends BaseNode {
     this.cell2 = endCell;
   }
 
+  getCells(env) {
+    return env.getCellsByRange(this.cell1,this.cell2);
+  }
+
   exec(env) {
-    // return env.getCellsByRange(this.cell1,this.cell2).map(x=>x.value);
+    return this;
   }
 
   findCellsReferenced(env) {
     return env.getCellsByRange(this.cell1, this.cell2);
   }
 
+  unParse(env) {
+    return env.getCell(this.cell1.x, this.cell1.y).label + ':' + env.getCell(this.cell2.x, this.cell2.y).label
+  }
 }

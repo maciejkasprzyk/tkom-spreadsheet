@@ -1,5 +1,6 @@
 import {UserError} from "../parser/errors";
 import {BaseNode} from "./BaseNode";
+import {RangeNode} from "./RangeNode";
 
 export class FunctionCallNode extends BaseNode {
   constructor(identifier, args, token) {
@@ -22,6 +23,9 @@ export class FunctionCallNode extends BaseNode {
 
     env.newScope();
     for (let i = 0; i < this.args.length; i++) {
+      if (argsValues[i] instanceof RangeNode) {
+        env.setReference(func.args[i].identifier, argsValues[i])
+      }
       env.setVariable(func.args[i].identifier, argsValues[i]);
     }
 
@@ -30,8 +34,10 @@ export class FunctionCallNode extends BaseNode {
         b.exec(env);
       } catch (e) {
         if (e.name === 'returnHandler') {
+          env.popScope();
           return e.result;
         } else {
+          env.popScope();
           throw e;
         }
       }
@@ -44,7 +50,7 @@ export class FunctionCallNode extends BaseNode {
   unParse(env) {
     const args = [];
     for (const a of this.args) {
-      args.push(a.unParse());
+      args.push(a.unParse(env));
     }
     return this.identifier + '(' + args.join(',') + ')'
   }

@@ -35,13 +35,13 @@ def iif(a,b,c)
         return c
 `
   store.run(code);
-  store.env.setCell(0,0,'=iif(B1==5,0,1)')
-  store.env.setCell(1,0,'=5')
+  store.env.setCell(0, 0, '=iif(B1==5,0,1)')
+  store.env.setCell(1, 0, '=5')
 
   let x;
   x = store.env.getCell(0, 0).value;
   expect(x).toEqual(0);
-  store.env.setCell(1,0,'=123')
+  store.env.setCell(1, 0, '=123')
 
   x = store.env.getCell(0, 0).value;
   expect(x).toEqual(1);
@@ -138,6 +138,31 @@ B2 = secondCell
   expect(x).toEqual(10);
   x = store.env.getCell(1, 1).value;
   expect(x).toEqual(10);
+
+});
+
+
+test('ranges', () => {
+
+  const store = new SpreadsheetStore(10, 10)
+  const code = `
+i = 0
+while i < 10
+    [0;i] = i + 1
+    i = i + 1
+
+def suma(r)
+    suma = 0
+    for cell in r
+        suma = suma + cell
+    return suma
+    
+A =& A1:A10
+B1 = suma(A)
+`
+  store.run(code);
+  let x = store.env.getCell(1, 0).value;
+  expect(x).toEqual(55);
 
 });
 

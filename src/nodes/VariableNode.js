@@ -10,6 +10,8 @@ export class VariableNode extends BaseNode {
 
   @errorInfoExecDecorator
   exec(env) {
+    // console.log(this.identifier)
+    // console.log(env.referencesScopes[0])
     const x = env.getReference(this.identifier);
     if (x !== undefined) {
       return x.exec(env)

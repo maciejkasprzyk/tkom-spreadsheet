@@ -1,3 +1,5 @@
+import {UserError} from "../parser/errors";
+
 export class BaseNode {
   constructor({value,type,text,offset,line,col}) {
     this.value = value;
@@ -21,5 +23,9 @@ export class BaseNode {
 
   unParse(env) {
     return this.text;
+  }
+
+  exec(env) {
+    throw new UserError("Executing non executable")
   }
 }

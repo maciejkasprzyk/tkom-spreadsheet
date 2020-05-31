@@ -1,0 +1,16 @@
+{
+ "cells": {
+  "A1": "=( 0 + 1 )",
+  "B1": "=suma(A1:A10)",
+  "A2": "=( 1 + 1 )",
+  "A3": "=( 2 + 1 )",
+  "A4": "=( 3 + 1 )",
+  "A5": "=( 4 + 1 )",
+  "A6": "=( 5 + 1 )",
+  "A7": "=( 6 + 1 )",
+  "A8": "=( 7 + 1 )",
+  "A9": "=( 8 + 1 )",
+  "A10": "=( 9 + 1 )"
+ },
+ "code": "i = 0\nwhile i < 10\n    [0;i] = i + 1\n    i = i + 1\n\ndef suma(r)\n    suma = 0\n    for cell in r\n        suma = suma + cell\n    return suma\n    \nA =& A1:A10\nB1 = suma(A)\n"
+}
